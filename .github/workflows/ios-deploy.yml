@@ -1,0 +1,44 @@
+name: Publish iOS App to App Store
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release-ios:
+    name: Build and release iOS app
+    runs-on: macos-11
+    defaults:
+      run:
+        working-directory: ./packages/yourkitchen-reactnative
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'yarn'
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+      - name: Install packages
+        run: bundle install
+      - name: Install packages
+        run: yarn install
+      - name: Fix types
+        run: cd ../../ && yarn add -W lerna && yarn typescript:deploy
+      - name: Decrypt Google Cloud Key
+        run: sh ./scripts/ios-gpg-decrypt.sh
+        env:
+          ENCRYPT_PASSWORD: ${{ secrets.GPG_ENCRYPT_PASSWORD }}
+      - name: Dump secrets to .env
+        run: env > .env
+        env:
+          REQUIRED_ENV: ${{ secrets.REQUIRED_ENV }}
+      - name: Build and Upload to TestFlight
+        run: bundle exec fastlane ios build_and_release_to_app_store versionName:${{ github.event.release.tag_name }}
+        env:
+          GITHUB_RUN_NUMBER: ${{ github.run_number }}
+          APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY }}
+          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY_ID }}
+          SLACK_URL: ${{ secrets.SLACK_URL }}

@@ -1,0 +1,82 @@
+{
+  "name": "@yourkitchen/website",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@craco/craco": "^6.4.2",
+    "@emotion/react": "^11.6.0",
+    "@emotion/styled": "^11.6.0",
+    "@fortawesome/fontawesome-svg-core": "1.2.35",
+    "@fortawesome/free-brands-svg-icons": "5.15.3",
+    "@fortawesome/free-solid-svg-icons": "5.15.3",
+    "@fortawesome/react-fontawesome": "0.1.14",
+    "@greatsumini/react-facebook-login": "^2.1.1",
+    "@mui/lab": "^5.0.0-alpha.55",
+    "@mui/material": "^5.1.1",
+    "@mui/x-data-grid": "^5.0.1",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/react-facebook-login": "^4.1.4",
+    "@types/react-loading-indicator": "1.0.0",
+    "@types/react-router-dom": "5.1.7",
+    "@yourkitchen/common": "https://github.com/YourKitchen/yourkitchen-common",
+    "@yourkitchen/models": "https://github.com/YourKitchen/yourkitchen-models",
+    "file-loader": "6.2.0",
+    "firebase": "^9.4.1",
+    "moment": "^2.29.1",
+    "react": "^17.0.2",
+    "react-animate-height": "2.0.23",
+    "react-apple-login": "^1.1.3",
+    "react-dom": "17.0.2",
+    "react-google-login": "^5.2.2",
+    "react-helmet": "^6.1.0",
+    "react-loading-indicator": "1.0.2",
+    "react-router-dom": "6.0.2",
+    "react-scripts": "^4.0.3"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ],
+    "rules": {
+      "react-hooks/exhaustive-deps": "off"
+    }
+  },
+  "scripts": {
+    "start": "craco start",
+    "sitemap": "node ./index.js",
+    "prebuild": "cd generate-sitemap && yarn && yarn start",
+    "build_local": "BUILD_PATH='./render-server/build' craco build",
+    "build": "BUILD_PATH='./render-server/build' PUBLIC_URL=https://yourkitchen.io craco build",
+    "test": "craco test"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/eslint-parser": "^7.16.3",
+    "@babel/node": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-react": "^7.16.0",
+    "@babel/preset-typescript": "^7.16.0",
+    "@types/react-helmet": "^6.1.4",
+    "@typescript-eslint/parser": "^5.4.0",
+    "babel-plugin-import": "^1.13.3",
+    "babel-preset-env": "^1.7.0",
+    "brotli-webpack-plugin": "^1.1.0",
+    "eslint-config-react-app": "^6.0.0",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack-bundle-analyzer": "^4.5.0"
+  },
+  "packageManager": "yarn@3.1.1"
+}

@@ -1,0 +1,26 @@
+{
+  "name": "render-server",
+  "version": "1.0.0",
+  "main": "server/index.ts",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node server/index.ts",
+    "prod:start": "node dist/index.js",
+    "dev": "nodemon --watch './**/*.ts' --exec 'TS_NODE_FILES=true TS_NODE_TRANSPILE_ONLY=true ts-node' ./server/index.ts",
+    "typescript:deploy": "tsc -b",
+    "typescript:clean": "rm -f -rf ./dist && rm -f tsconfig.tsbuildinfo"
+  },
+  "dependencies": {
+    "compression": "^1.7.4",
+    "express": "^4.17.1",
+    "express-static-gzip": "^2.1.1",
+    "rendertron-middleware": "^0.1.5"
+  },
+  "devDependencies": {
+    "@types/compression": "^1.7.2",
+    "@types/node": "^16.11.10",
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.2"
+  }
+}

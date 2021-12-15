@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.unknownstudios.yourkitchen",
+      "sha256_cert_fingerprints": [
+        "FA:C6:17:45:DC:09:03:78:6F:B9:ED:E6:2A:96:2B:39:9F:73:48:F0:BB:6F:89:9B:83:32:66:75:91:03:3B:9C",
+        "9C:39:CB:36:17:63:0E:DE:3A:8E:1B:12:0B:59:2B:F0:48:EA:2D:64:EB:FC:76:32:F4:C8:E9:B2:3B:23:6B:D0"
+      ]
+    }
+  }
+]

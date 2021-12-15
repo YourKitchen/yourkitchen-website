@@ -1,0 +1,96 @@
+.header {
+  top: 0;
+  position: fixed;
+  width: 100%;
+  background-color: #f3b03d;
+  text-align: center;
+  height: 75px;
+  z-index: 100;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.header li {
+  display: inline;
+  line-height: 75px;
+  transition: 0.2s;
+}
+
+.header li a {
+  text-decoration: none;
+  color: white;
+  padding: 10px 20px;
+  background-color: transparent;
+  border-radius: 20px;
+  height: 40px;
+}
+
+.header li a:hover {
+  transition: 0.25s;
+  color: #f3b03d;
+  background-color: white;
+}
+
+.loginWrapper {
+  line-height: 75px;
+  height: 75px;
+  position: absolute;
+  top: 0;
+  right: 15px;
+}
+
+.headerIconButton {
+  line-height: 20px;
+  transition: 0.2s;
+  color: white;
+  margin: 18px 0;
+  display: inline-block;
+  padding: 10px 20px 10px 20px;
+  border: 0;
+  font-size: 16px;
+  background: transparent;
+  border-radius: 100px;
+}
+
+.headerIconButton:hover {
+  background-color: white;
+  color: #f3b03d;
+}
+
+.loginButton {
+  transition: 0.2s;
+  color: white;
+  margin: 18px 0;
+  display: inline-block;
+  line-height: normal;
+  padding: 10px 20px 10px 20px;
+  border: 0;
+  font-size: 16px;
+  background: transparent;
+  border-radius: 100px;
+}
+
+.loginButton:hover {
+  background-color: white;
+  color: #f3b03d;
+}
+
+.message {
+  top: 75px;
+  width: 100%;
+  position: fixed;
+}
+
+.message.error {
+  background-color: rgb(206, 91, 91);
+  color: white;
+}
+
+.message.success {
+  background-color: #32e778;
+  color: white;
+}

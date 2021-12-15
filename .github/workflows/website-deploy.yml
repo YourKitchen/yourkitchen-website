@@ -1,0 +1,26 @@
+name: Deploy Website on server
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI or API.
+on:
+  push:
+    paths:
+      - 'packages/yourkitchen-website/**'
+      - '.github/workflows/website-deploy.yml' # If this file is edited (For testing)
+      - 'Dockerfile'
+    branches:
+      - master
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  deploy_api:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Call Docker website build hook
+        uses: distributhor/workflow-webhook@v2
+        env:
+          webhook_type: 'json-extended'
+          webhook_url: ${{ secrets.DOCKER_WEBSITE_WEBHOOK_API }}
+          webhook_secret: ${{ secrets.DOCKER_WEBSITE_WEBHOOK_SECRET }}
