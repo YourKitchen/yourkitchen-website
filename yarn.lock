@@ -3333,11 +3333,11 @@ __metadata:
   linkType: hard
 
 "@types/bson@npm:*":
-  version: 4.2.0
-  resolution: "@types/bson@npm:4.2.0"
+  version: 4.0.5
+  resolution: "@types/bson@npm:4.0.5"
   dependencies:
-    bson: "*"
-  checksum: 55abf60c57b7f05655c210b386392636a299a7df18b89cec2cde0aa87374d97dd4ac9632226b0f6fe135d16ad4296ae5ddc782f6e9132d38c53dd26a6df8e704
+    "@types/node": "*"
+  checksum: f6c74a68eec836010170e7091399b45fe39e2f7724372441cc00a0fbd0b9f44d901688504174d558edbf220922fa0c7c52fbc4aa0f2136194fa713101b8f2ec9
   languageName: node
   linkType: hard
 
@@ -3461,10 +3461,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=12.12.47, @types/node@npm:>=13.7.0, @types/node@npm:^16.10.2":
-  version: 16.11.13
-  resolution: "@types/node@npm:16.11.13"
-  checksum: 7c9d62c024537d7c9f2229097b9e7a93a60bc60efbc9171977f172819e229b01d0b6ed276d335996d39b0096aed2cefa58c4a34b264d712ae3595449e8d96ab7
+"@types/node@npm:*, @types/node@npm:>=12.12.47, @types/node@npm:>=13.7.0":
+  version: 17.0.0
+  resolution: "@types/node@npm:17.0.0"
+  checksum: 30970a70c2eb78dbe80613d73243c255aaa9ce057d9e8595069ca0aef0363db0af45dc0d35f445cc804576a99df2970c170130663d76cd60319b779872e92ad6
   languageName: node
   linkType: hard
 
@@ -3472,6 +3472,13 @@ __metadata:
   version: 15.14.9
   resolution: "@types/node@npm:15.14.9"
   checksum: 49f7f0522a3af4b8389aee660e88426490cd54b86356672a1fedb49919a8797c00d090ec2dcc4a5df34edc2099d57fc2203d796c4e7fbd382f2022ccd789eee7
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^16.10.2":
+  version: 16.11.14
+  resolution: "@types/node@npm:16.11.14"
+  checksum: 0bd4333fb4e56532db7f5174732268b18089913ddbb0e97957228e64f9fe3babf9923c77ce6f07d3d354445cfbb8d31b95c1f8be3c0f7426308bd8b93d3aaa02
   languageName: node
   linkType: hard
 
@@ -4128,21 +4135,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yourkitchen/common@https://github.com/YourKitchen/yourkitchen-common":
+"@yourkitchen/models@git+ssh://git@github.com:YourKitchen/yourkitchen-common.git":
   version: 1.0.2
-  resolution: "@yourkitchen/common@https://github.com/YourKitchen/yourkitchen-common.git#commit=61c13f855d5901081759702e5df9f067a101a9f8"
+  resolution: "@yourkitchen/models@git+ssh://git@github.com:YourKitchen/yourkitchen-common.git#commit=61c13f855d5901081759702e5df9f067a101a9f8"
   dependencies:
     "@yourkitchen/models": "https://github.com/YourKitchen/yourkitchen-models"
     axios: ^0.21.4
     gql-query-builder: ^3.5.5
     react: ^17.0.2
-  checksum: c5d95ef3355679f7eed119a464680f4eb700dfae7979eb44ceda34820a67dcd350315593cba6d32a578ab60c011d252b99e058ffd3f8920c8c6f724b627c6ff5
+  checksum: 96964ae03061f9c21fbaba50421a7bd822905345389cf6ea88564e9be47b5919cda7ec863217da48f5f2c03f3c452829db8bc7928a96ad9f62e7228f74404096
   languageName: node
   linkType: hard
 
 "@yourkitchen/models@https://github.com/YourKitchen/yourkitchen-models":
   version: 1.0.5
-  resolution: "@yourkitchen/models@https://github.com/YourKitchen/yourkitchen-models.git#commit=2512ce2f7b074c1e1b6a19772218799b2607353a"
+  resolution: "@yourkitchen/models@https://github.com/YourKitchen/yourkitchen-models.git#commit=0ff8491c5d49a74ff913e6b26421c421ba39c734"
   dependencies:
     graphql-compose-mongoose: ^9.6.0
     mongoose: 5.13.4
@@ -4181,8 +4188,8 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.4.0
     "@typescript-eslint/parser": ^5.4.0
     "@typescript-eslint/visitor-keys": ^5.4.0
-    "@yourkitchen/common": "https://github.com/YourKitchen/yourkitchen-common"
-    "@yourkitchen/models": "https://github.com/YourKitchen/yourkitchen-models"
+    "@yourkitchen/models": "git+ssh://git@github.com:YourKitchen/yourkitchen-common.git"
+    babel-eslint: ^10.1.0
     babel-plugin-import: ^1.13.3
     babel-preset-env: ^1.7.0
     brotli-webpack-plugin: ^1.1.0
@@ -4190,10 +4197,14 @@ __metadata:
     eslint-config-prettier: ^8.3.0
     eslint-config-react-app: ^6.0.0
     eslint-config-standard: ^16.0.3
+    eslint-plugin-flowtype: ^8.0.3
     eslint-plugin-import: ^2.25.3
+    eslint-plugin-jsx-a11y: ^6.5.1
     eslint-plugin-node: ^11.1.0
     eslint-plugin-prettier: ^4.0.0
     eslint-plugin-promise: ^5.1.1
+    eslint-plugin-react: ^7.27.1
+    eslint-plugin-react-hooks: ^4.3.0
     eslint-utils: ^3.0.0
     file-loader: 6.2.0
     firebase: ^9.4.1
@@ -6005,15 +6016,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bson@npm:*":
-  version: 4.6.0
-  resolution: "bson@npm:4.6.0"
-  dependencies:
-    buffer: ^5.6.0
-  checksum: d38ca1b6c581d8667137c62258f22c0076575879c77f278c08282721844166afc0538d9fb4942976bb320a2e3dec3ddfae57b7ad52845bf7464bf997d3fdc5a2
-  languageName: node
-  linkType: hard
-
 "bson@npm:^1.1.4":
   version: 1.1.6
   resolution: "bson@npm:1.1.6"
@@ -6053,7 +6055,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"buffer@npm:^5.5.0, buffer@npm:^5.6.0":
+"buffer@npm:^5.5.0":
   version: 5.7.1
   resolution: "buffer@npm:5.7.1"
   dependencies:
@@ -8243,6 +8245,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-flowtype@npm:^8.0.3":
+  version: 8.0.3
+  resolution: "eslint-plugin-flowtype@npm:8.0.3"
+  dependencies:
+    lodash: ^4.17.21
+    string-natural-compare: ^3.0.1
+  peerDependencies:
+    "@babel/plugin-syntax-flow": ^7.14.5
+    "@babel/plugin-transform-react-jsx": ^7.14.9
+    eslint: ^8.1.0
+  checksum: 30e63c5357b0b5571f39afed51e59c140084f4aa53c106b1fd04f26da42b268908466daa6020b92943e71409bdaee1c67202515ed9012404d027cc92cb03cefa
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-import@npm:^2.22.1, eslint-plugin-import@npm:^2.25.3":
   version: 2.25.3
   resolution: "eslint-plugin-import@npm:2.25.3"
@@ -8281,7 +8297,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsx-a11y@npm:^6.3.1":
+"eslint-plugin-jsx-a11y@npm:^6.3.1, eslint-plugin-jsx-a11y@npm:^6.5.1":
   version: 6.5.1
   resolution: "eslint-plugin-jsx-a11y@npm:6.5.1"
   dependencies:
@@ -8343,7 +8359,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:^4.2.0":
+"eslint-plugin-react-hooks@npm:^4.2.0, eslint-plugin-react-hooks@npm:^4.3.0":
   version: 4.3.0
   resolution: "eslint-plugin-react-hooks@npm:4.3.0"
   peerDependencies:
@@ -8352,7 +8368,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:^7.21.5":
+"eslint-plugin-react@npm:^7.21.5, eslint-plugin-react@npm:^7.27.1":
   version: 7.27.1
   resolution: "eslint-plugin-react@npm:7.27.1"
   dependencies:
