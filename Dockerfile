@@ -2,11 +2,10 @@ FROM node:16-alpine as build_image
 WORKDIR /
 RUN apk add --no-cache git openssh-client
 RUN apk add g++ make python3
-COPY package.json lerna.json yarn.lock ./
+COPY package.json yarn.lock ./
 
 # Install packages
-ENV YARN_CACHE_FOLDER=/tmp/yarn_cache
-RUN --mount=type=cache,target=/tmp/yarn_cache yarn install --prefer-offline  --immutable --immutable-cache --check-cache
+RUN yarn
 
 # Fix types on models and common
 COPY . .
