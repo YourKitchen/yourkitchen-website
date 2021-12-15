@@ -1,0 +1,15 @@
+.env
+auth.env
+db.env
+private-key.json
+google-private-key.json
+YourKitchenReactNative.ipa
+YourKitchenReactNative.app.dSYM.zip
+google-keystore.keystore
+private-key.json
+
+node_modules/
+dist/
+build/
+Pods/
+derived/

@@ -55,7 +55,7 @@ const RecipePage: React.FC = () => {
       })),
     }
     if (ratings !== undefined && ratings.count > 0) {
-      recipeStructuredData['aggregateRating'] = {
+      recipeStructuredData.aggregateRating = {
         '@type': 'AggregateRating',
         ratingCount: ratings.count.toString(),
         ratingValue: recipe.rating.toString(),
@@ -69,7 +69,7 @@ const RecipePage: React.FC = () => {
   React.useEffect(() => {
     const id = match?.params.id
     if (id) {
-      //Get recipe
+      // Get recipe
       ;(async () => {
         try {
           setLoading(true)
