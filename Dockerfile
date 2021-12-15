@@ -1,6 +1,6 @@
 FROM node:16-alpine as build_image
 WORKDIR /
-RUN apk add --no-cache git
+RUN apk add --no-cache git openssh-client
 RUN apk add g++ make python3
 COPY package.json lerna.json yarn.lock ./
 
