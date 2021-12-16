@@ -15,11 +15,14 @@ COPY . .
 # Compile types
 RUN yarn build
 
+COPY ./render-server ./render-server
+
 # Second 
 FROM node:16-alpine
 
-COPY --from=build_image ./render-server .
-RUN yarn --frozen-lockfile
+COPY ./render-server/package.json .
+RUN yarn
+COPY --from=build_image ./app/render-server .
 RUN yarn typescript:deploy
 
 EXPOSE 3000
