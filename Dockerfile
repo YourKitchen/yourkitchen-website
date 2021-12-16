@@ -15,13 +15,14 @@ COPY . .
 # Compile types
 RUN yarn build
 
-COPY ./render-server ./render-server
-
 # Second 
 FROM node:16-alpine
-
-COPY ./render-server/package.json .
+WORKDIR /app
+COPY ./render-server/package.json ./
+RUN yarn set version berry
+COPY ./render-server/yarn.lock ./render-server/.yarn ./render-server/.yarnrc.yml ./
 RUN yarn
+
 COPY --from=build_image ./app/render-server .
 RUN yarn typescript:deploy
 
