@@ -3,8 +3,6 @@ const { getLoader, loaderByName } = require('@craco/craco')
 const webpack = require('webpack')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const BrotliPlugin = require('brotli-webpack-plugin')
-const BundleAnalyzerPlugin =
-  require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const packages = []
 packages.push(path.join(__dirname, '../yourkitchen-models'))
@@ -13,7 +11,7 @@ packages.push(path.join(__dirname, '../yourkitchen-common'))
 const isProd =
   process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'PROD'
 
-const devPlugins = [new BundleAnalyzerPlugin()]
+const devPlugins = []
 
 const prodPlugins = [
   new webpack.DefinePlugin({
