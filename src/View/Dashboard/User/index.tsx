@@ -54,13 +54,13 @@ export const UsersPage: React.FC = () => {
         field: 'following',
         headerName: 'Following',
         width: 125,
-        valueGetter: (params) => params.value.length,
+        valueGetter: (params) => params.row.following.length,
       },
       {
         field: 'followers',
         headerName: 'Followers',
         width: 125,
-        valueGetter: (params) => params.value.length,
+        valueGetter: (params) => params.row.followers.length,
       },
     ] as GridColDef[]
     return cols.map((col) => ({ ...col, width: col.width ? col.width : 150 }))

@@ -1,13 +1,15 @@
 FROM node:16-alpine as build_image
-WORKDIR /
-RUN apk add --no-cache git openssh-client
+WORKDIR /app
+RUN apk add --no-cache git
 RUN apk add g++ make python3
-COPY package.json yarn.lock ./
+COPY package.json .
+RUN yarn set version berry
+
+COPY .yarn/ .yarn/
 
 # Install packages
-RUN yarn
-
-# Fix types on models and common
+COPY yarn.lock .yarn .yarnrc.yml ./
+RUN yarn install
 COPY . .
 
 # Compile types

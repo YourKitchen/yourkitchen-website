@@ -28,7 +28,7 @@ const RecipePage: React.FC = () => {
     if (!recipe) {
       return ''
     }
-    const recipeStructuredData = {
+    const recipeStructuredData: any = {
       '@context': 'http://schema.org/',
       '@type': 'Recipe',
       name: recipe.name,

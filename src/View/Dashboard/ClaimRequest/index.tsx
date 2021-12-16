@@ -72,7 +72,6 @@ export const ClaimRequestsPage: React.FC = () => {
           field: 'message',
           headerName: 'Message',
           minWidth: 300,
-          valueGetter: (params) => params.value,
         },
 
         {
