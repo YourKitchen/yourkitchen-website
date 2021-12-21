@@ -1,0 +1,16 @@
+repo:
+- '*'
+
+sitemap:
+- generate-sitemap/*
+
+public:
+- public/*
+
+# Add 'source' label to any change to src files within the source dir EXCEPT for the docs sub-folder
+source:
+- src/*
+
+# Add 'frontend` label to any change to *.js files as long as the `main.js` hasn't changed
+render-server:
+- render-server/*
