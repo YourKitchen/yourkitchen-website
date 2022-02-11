@@ -1,4 +1,3 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -14,6 +13,8 @@ import { MessageContext, MessageType } from './Message/Message'
 import FileInput from '../Main/Recipe/AddRecipePage/Helpers/FileInput'
 import { api, auth } from '@yourkitchen/common'
 import PrivacyPage from '../Settings/Policies/PrivacyPage'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 const Header: React.FC = () => {
   // Data
@@ -112,7 +113,7 @@ const Header: React.FC = () => {
               className="headerIconButton"
               to="/dashboard"
             >
-              <FontAwesomeIcon icon={['fas', 'columns']} />
+              <FontAwesomeIcon icon={solid('columns')} />
             </Link>
           )}
           {authContext.authenticated && (
@@ -121,14 +122,35 @@ const Header: React.FC = () => {
               className="headerIconButton"
               to="/recipe/add"
             >
-              <FontAwesomeIcon icon={['fas', 'plus']} />
+              <FontAwesomeIcon icon={solid('plus')} />
+            </Link>
+          )}
+          {authContext.user && (
+            <Link className="loginButton" to={`/user/${authContext.user.ID}`}>
+              <img src={authContext.user.image} />
             </Link>
           )}
           <Link
             className="loginButton"
             to={authContext.authenticated ? '/signout' : '/login'}
           >
-            {authContext.authenticated ? 'Sign Out' : 'Login'}
+            {authContext.authenticated ? (
+              <div>
+                <FontAwesomeIcon
+                  style={{ marginRight: 10 }}
+                  icon={solid('right-from-bracket')}
+                />
+                Sign out
+              </div>
+            ) : (
+              <div>
+                <FontAwesomeIcon
+                  style={{ marginRight: 10 }}
+                  icon={solid('lock-open')}
+                />
+                Login
+              </div>
+            )}
           </Link>
         </div>
       </div>

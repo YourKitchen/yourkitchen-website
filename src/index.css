@@ -1,11 +1,6 @@
 body {
   margin: 0;
-  font-family: 'Cabin', sans-serif;
-}
-
-@font-face {
-  font-family: 'Cabin', sans-serif;
-  src: url('https://fonts.googleapis.com/css2?family=Cabin&display=swap');
+  font-family: 'Nunito', sans-serif;
 }
 
 code {
