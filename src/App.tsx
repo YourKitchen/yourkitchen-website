@@ -15,14 +15,14 @@ import {
   faUsers,
   faHome,
 } from '@fortawesome/free-solid-svg-icons'
-import { getAnalytics } from 'firebase/analytics'
-import { initializeApp } from 'firebase/app'
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import './App.css'
 import { MainRoutes } from './Routes'
 import Footer from './View/Footer'
 import Header from './View/Header/Header'
+import { initGA } from 'green-analytics-react'
+import { initializeApp } from '@firebase/app'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -51,7 +51,7 @@ library.add(
 const App: React.FC = () => {
   // Initialize Firebase
   const app = initializeApp(firebaseConfig)
-  getAnalytics(app)
+  initGA('aab4595a-ab94-4c99-b444-bfb5abc5adb1')
 
   return (
     <BrowserRouter>
