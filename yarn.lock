@@ -4320,7 +4320,7 @@ __metadata:
     eslint-utils: ^3.0.0
     file-loader: 6.2.0
     firebase: ^9.6.1
-    green-analytics-react: ^1.0.10
+    green-analytics-react: ^1.0.11
     husky: ^7.0.4
     lint-staged: ^12.1.2
     moment: ^2.29.1
@@ -9790,10 +9790,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"green-analytics-react@npm:^1.0.10":
-  version: 1.0.10
-  resolution: "green-analytics-react@npm:1.0.10"
-  checksum: df210a321c7a7ce7688f9b8d795453648a7830257f47d017b6a4dfdf154e0f4cdca806f24efc67ff7f9c6deea5337800a32876d7769f30bfcfddf56ac1669000
+"green-analytics-react@npm:^1.0.11":
+  version: 1.0.11
+  resolution: "green-analytics-react@npm:1.0.11"
+  checksum: 0f7f1a0208ab6a7ebc5edbfbca5115f360f8903381c3aab864bf2bd80234aad566e6f9d84e692c8a24881e11ac1d9f27d4bd9e37a37518df8ff0a1088b98922f
   languageName: node
   linkType: hard
 
