@@ -1,5 +1,3 @@
-import AdapterMoment from '@mui/lab/AdapterMoment'
-import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import { TimePicker } from '@mui/x-date-pickers/TimePicker'
 import { api, feeditemCreateOne, recipeCreateOne } from '@yourkitchen/common'
 import { FeedItem, Ingredient, Recipe } from '@yourkitchen/models'
@@ -14,6 +12,8 @@ import RecipeTypeContainer from './Containers/RecipeTypeContainer'
 // Time
 import FileInput from './Helpers/FileInput'
 import SelectIngredient from './SelectIngredient'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 
 const AddRecipePage: React.FC = () => {
   // Context
