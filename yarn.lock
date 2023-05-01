@@ -3191,9 +3191,9 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@yourkitchen/common@git+https://github.com/YourKitchen/yourkitchen-common.git":
+"@yourkitchen/common@YourKitchen/yourkitchen-common#master":
   version "1.0.2"
-  resolved "git+https://github.com/YourKitchen/yourkitchen-common.git#f15d92a2c59660cded44e56dab6ffb0d2972e33b"
+  resolved "https://codeload.github.com/YourKitchen/yourkitchen-common/tar.gz/b39a6cb682a34948dc196ca36cf4f742b3033af3"
   dependencies:
     "@yourkitchen/models" "git+https://github.com/YourKitchen/yourkitchen-models.git"
     axios "^1.4.0"
@@ -3201,9 +3201,19 @@
     gql-query-builder "^3.8.0"
     react "^17.0.2"
 
+"@yourkitchen/models@YourKitchen/yourkitchen-models#master":
+  version "1.0.5"
+  uid "2d70f8aa2080d10e92cf8a9f56590892cb2e22ad"
+  resolved "https://codeload.github.com/YourKitchen/yourkitchen-models/tar.gz/2d70f8aa2080d10e92cf8a9f56590892cb2e22ad"
+  dependencies:
+    graphql "^16.6.0"
+    graphql-compose "^9.0.10"
+    graphql-compose-mongoose "^9.8.0"
+    mongoose "^7.1.0"
+
 "@yourkitchen/models@git+https://github.com/YourKitchen/yourkitchen-models.git":
   version "1.0.5"
-  resolved "git+https://github.com/YourKitchen/yourkitchen-models.git#ff6422e2555abfb35080385388b8e6a11db89a14"
+  resolved "git+https://github.com/YourKitchen/yourkitchen-models.git#2d70f8aa2080d10e92cf8a9f56590892cb2e22ad"
   dependencies:
     graphql "^16.6.0"
     graphql-compose "^9.0.10"
