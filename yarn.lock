@@ -3197,9 +3197,9 @@
 
 "@yourkitchen/common@git+https://github.com/YourKitchen/yourkitchen-common.git":
   version "1.0.2"
-  resolved "git+https://github.com/YourKitchen/yourkitchen-common.git#167010bb2cb35adee4419d6c2154eef713e9cdaa"
+  resolved "git+https://github.com/YourKitchen/yourkitchen-common.git#35c53c509e75e4047f541d47e29c9316dd9d406d"
   dependencies:
-    "@yourkitchen/models" "https://github.com/YourKitchen/yourkitchen-models.git"
+    "@yourkitchen/models" "git+https://github.com/YourKitchen/yourkitchen-models.git"
     axios "^0.21.4"
     buffer "^6.0.3"
     gql-query-builder "^3.5.5"
@@ -3207,16 +3207,7 @@
 
 "@yourkitchen/models@git+https://github.com/YourKitchen/yourkitchen-models.git":
   version "1.0.5"
-  resolved "git+https://github.com/YourKitchen/yourkitchen-models.git#0a553d064673a63c38f409910527b9d9a23419c5"
-  dependencies:
-    graphql "^15.3.0"
-    graphql-compose "^9.0.4"
-    graphql-compose-mongoose "^9.6.0"
-    mongoose "5.13.4"
-
-"@yourkitchen/models@https://github.com/YourKitchen/yourkitchen-models.git":
-  version "1.0.5"
-  resolved "https://github.com/YourKitchen/yourkitchen-models.git#43f49ab296ccb4da5b841072b2770cb77a3dd037"
+  resolved "git+https://github.com/YourKitchen/yourkitchen-models.git#08f7fa6578f1b9aa5ad123bd1bb6f1fa0e2a2db0"
   dependencies:
     graphql "^15.3.0"
     graphql-compose "^9.0.4"

@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: ['eslint:recommended', 'prettier', 'standard'],
+  extends: ['eslint:recommended', 'prettier', 'standard', 'react-app'],
   plugins: ['prettier'],
   ignorePatterns: ['*.js', 'dist', 'node_modules', 'build'],
   parser: '@babel/eslint-parser',

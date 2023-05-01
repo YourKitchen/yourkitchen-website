@@ -37,14 +37,6 @@
     "react-router-dom": "6.1.1",
     "react-scripts": "^5.0.1"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ],
-    "rules": {
-      "react-hooks/exhaustive-deps": "off"
-    }
-  },
   "scripts": {
     "start": "craco start",
     "prebuild": "cd generate-sitemap && yarn && yarn start",

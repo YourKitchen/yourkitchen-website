@@ -1,18 +1,19 @@
-FROM node:16-alpine as build_image
+FROM node:18-alpine as build_image
 WORKDIR /app
 RUN apk add --no-cache git
 RUN apk add g++ make python3
-COPY package.json .
+RUN yarn config set network-timeout 600000
+COPY package.json yarn.lock ./
 
 # Install packages
 RUN yarn install
-COPY ./src .
+COPY . .
 
 # Compile types
 RUN yarn build
 
 # Second 
-FROM node:16-alpine
+FROM node:18-alpine
 WORKDIR /app
 COPY ./render-server/yarn.lock ./render-server/package.json ./
 RUN yarn install
