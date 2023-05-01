@@ -7,7 +7,7 @@
     "start": "ts-node server/index.ts",
     "prod:start": "node dist/index.js",
     "dev": "nodemon --watch './**/*.ts' --exec 'TS_NODE_FILES=true TS_NODE_TRANSPILE_ONLY=true ts-node' ./server/index.ts",
-    "typescript:deploy": "tsc -b",
+    "typescript:build": "tsc -b",
     "typescript:clean": "rm -f -rf ./dist && rm -f tsconfig.tsbuildinfo"
   },
   "dependencies": {
