@@ -7,6 +7,7 @@ import {
   userOwn,
 } from '@yourkitchen/common'
 import { User } from '@yourkitchen/models'
+import { setPerson } from 'green-analytics-react'
 import React from 'react'
 
 type ContextProps = {
@@ -115,6 +116,13 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   React.useEffect(() => {
     console.log('Authenticated changed:', !!initialUser)
+    if (initialUser) {
+      setPerson({
+        id: initialUser.ID,
+        name: initialUser.name,
+        email: initialUser.email,
+      })
+    }
     setUser(initialUser)
   }, [initialUser])
 
