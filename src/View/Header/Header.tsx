@@ -15,6 +15,8 @@ import { api, auth } from '@yourkitchen/common'
 import PrivacyPage from '../Settings/Policies/PrivacyPage'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
+import { Box } from '@mui/material'
+import Logo from '../../Assets/images/Logo.png'
 
 const Header: React.FC = () => {
   // Data
@@ -89,24 +91,28 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <div className="header">
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          {
-            // Not done
-            /* authContext.authenticated &&
-                <li>
-                    <Link to="/feed">Feed</Link>
-                </li>
-                */
-          }
-          <li>
-            <Link to="/explore">Explore</Link>
-          </li>
-        </ul>
-        <div className="loginWrapper">
+      <Box className="header" sx={{ display: 'flex', lineHeight: '75px' }}>
+        <Button href="/">
+          <img
+            width={50}
+            height={50}
+            style={{ margin: 25 / 2.0, borderRadius: '50vh' }}
+            alt="Company logo"
+            src={Logo}
+          />
+        </Button>
+        <Box
+          className="loginWrapper"
+          sx={{ display: 'flex', flexDirection: 'row' }}
+        >
+          <Box sx={{ display: 'flex', gap: 2, marginRight: 4 }}>
+            <Button sx={{ color: '#fff' }} href="/">
+              Home
+            </Button>
+            <Button sx={{ color: '#fff' }} href="/explore">
+              Explore
+            </Button>
+          </Box>
           {authContext.user?.role === 'Admin' && (
             <Link
               aria-label="Dashboard Button"
@@ -127,7 +133,7 @@ const Header: React.FC = () => {
           )}
           {authContext.user && (
             <Link className="loginButton" to={`/user/${authContext.user.ID}`}>
-              <img src={authContext.user.image} />
+              <img alt="User profilepicture" src={authContext.user.image} />
             </Link>
           )}
           <Link
@@ -152,8 +158,8 @@ const Header: React.FC = () => {
               </div>
             )}
           </Link>
-        </div>
-      </div>
+        </Box>
+      </Box>
       <div style={{ height: 50 }}>
         <div
           style={{ zIndex: 100 }}
