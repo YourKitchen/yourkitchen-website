@@ -3193,9 +3193,9 @@
 
 "@yourkitchen/common@YourKitchen/yourkitchen-common#master":
   version "1.0.2"
-  resolved "https://codeload.github.com/YourKitchen/yourkitchen-common/tar.gz/b39a6cb682a34948dc196ca36cf4f742b3033af3"
+  resolved "https://codeload.github.com/YourKitchen/yourkitchen-common/tar.gz/484bd55e9ef8d5ca943d7a9ee96062da100c9037"
   dependencies:
-    "@yourkitchen/models" "git+https://github.com/YourKitchen/yourkitchen-models.git"
+    "@yourkitchen/models" YourKitchen/yourkitchen-models#master
     axios "^1.4.0"
     buffer "^6.0.3"
     gql-query-builder "^3.8.0"
