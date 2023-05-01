@@ -48,10 +48,11 @@ library.add(
   faFacebookF,
 )
 
+initGA('aab4595a-ab94-4c99-b444-bfb5abc5adb1')
+
 const App: React.FC = () => {
   // Initialize Firebase
-  const app = initializeApp(firebaseConfig)
-  initGA('aab4595a-ab94-4c99-b444-bfb5abc5adb1')
+  initializeApp(firebaseConfig)
 
   return (
     <BrowserRouter>

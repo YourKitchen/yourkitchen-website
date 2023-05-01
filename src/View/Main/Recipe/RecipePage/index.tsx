@@ -5,7 +5,7 @@ import {
   toTitleCase,
 } from '@yourkitchen/common'
 import { Recipe } from '@yourkitchen/models'
-import React from 'react'
+import React, { useState } from 'react'
 import LoadingIndicator from 'react-loading-indicator'
 import { Link, useMatch } from 'react-router-dom'
 import ActionsContainer from './Containers/ActionsContainer'
@@ -21,8 +21,11 @@ const RecipePage: React.FC = () => {
   const [recipe, setRecipe] = React.useState<Recipe>()
   const [loading, setLoading] = React.useState(true)
   const [showSteps, setShowSteps] = React.useState(window.innerWidth >= 768)
-  const [ratings, setRatings] =
-    React.useState<{ count: number; min: number; max: number }>()
+  const [ratings, setRatings] = useState<{
+    count: number
+    min: number
+    max: number
+  }>()
 
   const structuredData = React.useMemo(() => {
     if (!recipe) {

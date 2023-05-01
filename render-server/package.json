@@ -12,16 +12,16 @@
   },
   "dependencies": {
     "compression": "^1.7.4",
-    "express": "^4.17.1",
-    "express-static-gzip": "^2.1.1",
+    "express": "^4.18.2",
+    "express-static-gzip": "^2.1.7",
     "rendertron-middleware": "^0.1.5"
   },
   "devDependencies": {
     "@types/compression": "^1.7.2",
-    "@types/node": "^16.11.10",
-    "nodemon": "^2.0.15",
-    "ts-node": "^10.4.0",
-    "typescript": "^4.5.2"
+    "@types/node": "^18.16.3",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
   },
   "packageManager": "yarn@3.1.1"
 }

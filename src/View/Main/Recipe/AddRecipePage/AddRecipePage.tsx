@@ -1,7 +1,6 @@
 import AdapterMoment from '@mui/lab/AdapterMoment'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
-import TimePicker from '@mui/lab/TimePicker'
-import { TextField } from '@mui/material'
+import { TimePicker } from '@mui/x-date-pickers/TimePicker'
 import { api, feeditemCreateOne, recipeCreateOne } from '@yourkitchen/common'
 import { FeedItem, Ingredient, Recipe } from '@yourkitchen/models'
 import React from 'react'
@@ -274,7 +273,6 @@ const AddRecipePage: React.FC = () => {
               )
             }
             ampm={false}
-            renderInput={(props) => <TextField {...props} />}
             onChange={(time) => {
               if (!time) {
                 return

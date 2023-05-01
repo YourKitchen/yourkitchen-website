@@ -17,6 +17,8 @@ module.exports = {
     'multiline-ternary': 'off',
     'no-use-before-define': 'off',
     indent: 'off',
+
+    'prettier/prettier': 'error',
   },
   overrides: [
     {
