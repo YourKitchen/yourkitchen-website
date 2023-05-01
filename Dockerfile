@@ -1,6 +1,7 @@
 FROM node:16-alpine as build_image
 WORKDIR /app
 RUN apk add --no-cache git
+RUN yarn cache clean
 COPY package.json yarn.lock ./
 
 # Install packages
