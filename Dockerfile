@@ -6,7 +6,7 @@ COPY package.json yarn.lock ./
 
 # Install packages
 COPY yarn.lock yarn.lock
-RUN yarn install --frozen-lockfile --network-timeout 1000000 --ignore-scripts --network-concurrency 1
+RUN yarn install --frozen-lockfile --network-timeout 1000000 --network-concurrency 1
 COPY . .
 
 # Compile types
@@ -16,7 +16,7 @@ RUN yarn build
 FROM node:16-alpine
 WORKDIR /app
 COPY ./render-server/package.json ./render-server/yarn.lock ./
-RUN yarn --frozen-lockfile --ignore-scripts
+RUN yarn --frozen-lockfile --network-timeout 1000000 --network-concurrency 1
 
 # To copy /build folder
 COPY --from=build_image ./app/render-server .
