@@ -1,24 +1,32 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "src",
+    "baseUrl": ".",
+
+    "target": "es2022",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "useUnknownInCatchVariables": false,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
     "isolatedModules": true,
-    "target": "es5",
-    "useUnknownInCatchVariables": false
+    "jsx": "preserve",
+    "incremental": true,
+    "paths": {
+      "#src/*": ["./src/*"],
+      "#assets/*": ["./src/assets/*"],
+      "#components": ["./src/components/*"],
+      "#pages": ["./pages/*"],
+      "#models": ["./src/models/*"],
+      "#contexts": ["./src/contexts/*"],
+      "#network": ["./src/network/*"]
+    }
   },
-  "exclude": ["node_modules", "render-server/build", "dist"],
-  "include": ["src"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }

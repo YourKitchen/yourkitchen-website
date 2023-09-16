@@ -1,9 +1,0 @@
-{
-  "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "jsx": "react",
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true
-  }
-}
