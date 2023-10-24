@@ -9,6 +9,7 @@
     "dev": "next dev",
     "build": "next build",
     "postbuild": "next-sitemap",
+    "postinstall": "prisma generate",
     "start": "node build/standalone/server.js",
     "lint": "biome format --write . && biome lint --apply .",
     "lint:staged": "lint-staged",
