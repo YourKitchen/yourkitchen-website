@@ -32,8 +32,6 @@ const advancedHeaders = [
 /** @type {import('next').NextConfig} */
 let config = {
   reactStrictMode: true,
-  distDir: 'build',
-  output: 'standalone',
   pageExtensions: ['ts', 'tsx'],
   transpilePackages: ['@mui/system', '@mui/material', '@mui/icons-material'],
   modularizeImports: {
