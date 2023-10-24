@@ -1,4 +1,3 @@
-import Logo from '#src/assets/Logo-192x192.png'
 import {
   Description,
   Logout,
@@ -18,6 +17,7 @@ import {
   Typography,
 } from '@mui/material'
 import useTheme from '@mui/system/useTheme'
+import { useSession } from 'next-auth/react'
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import { useRouter as useNavigation } from 'next/navigation'
@@ -29,12 +29,18 @@ import React, {
   useMemo,
   useState,
 } from 'react'
+import Logo from '#assets/Logo-192x192.png'
 import Link from '../Link'
 import LanguageSelect from './LanguageSelect'
-import { useUser } from '@auth0/nextjs-auth0/client'
+
+interface Page {
+  label: string
+  href?: string
+  func?: () => void
+}
 
 export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { user, isLoading, error } = useUser()
+  const { data: session, status } = useSession()
   const theme = useTheme()
   const { t } = useTranslation('header')
 
@@ -42,25 +48,37 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   const navigation = useNavigation()
   const [scrollY, setScrollY] = useState(0)
 
-  const pages: { name: string; path: string }[] = useMemo(
+  const pages: Page[] = useMemo(
     () => [
       {
-        name: t('home'),
-        path: '/',
+        label: t('home'),
+        href: '/',
       },
       {
-        name: t('about'),
-        path: '/about',
+        label: t('about'),
+        href: '/about',
       },
       {
-        name: t('recipes'),
-        path: '/recipes',
+        label: t('recipes'),
+        href: '/recipes',
       },
     ],
-    [router.pathname],
+    [t],
   )
 
+  const settings: Page[] =
+    status === 'authenticated'
+      ? [
+          { label: t('settings'), href: '/settings' },
+          {
+            label: t('logout'),
+            href: '/auth/signout',
+          },
+        ]
+      : [{ label: t('get_started'), href: '/auth/signin' }]
+
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null)
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null)
 
@@ -68,7 +86,6 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
 
   const onScroll = useCallback(() => {
-    console.log(window.scrollY)
     setScrollY(window.scrollY)
   }, [])
 
@@ -79,15 +96,21 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
     return () => {
       window.removeEventListener('scroll', onScroll)
     }
-  }, [])
+  }, [onScroll])
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>): void => {
+  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget)
   }
+  const handleToggleUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser((prev) => (prev ? null : event.currentTarget))
+  }
 
-  const handleCloseNavMenu = (): void => {
+  const handleCloseNavMenu = () => {
     setAnchorElNav(null)
-    handleMobileMenuClose()
+  }
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null)
   }
 
   const handleMobileMenuClose = (): void => {
@@ -98,8 +121,19 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
     setMobileMoreAnchorEl(event.currentTarget)
   }
 
-  const logout = (): void => {
-    navigation.replace('/api/auth/logout')
+  const onPageClick = (page: Page) => {
+    if (page.func) {
+      page.func()
+    } else if (page.href) {
+      router.push(page.href)
+    } else {
+      throw new Error('Page must have either href or func')
+    }
+
+    // Close all menus
+    handleCloseUserMenu()
+    handleCloseNavMenu()
+    handleMobileMenuClose()
   }
 
   const mobileMenuId = 'primary-menu-mobile'
@@ -119,17 +153,14 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      {!user ? (
-        <MenuItem {...{ component: 'a', href: '/api/auth/login' }}>
-          <Settings />
-          <p>{t('sign_in')}</p>
+      {settings.map((settingsPage) => (
+        <MenuItem
+          key={settingsPage.label}
+          onClick={() => onPageClick(settingsPage)}
+        >
+          {settingsPage.label}
         </MenuItem>
-      ) : (
-        <MenuItem {...{ component: 'a', href: '/api/auth/logout' }}>
-          <Logout />
-          <p>{t('logout')}</p>
-        </MenuItem>
-      )}
+      ))}
     </Menu>
   )
 
@@ -208,11 +239,8 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem
-                  key={page.name}
-                  {...{ component: 'a', href: page.path }}
-                >
-                  <Typography textAlign="center">{page.name}</Typography>
+                <MenuItem key={page.label} onClick={() => onPageClick(page)}>
+                  <Typography textAlign="center">{page.label}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -237,30 +265,35 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
-                key={page.name}
-                href={page.path}
+                key={page.label}
+                href={page.href}
                 sx={{
-                  my: 2,
                   mx: 1,
                   textAlign: 'center',
-                  color:
-                    router.pathname === page.path
-                      ? 'white'
-                      : theme.palette.text.primary,
-                  backgroundColor:
-                    router.pathname === page.path
-                      ? theme.palette.primary.main
-                      : '',
                   display: 'block',
+                  position: 'relative',
+                  color: 'white',
                   '&:hover': {
+                    backgroundColor: 'transparent',
+                    '&:after': {
+                      width: '80%',
+                    },
+                  },
+                  '&:after': {
+                    transition: 'width 0.2s ease-in-out',
+                    position: 'absolute',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    display: 'block',
+                    content: '""',
+                    height: '4px',
+                    borderRadius: '2px',
                     backgroundColor: (theme) => theme.palette.primary.main,
-                    boxShadow:
-                      '0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)',
-                    color: 'white',
+                    width: router.pathname === page.href ? '100%' : '0%',
                   },
                 }}
               >
-                {page.name}
+                {page.label}
               </Button>
             ))}
           </Box>
@@ -273,36 +306,54 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
             }}
           >
             <LanguageSelect />
-            {!user ? (
-              <Button
-                key={'signinButton'}
-                href={'/app'}
-                variant="contained"
-                sx={{
-                  backgroundColor: theme.palette.primary.main,
-                  color: 'white',
-                  display: 'block',
-                  '&:hover': {
-                    backgroundColor: (theme) => theme.palette.primary.main,
-                    boxShadow:
-                      '0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)',
-                    color: 'white',
-                  },
-                }}
-              >
-                {t('sign_in')}
-              </Button>
-            ) : (
-              <Tooltip title={t('logout')}>
+            {session ? (
+              <>
                 <IconButton
-                  onClick={logout}
-                  size="small"
-                  aria-label="Sign out of your account"
-                  color="inherit"
+                  onClick={handleToggleUserMenu}
+                  sx={{
+                    width: '40px',
+                    height: '40px',
+                    p: 0,
+                    borderRadius: '20px',
+                  }}
                 >
-                  <Logout />
+                  <Image
+                    referrerPolicy="no-referrer"
+                    width={40}
+                    height={40}
+                    style={{ borderRadius: '20px' }}
+                    alt={session.user.name || ''}
+                    src={session.user.image || ''}
+                  />
                 </IconButton>
-              </Tooltip>
+                <Menu
+                  id="user-menu"
+                  anchorEl={anchorElUser}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem
+                      key={setting.label}
+                      onClick={() => onPageClick(setting)}
+                    >
+                      <Typography textAlign="center">
+                        {setting.label}
+                      </Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="contained"
+                  onClick={() => onPageClick(settings[0])}
+                  sx={{ display: 'block' }}
+                >
+                  {settings[0].label}
+                </Button>
+              </>
             )}
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>

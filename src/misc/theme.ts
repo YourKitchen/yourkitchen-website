@@ -19,6 +19,10 @@ const defaultThemeOptions: ThemeOptions = {
     error: {
       main: red.A400,
     },
+    background: {
+      default: '#ededed',
+      paper: '#dddddd',
+    },
   },
   components: {
     MuiCssBaseline: {
@@ -85,6 +89,10 @@ export const darkTheme = createTheme({
     },
     secondary: {
       main: '#3d80f3',
+    },
+    background: {
+      default: '#121212',
+      paper: '#222222',
     },
   },
   components: {

@@ -50,7 +50,7 @@ let config = {
   ],
   i18n,
   images: {
-    domains: ['flagcdn.com'],
+    domains: ['flagcdn.com', 'play.google.com', 'lh3.googleusercontent.com'],
   },
 }
 

@@ -6,8 +6,6 @@ The website can be found at: <https://yourkitchen.io>
 
 The website is built on the following technologies:
 
-- [React](https://reactjs.org)
-- [MUI](https://mui.com/) (UI)
-- [Firebase](https://firebase.com) (Analytics)
-- [ExpressJS](https://expressjs.com/) (Dynamic Rendering)
-- [Rendertron](https://github.com/GoogleChrome/rendertron) (Dynamic Rendering, Web Crawling)
+- [Nextjs](https://nextjs.org/)
+- [MUI](https://mui.com/) (UI Library)
+- [Firebase](https://green-analytics.com/) (Analytics)

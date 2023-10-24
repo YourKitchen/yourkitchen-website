@@ -6,7 +6,180 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider  = "postgresql"
+  url       = env("DATABASE_PRISMA_URL") // uses connection pooling
+  directUrl = env("DATABASE_URL_NON_POOLING") // uses a direct connection
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model User {
+  id             String   @id @default(uuid())
+  allergenes     String[]
+  defaultPersons Int      @default(4)
+  name           String?
+  email          String   @unique
+  image          String?
+
+  // Auth
+  emailVerified DateTime?
+  accounts      Account[]
+  sessions      Session[]
+
+  privacySettings      Json       @default("{}")
+  notificationSettings Json       @default("{}")
+  followers            Follows[]  @relation("following")
+  following            Follows[]  @relation("follower")
+  recipes              Recipe[]   @relation("recipeOwner")
+  feeditems            FeedItem[]
+  ratings              Rating[]
+  role                 String?
+
+  created DateTime @default(now())
+}
+
+model Follows {
+  follower    User   @relation("follower", fields: [followerId], references: [id])
+  followerId  String
+  following   User   @relation("following", fields: [followingId], references: [id])
+  followingId String
+
+  @@id([followerId, followingId])
+}
+
+model Recipe {
+  id          String     @id @default(uuid())
+  owner       User       @relation("recipeOwner", fields: [ownerId], references: [id])
+  ownerId     String
+  name        String
+  description String
+  cuisine     String
+  recipeType  RecipeType
+  mealType    MealType
+
+  preparationTime DateTime
+  image           String
+  ingredients     RecipeIngredients[]
+  steps           String[]
+  ratings         Rating[]
+  persons         Int                 @default(4)
+
+  feedItems FeedItem[]
+
+  updated DateTime @updatedAt
+  created DateTime @default(now())
+}
+
+enum RecipeType {
+  TEST
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+}
+
+model RecipeIngredients {
+  recipe   Recipe @relation(fields: [recipeId], references: [id])
+  recipeId String
+
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [name])
+  ingredientId String
+
+  @@id([recipeId, ingredientId])
+}
+
+// Done
+model Ingredient {
+  name String @id
+
+  recipes      RecipeIngredients[]
+  count        Int
+  unit         String?
+  amount       Int?
+  allergenType AllergenType[]      @default([])
+  type         String
+}
+
+// Done
+enum AllergenType {
+  NUT
+  PEANUTS
+  LACTOSE
+  EGGS
+  FISH
+  SHELLFISH
+  SOY
+  WHEAT
+  GLUTEN
+  SESAME
+  MUSTARD
+  SULFITES
+  CELERY
+  LUPIN
+  MOLLUSKUS
+}
+
+// Done
+model Rating {
+  id      String  @id @default(uuid())
+  score   Int
+  message String?
+  owner   User    @relation(fields: [ownerId], references: [id])
+  ownerId String
+
+  // Optional relations, depending on which one it concerns. One will be defined
+  recipe     Recipe?   @relation(fields: [recipeId], references: [id])
+  recipeId   String?
+  feedItem   FeedItem? @relation(fields: [feedItemId], references: [id])
+  feedItemId String?
+}
+
+// Done
+model FeedItem {
+  id       String   @id @default(uuid())
+  owner    User     @relation(fields: [ownerId], references: [id])
+  ownerId  String
+  recipe   Recipe   @relation(fields: [recipeId], references: [id])
+  recipeId String
+  ratings  Rating[]
+
+  description String
+
+  updated DateTime @updatedAt
+  created DateTime @default(now())
 }
