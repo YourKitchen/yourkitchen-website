@@ -1,5 +1,4 @@
 import React from 'react'
-import './Policy.css'
 
 const PrivacyPage: React.FC = () => {
   return (

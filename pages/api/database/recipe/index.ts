@@ -1,7 +1,9 @@
-import prisma from '#lib/prisma'
 import { Recipe } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { getServerSession } from 'next-auth'
 import { ApiError } from 'next/dist/server/api-utils'
+import { authOptions } from '#pages/api/auth/[...nextauth]'
+import prisma from '../../_base'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
@@ -44,20 +46,51 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   })
 }
 
-const handlePOST = withApiAuthRequired(
-  async (req: NextApiRequest, res: NextApiResponse) => {
-    const recipe = req.body as Omit<Recipe, 'id'>
+const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
+  const recipe = req.body as Omit<Recipe, 'id'>
 
-    const response = await prisma.recipe.create({
-      data: recipe,
-    })
+  const session = await getServerSession(req, res, authOptions)
 
-    return res.json({
-      ok: true,
-      message: 'Succesfully created the recipe',
-      data: response,
-    })
-  },
-)
+  if (!session) {
+    res
+      .status(401)
+      .json({ ok: false, message: 'You need to be authenticated to do this' })
+    return
+  }
+
+  const {
+    cuisine,
+    description,
+    image,
+    mealType,
+    name,
+    persons,
+    preparationTime,
+    recipeType,
+    steps,
+  } = req.body as Omit<Recipe, 'id'>
+
+  const response = await prisma.recipe.create({
+    data: {
+      cuisine,
+      description,
+      image,
+      mealType,
+      name,
+      persons,
+      preparationTime,
+      recipeType,
+      steps,
+      ownerId: session.user.id,
+      created: new Date(),
+    },
+  })
+
+  return res.json({
+    ok: true,
+    message: 'Succesfully created the recipe',
+    data: response,
+  })
+}
 
 export default handler

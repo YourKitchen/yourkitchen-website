@@ -1,5 +1,4 @@
 import React from 'react'
-import './Policy.css'
 
 const CookiesPage: React.FC = () => {
   return (

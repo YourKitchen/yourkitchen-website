@@ -22,8 +22,6 @@ import useSWR from 'swr'
 import AccountBox from '#components/Account/AccountBox'
 import AccountTabPanel from '#components/Account/AccountTabPanel'
 import AccountUpdateBox from '#components/Account/AccountUpdateBox'
-import TeamTabPanel from '#components/Account/Panels/TeamTabPanel'
-import Websites from '#components/Account/Panels/WebsiteTabPanel'
 import { api } from '#network/index'
 
 export enum SettingsTab {
