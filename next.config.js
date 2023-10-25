@@ -31,10 +31,12 @@ const advancedHeaders = [
 
 /** @type {import('next').NextConfig} */
 let config = {
-  reactStrictMode: true,
   pageExtensions: ['ts', 'tsx'],
   transpilePackages: ['@mui/system', '@mui/material', '@mui/icons-material'],
   modularizeImports: {
+    '@mui/material/?(((\\w*)?/?)*)': {
+      transform: '@mui/material/{{ matches.[1] }}/{{member}}',
+    },
     '@mui/icons-material/?(((\\w*)?/?)*)': {
       transform: '@mui/icons-material/{{ matches.[1] }}/{{member}}',
     },

@@ -48,7 +48,7 @@ model VerificationToken {
 
 model User {
   id             String   @id @default(uuid())
-  allergenes     String[]
+  allergenes     AllergenType[]
   defaultPersons Int      @default(4)
   name           String?
   email          String   @unique

@@ -17,7 +17,8 @@ import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { NextSeo } from 'next-seo'
 import Image from 'next/image'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import useSWR from 'swr'
 import AccountBox from '#components/Account/AccountBox'
 import AccountTabPanel from '#components/Account/AccountTabPanel'
@@ -27,8 +28,6 @@ import { api } from '#network/index'
 export enum SettingsTab {
   General = 0,
   Privacy = 1,
-  Websites = 2,
-  Team = 3,
 }
 
 interface PageInfo {
@@ -71,7 +70,11 @@ const UserPage: FC = () => {
   }
 
   const updateUser = async (user: Partial<Omit<User, 'id'>>) => {
-    const response = await update(user)
+    toast.promise(update(user), {
+      loading: `${t('updating')} ${t('user')}..`,
+      error: (err) => err.message || err,
+      success: `${t('succesfully_updated')} ${t('user')}`,
+    })
   }
 
   return (
@@ -116,18 +119,28 @@ const UserPage: FC = () => {
             <Tab key={pageInfo.tab} label={pageInfo.title} />
           ))}
         </Tabs>
-        <AccountTabPanel value={value} index={SettingsTab.General}>
+        <AccountTabPanel
+          key="general"
+          value={value}
+          index={SettingsTab.General}
+        >
           <AccountUpdateBox
             t={t}
+            key="personal-information"
             label="Personal Information"
-            object={session.user}
+            defaultObject={session.user}
             cells={[
-              { field: 'name', label: 'Name' },
-              { field: 'email', label: 'Email', disabled: true },
+              { field: 'name', label: t('name') },
+              { field: 'email', label: t('email'), disabled: true },
               {
                 field: 'defaultPersons',
                 type: 'number',
-                label: 'Default Persons',
+                label: t('default_persons'),
+              },
+              {
+                field: 'allergenes',
+                type: 'allergenes',
+                label: t('allergenes'),
               },
             ]}
             onSave={updateUser}

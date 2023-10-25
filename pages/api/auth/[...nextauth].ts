@@ -1,5 +1,6 @@
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { PrismaClient, User } from '@prisma/client'
+import { JsonValue } from '@prisma/client/runtime/library'
 import NextAuth, { AuthOptions } from 'next-auth'
 import AppleProvider from 'next-auth/providers/apple'
 import EmailProvider from 'next-auth/providers/email'
@@ -39,7 +40,37 @@ export const authOptions: AuthOptions = {
   callbacks: {
     session: async ({ session, token, trigger, newSession }) => {
       if (trigger === 'update') {
-        console.log('new session', trigger, newSession)
+        // If the trigger is update, update the user in prisma and return that as the session
+        // Extract the valid keys that can be updated. (To prevent faulty request due to spreading)
+        const {
+          allergenes,
+          defaultPersons,
+          name,
+          image,
+          privacySettings,
+          notificationSettings,
+        } = newSession as Partial<User>
+        const updateResponse = await prisma.user.update({
+          data: {
+            allergenes,
+            defaultPersons,
+            name,
+            image,
+            privacySettings: {
+              toJSON: privacySettings,
+            },
+            notificationSettings: {
+              toJSON: notificationSettings,
+            },
+          },
+          where: {
+            email: session.user.email,
+          },
+        })
+
+        session.user = updateResponse
+
+        return session
       }
       const email = token?.email || session?.user?.email
       if (email) {
@@ -53,10 +84,6 @@ export const authOptions: AuthOptions = {
       return session
     },
     jwt: async ({ token, user, session, trigger }) => {
-      if (trigger === 'update') {
-        // Update the serverside user.
-        console.log('jwt', trigger, session)
-      }
       if (user) {
         token.accessToken = user.id
         token.user = user
