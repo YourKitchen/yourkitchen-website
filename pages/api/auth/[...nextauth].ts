@@ -1,7 +1,7 @@
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { PrismaClient, User } from '@prisma/client'
 import { JsonValue } from '@prisma/client/runtime/library'
-import NextAuth, { AuthOptions } from 'next-auth'
+import NextAuth, { AuthOptions, Session } from 'next-auth'
 import AppleProvider from 'next-auth/providers/apple'
 import EmailProvider from 'next-auth/providers/email'
 import FacebookProvider from 'next-auth/providers/facebook'
@@ -50,7 +50,7 @@ export const authOptions: AuthOptions = {
           privacySettings,
           notificationSettings,
         } = newSession as Partial<User>
-        const updateResponse = await prisma.user.update({
+        const user = await prisma.user.update({
           data: {
             allergenes,
             defaultPersons,
@@ -66,24 +66,78 @@ export const authOptions: AuthOptions = {
           where: {
             email: session.user.email,
           },
+          include: {
+            _count: {
+              select: {
+                followers: true,
+                following: true,
+              },
+            },
+          },
         })
 
-        session.user = updateResponse
+        if (user) {
+          // If we found the user, we also need the score for the user (Sum of ratings)
+          const authUser: Partial<Session['user']> = user
+          // The authUser is partial, because it needs to be formatted correctly.
+          // We also need to get the score of the user.
+          const scoreResponse = await prisma.rating.aggregate({
+            where: {
+              recipe: {
+                ownerId: user.id,
+              },
+            },
+            _sum: {
+              score: true,
+            },
+          })
+          authUser.followerCount = user._count.followers
+          authUser.followingCount = user._count.following
+          authUser.score = scoreResponse._sum.score ?? 0
+
+          session.user = authUser as Session['user']
+        }
 
         return session
       }
       const email = token?.email || session?.user?.email
       if (email) {
-        const user: User | null = await prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
           where: { email },
+          include: {
+            _count: {
+              select: {
+                followers: true,
+                following: true,
+              },
+            },
+          },
         })
         if (user) {
-          session.user = user
+          // If we found the user, we also need the score for the user (Sum of ratings)
+          const authUser: Partial<Session['user']> = user
+          // The authUser is partial, because it needs to be formatted correctly.
+          // We also need to get the score of the user.
+          const scoreResponse = await prisma.rating.aggregate({
+            where: {
+              recipe: {
+                ownerId: user.id,
+              },
+            },
+            _sum: {
+              score: true,
+            },
+          })
+          authUser.followerCount = user._count.followers
+          authUser.followingCount = user._count.following
+          authUser.score = scoreResponse._sum.score ?? 0
+
+          session.user = authUser as Session['user']
         }
       }
       return session
     },
-    jwt: async ({ token, user, session, trigger }) => {
+    jwt: async ({ token, user }) => {
       if (user) {
         token.accessToken = user.id
         token.user = user

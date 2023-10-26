@@ -57,7 +57,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const {
-    cuisine,
+    cuisineName,
     description,
     image,
     mealType,
@@ -70,7 +70,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const response = await prisma.recipe.create({
     data: {
-      cuisine,
+      cuisineName,
       description,
       image,
       mealType,

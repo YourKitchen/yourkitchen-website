@@ -16,12 +16,13 @@ import { TFunction } from 'next-i18next'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
+import { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
 
 interface CuisineAutocompleteProps {
   t: TFunction
   defaultCuisine: Cuisine['name']
-  onChange: (cuisine: Cuisine) => void
+  onChange: (cuisine: Cuisine | undefined) => void
 }
 
 const CuisineAutocomplete: FC<CuisineAutocompleteProps> = ({
@@ -38,11 +39,11 @@ const CuisineAutocomplete: FC<CuisineAutocompleteProps> = ({
   const [createName, setCreateName] = useState('')
 
   // Data
-  const { data, isValidating: cuisineLoading } = useSWR<Cuisine[]>(
+  const { data, isValidating: cuisineLoading } = useSWR<YKResponse<Cuisine[]>>(
     value.length > 2 ? { url: 'cuisine/search', searchTerm: value } : null,
   )
 
-  const setValueDelayed = useMemo(() => debounce(setValue, 1000), [])
+  const setValueDelayed = useMemo(() => debounce(setValue, 250), [])
 
   // Create Dialog
   const handleCloseCreateDialog = () => {
@@ -71,8 +72,6 @@ const CuisineAutocomplete: FC<CuisineAutocompleteProps> = ({
     )
   }
 
-  // TODO: IMPLEMENT SCORE CHECK
-
   return (
     <>
       <Dialog open={openCreateDialog} onClose={handleCloseCreateDialog}>
@@ -97,19 +96,17 @@ const CuisineAutocomplete: FC<CuisineAutocompleteProps> = ({
         onInputChange={(_e, newValue) => setValueDelayed(newValue)}
         loading={cuisineLoading}
         onChange={(_e, newValue) => {
-          const cuisine = data?.find((cuisine) => cuisine.name === newValue)
-          if (!cuisine) {
-            toast.error('Unable to find cuisine')
-            return
-          }
+          const cuisine = data?.data.find(
+            (cuisine) => cuisine.name === newValue,
+          )
           onChange(cuisine)
         }}
-        options={data?.map((cuisine) => cuisine.name) ?? []}
+        options={data?.data.map((cuisine) => cuisine.name) ?? []}
         renderInput={(params: AutocompleteRenderInputParams) => (
           <TextField {...params} label={t('cuisine')} />
         )}
         noOptionsText={
-          session?.user.role === 'ADMIN' ? (
+          session?.user.role === 'ADMIN' || (session?.user.score ?? 0) >= 25 ? (
             <Button
               color="primary"
               fullWidth

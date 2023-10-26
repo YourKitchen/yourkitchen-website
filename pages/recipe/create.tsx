@@ -93,7 +93,7 @@ const CreateRecipePage: FC = () => {
           t={t}
           defaultCuisine={recipe.cuisineName}
           onChange={(cuisine) =>
-            setRecipe((prev) => ({ ...prev, cuisineName: cuisine.name }))
+            setRecipe((prev) => ({ ...prev, cuisineName: cuisine?.name ?? '' }))
           }
         />
       </Box>
