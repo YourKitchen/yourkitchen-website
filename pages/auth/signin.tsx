@@ -33,7 +33,7 @@ export const SigninPage: FC = () => {
   const searchParams = useSearchParams()
 
   if (status === 'authenticated') {
-    navigation.push('/')
+    navigation.push(searchParams.get('callbackUrl') || '/')
   }
 
   useEffect(() => {

@@ -15,6 +15,7 @@ import { Footer } from '#components/Footer'
 import { Header } from '#components/Header'
 import createEmotionCache from '#misc/createEmotionCache'
 import theme, { darkTheme } from '#misc/theme'
+import { api } from '#network/index'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -72,6 +73,19 @@ const MyApp: FC<MyAppProps> = (props) => {
 
           <SWRConfig
             value={{
+              fetcher: async (args) => {
+                if (typeof args === 'string') {
+                  const response = await api.get(`/database/${args}`)
+                  return response.data
+                } else {
+                  const { url, ...rest } = args
+
+                  const response = await api.get(`/database/${url}`, {
+                    params: rest,
+                  })
+                  return response.data
+                }
+              },
               errorRetryCount: 1, // only retry once, then throw error
               onErrorRetry: (error, key: string) => {
                 const matches = /#url:"(\w*)"/g.exec(key)

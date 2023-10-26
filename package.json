@@ -27,7 +27,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.15",
     "@mui/material": "^5.14.15",
-    "@prisma/client": "^5.5.0",
+    "@prisma/client": "^5.5.2",
     "accept-language": "^3.0.18",
     "axios": "^1.5.1",
     "green-analytics-js": "^1.0.12",
@@ -57,7 +57,7 @@
     "husky": "^8.0.3",
     "lint-staged": "^15.0.2",
     "next-bundle-analyzer": "^0.6.7",
-    "prisma": "^5.5.0",
+    "prisma": "^5.5.2",
     "typescript": "^5.2.2"
   }
 }

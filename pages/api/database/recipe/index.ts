@@ -47,8 +47,6 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
-  const recipe = req.body as Omit<Recipe, 'id'>
-
   const session = await getServerSession(req, res, authOptions)
 
   if (!session) {

@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -47,11 +48,11 @@ model VerificationToken {
 }
 
 model User {
-  id             String   @id @default(uuid())
+  id             String         @id @default(uuid())
   allergenes     AllergenType[]
-  defaultPersons Int      @default(4)
+  defaultPersons Int            @default(4)
   name           String?
-  email          String   @unique
+  email          String         @unique
   image          String?
 
   // Auth
@@ -86,7 +87,10 @@ model Recipe {
   ownerId     String
   name        String
   description String
-  cuisine     String
+  // Cuisine is referenced because it allows them to be used like tags
+  cuisine     Cuisine    @relation(fields: [cuisineName], references: [name])
+  cuisineName String
+
   recipeType  RecipeType
   mealType    MealType
 
@@ -101,6 +105,12 @@ model Recipe {
 
   updated DateTime @updatedAt
   created DateTime @default(now())
+}
+
+model Cuisine {
+  name String @id
+
+  recipes Recipe[]
 }
 
 enum RecipeType {

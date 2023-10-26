@@ -1,4 +1,5 @@
 import {
+  Add,
   Description,
   Logout,
   Menu as MenuIcon,
@@ -30,8 +31,8 @@ import React, {
   useState,
 } from 'react'
 import Logo from '#assets/Logo-192x192.png'
+import LanguageSelect from '../Footer/LanguageSelect'
 import Link from '../Link'
-import LanguageSelect from './LanguageSelect'
 
 interface Page {
   label: string
@@ -305,7 +306,18 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
               display: { xs: 'none', md: 'flex' },
             }}
           >
-            <LanguageSelect />
+            <Button
+              sx={{ display: 'flex', gap: 1 }}
+              variant="contained"
+              href={
+                session
+                  ? '/recipe/create'
+                  : '/auth/signin?callbackUrl=/recipe/create'
+              }
+            >
+              <Add />
+              {t('create')}
+            </Button>
             {session ? (
               <>
                 <IconButton

@@ -1,9 +1,10 @@
-// src/components/Footer.tsx
-import yourkitchenLogo from '#assets/Logo-192x192.png'
 import { Box, Link, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import { FC, ReactElement } from 'react'
+// src/components/Footer.tsx
+import yourkitchenLogo from '#assets/Logo-192x192.png'
+import LanguageSelect from './LanguageSelect'
 
 export const Footer: FC = (): ReactElement => {
   const { t } = useTranslation('footer')
@@ -49,6 +50,7 @@ export const Footer: FC = (): ReactElement => {
             alignItems: 'center',
           }}
         >
+          <LanguageSelect />
           <Link href="/cookies" variant="body2">
             {t('cookie_policy')}
           </Link>
