@@ -4,6 +4,7 @@ import { Ingredient, MealType, Recipe, RecipeType } from '@prisma/client'
 import { GetStaticProps } from 'next'
 import { useSession } from 'next-auth/react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import React, { FC, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -57,6 +58,10 @@ const CreateRecipePage: FC = () => {
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <NextSeo
+        title="Create Recipe"
+        description="This page allows the user to create a new recipe to add to their recipe collection. This recipe can also be public."
+      />
       <Box
         sx={{
           width: {
@@ -134,6 +139,7 @@ const CreateRecipePage: FC = () => {
             }))
           }}
         />
+        N
       </Box>
     </Box>
   )

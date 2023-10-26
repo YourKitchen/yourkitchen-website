@@ -64,7 +64,7 @@ const MyApp: FC<MyAppProps> = (props) => {
             href: '/manifest.json',
           },
         ]}
-        titleTemplate="%s | Nom-Nom"
+        titleTemplate="%s | YourKitchen"
       />
       <ThemeProvider theme={selectedTheme}>
         <SessionProvider session={pageProps.session}>
