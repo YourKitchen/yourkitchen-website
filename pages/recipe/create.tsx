@@ -1,6 +1,6 @@
-import { Autocomplete, Box, Button, TextField, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { debounce } from '@mui/material/utils'
-import { Ingredient, Recipe } from '@prisma/client'
+import { Ingredient, MealType, Recipe, RecipeType } from '@prisma/client'
 import { GetStaticProps } from 'next'
 import { useSession } from 'next-auth/react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
@@ -8,8 +8,12 @@ import { useRouter } from 'next/router'
 import React, { FC, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { v4 } from 'uuid'
+import YKTextField from '#components/General/YKTextField'
 import Link from '#components/Link'
 import CuisineAutocomplete from '#components/Recipe/CuisineAutocomplete'
+import MealTypeSelect from '#components/Recipe/MealTypeSelect'
+import PreparationTimePicker from '#components/Recipe/PreparationTimePicker'
+import RecipeTypeSelect from '#components/Recipe/RecipeTypeSelect'
 
 const defaultRecipe: Recipe & { ingredients: Ingredient[] } = {
   id: v4(),
@@ -19,7 +23,7 @@ const defaultRecipe: Recipe & { ingredients: Ingredient[] } = {
   mealType: 'DINNER',
   persons: 4,
   preparationTime: new Date(0, 0, 0, 1, 0, 0, 0),
-  recipeType: 'TEST',
+  recipeType: 'MAIN',
 
   steps: [],
   ingredients: [],
@@ -66,7 +70,7 @@ const CreateRecipePage: FC = () => {
         }}
       >
         <Typography variant="h3">{t('create_recipe')}</Typography>
-        <TextField
+        <YKTextField
           value={recipe.name}
           onChange={(e) => {
             setRecipe((prev) => ({
@@ -74,10 +78,9 @@ const CreateRecipePage: FC = () => {
               name: e.target.value,
             }))
           }}
-          fullWidth
           placeholder={t('name')}
         />
-        <TextField
+        <YKTextField
           value={recipe.description}
           multiline
           onChange={(e) => {
@@ -86,7 +89,6 @@ const CreateRecipePage: FC = () => {
               description: e.target.value,
             }))
           }}
-          fullWidth
           placeholder={t('description')}
         />
         <CuisineAutocomplete
@@ -95,6 +97,42 @@ const CreateRecipePage: FC = () => {
           onChange={(cuisine) =>
             setRecipe((prev) => ({ ...prev, cuisineName: cuisine?.name ?? '' }))
           }
+        />
+        <MealTypeSelect
+          t={t}
+          value={recipe.mealType}
+          onChange={(mealType) => setRecipe((prev) => ({ ...prev, mealType }))}
+        />
+        <YKTextField
+          value={recipe.persons}
+          onChange={(e) => {
+            setRecipe((prev) => ({
+              ...prev,
+              persons: Number.parseInt(e.target.value),
+            }))
+          }}
+          type="number"
+          placeholder={t('persons')}
+        />
+        <RecipeTypeSelect
+          t={t}
+          value={recipe.recipeType}
+          onChange={(recipeType) => {
+            setRecipe((prev) => ({
+              ...prev,
+              recipeType,
+            }))
+          }}
+        />
+        <PreparationTimePicker
+          t={t}
+          value={recipe.preparationTime}
+          onChange={(preparationTime) => {
+            setRecipe((prev) => ({
+              ...prev,
+              preparationTime,
+            }))
+          }}
         />
       </Box>
     </Box>

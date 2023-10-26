@@ -114,7 +114,8 @@ model Cuisine {
 }
 
 enum RecipeType {
-  TEST
+  MAIN
+  SIDE
 }
 
 enum MealType {
