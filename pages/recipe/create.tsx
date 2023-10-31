@@ -139,7 +139,6 @@ const CreateRecipePage: FC = () => {
             }))
           }}
         />
-        N
       </Box>
     </Box>
   )

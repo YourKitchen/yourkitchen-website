@@ -29,6 +29,17 @@ const advancedHeaders = [
   },
 ]
 
+const apiHeaders = [
+  { key: 'Access-Control-Allow-Credentials', value: 'true' },
+  { key: 'Access-Control-Allow-Origin', value: '*' }, // replace this your actual origin
+  { key: 'Access-Control-Allow-Methods', value: 'GET,DELETE,PATCH,POST,PUT' },
+  {
+    key: 'Access-Control-Allow-Headers',
+    value:
+      'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
+  },
+]
+
 /** @type {import('next').NextConfig} */
 let config = {
   pageExtensions: ['ts', 'tsx'],
@@ -47,10 +58,20 @@ let config = {
       source: '/:path*',
       headers: advancedHeaders,
     },
+    {
+      source: '/api/:path*',
+      headers: apiHeaders,
+    },
   ],
   i18n,
   images: {
-    domains: ['flagcdn.com', 'play.google.com', 'lh3.googleusercontent.com'],
+    remotePatterns: [
+      {
+        hostname: 'flagcdn.com',
+      },
+      { hostname: 'play.google.com' },
+      { hostname: 'lh3.googleusercontent.com' },
+    ],
   },
 }
 

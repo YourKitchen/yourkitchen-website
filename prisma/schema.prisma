@@ -95,9 +95,9 @@ model Recipe {
   mealType    MealType
 
   preparationTime DateTime
-  image           String
-  ingredients     RecipeIngredients[]
-  steps           String[]
+  image           String //
+  ingredients     RecipeIngredients[] //
+  steps           String[] //
   ratings         Rating[]
   persons         Int                 @default(4)
 
@@ -128,6 +128,9 @@ model RecipeIngredients {
   recipe   Recipe @relation(fields: [recipeId], references: [id])
   recipeId String
 
+  unit         String
+  amount       Int
+
   ingredient   Ingredient @relation(fields: [ingredientId], references: [name])
   ingredientId String
 
@@ -139,9 +142,6 @@ model Ingredient {
   name String @id
 
   recipes      RecipeIngredients[]
-  count        Int
-  unit         String?
-  amount       Int?
   allergenType AllergenType[]      @default([])
   type         String
 }

@@ -18,6 +18,8 @@ declare -A emoji_map=(
   ["wip"]=":construction:"
   ["build"]=":construction_worker:"
   ["ci"]=":green_heart:"
+  ["upgrade"]=":arrow_up:"
+  ["downgrade"]=":arrow_down:"
 )
 
 # Get the file path
