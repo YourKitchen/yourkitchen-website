@@ -106,15 +106,22 @@ const CuisineAutocomplete: FC<CuisineAutocompleteProps> = ({
           <TextField {...params} label={t('cuisine')} />
         )}
         noOptionsText={
-          session?.user.role === 'ADMIN' || (session?.user.score ?? 0) >= 25 ? (
-            <Button
-              color="primary"
-              fullWidth
-              onClick={() => setOpenCreateDialog(true)}
-            >
-              {t('add_new')}
-            </Button>
-          ) : undefined
+          <Button
+            color="primary"
+            fullWidth
+            onClick={() => {
+              if (
+                session?.user.role !== 'ADMIN' &&
+                (session?.user.score ?? 0) < 25
+              ) {
+                toast.error(`${t('need_score_of')} 25`)
+                return
+              }
+              setOpenCreateDialog(true)
+            }}
+          >
+            {t('add_new')}
+          </Button>
         }
       />
     </>

@@ -15,6 +15,7 @@ import CuisineAutocomplete from '#components/Recipe/CuisineAutocomplete'
 import MealTypeSelect from '#components/Recipe/MealTypeSelect'
 import PreparationTimePicker from '#components/Recipe/PreparationTimePicker'
 import RecipeTypeSelect from '#components/Recipe/RecipeTypeSelect'
+import StepsTextField from '#components/Recipe/StepsTextField'
 
 const defaultRecipe: Recipe & { ingredients: Ingredient[] } = {
   id: v4(),
@@ -137,6 +138,13 @@ const CreateRecipePage: FC = () => {
               ...prev,
               preparationTime,
             }))
+          }}
+        />
+        <StepsTextField
+          t={t}
+          value={recipe.steps[0]}
+          setValue={(value) => {
+            setRecipe((prev) => ({ ...prev, steps: [value] }))
           }}
         />
       </Box>

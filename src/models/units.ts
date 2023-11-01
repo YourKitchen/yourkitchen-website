@@ -1,0 +1,28 @@
+import { Unit } from '@prisma/client'
+
+export const allUnits: Unit[] = [
+  Unit.TEASPOON,
+  Unit.TABLESPOON,
+  Unit.FLUID_OUNCE,
+  Unit.CUP,
+  Unit.PINT,
+  Unit.QUART,
+  Unit.GALLON,
+  Unit.MILLILITER,
+  Unit.LITER,
+  Unit.GRAM,
+  Unit.KILOGRAM,
+  Unit.OUNCE,
+  Unit.POUND,
+  Unit.PINCH,
+  Unit.DASH,
+  Unit.DROP,
+  Unit.SLICE,
+  Unit.PIECE,
+  Unit.CLOVE,
+  Unit.BULB,
+  Unit.STICK,
+  Unit.CUBIC_INCH,
+  Unit.CUBIC_FOOT,
+  Unit.PACKAGE,
+]

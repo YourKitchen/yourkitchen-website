@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch"]
 }
 
@@ -82,17 +82,17 @@ model Follows {
 }
 
 model Recipe {
-  id          String     @id @default(uuid())
-  owner       User       @relation("recipeOwner", fields: [ownerId], references: [id])
+  id          String  @id @default(uuid())
+  owner       User    @relation("recipeOwner", fields: [ownerId], references: [id])
   ownerId     String
   name        String
   description String
   // Cuisine is referenced because it allows them to be used like tags
-  cuisine     Cuisine    @relation(fields: [cuisineName], references: [name])
+  cuisine     Cuisine @relation(fields: [cuisineName], references: [name])
   cuisineName String
 
-  recipeType  RecipeType
-  mealType    MealType
+  recipeType RecipeType
+  mealType   MealType
 
   preparationTime DateTime
   image           String //
@@ -128,13 +128,40 @@ model RecipeIngredients {
   recipe   Recipe @relation(fields: [recipeId], references: [id])
   recipeId String
 
-  unit         String
-  amount       Int
+  unit   Unit
+  amount Int
 
   ingredient   Ingredient @relation(fields: [ingredientId], references: [name])
   ingredientId String
 
   @@id([recipeId, ingredientId])
+}
+
+enum Unit {
+  TEASPOON
+  TABLESPOON
+  FLUID_OUNCE
+  CUP
+  PINT
+  QUART
+  GALLON
+  MILLILITER
+  LITER
+  GRAM
+  KILOGRAM
+  OUNCE
+  POUND
+  PINCH
+  DASH
+  DROP
+  SLICE
+  PIECE
+  CLOVE
+  BULB
+  STICK
+  CUBIC_INCH
+  CUBIC_FOOT
+  PACKAGE
 }
 
 // Done

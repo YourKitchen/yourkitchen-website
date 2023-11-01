@@ -10,6 +10,7 @@ import {
 import { AllergenType } from '@prisma/client'
 import { TFunction } from 'next-i18next'
 import { FC, useEffect, useMemo, useState } from 'react'
+import { allAllergenes } from '#models/allergenes'
 import AccountBox from './AccountBox'
 
 interface AccountCell<T = any> {
@@ -26,24 +27,6 @@ interface AccountUpdateBoxProps<T = any> {
   onSave?: (object: T) => PromiseLike<void>
   cells: AccountCell<T>[]
 }
-
-const allAllergenes: AllergenType[] = [
-  AllergenType.CELERY,
-  AllergenType.EGGS,
-  AllergenType.FISH,
-  AllergenType.GLUTEN,
-  AllergenType.LACTOSE,
-  AllergenType.LUPIN,
-  AllergenType.MOLLUSKUS,
-  AllergenType.MUSTARD,
-  AllergenType.NUT,
-  AllergenType.PEANUTS,
-  AllergenType.SESAME,
-  AllergenType.SHELLFISH,
-  AllergenType.SOY,
-  AllergenType.SULFITES,
-  AllergenType.WHEAT,
-]
 
 const AccountUpdateBox: FC<AccountUpdateBoxProps> = <T = any>({
   t,
