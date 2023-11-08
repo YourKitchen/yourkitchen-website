@@ -11,6 +11,6 @@ updates:
       interval: 'weekly'
 
     commit-message:
-      prefix: "upgrade"
-      prefix-development: "chore"
+      prefix: ":arrow_up: upgrade"
+      prefix-development: ":truck: chore"
       include: "scope"
