@@ -33,14 +33,12 @@ const CreateIngredientDialog: FC<CreateIngredientDialogProps> = ({
 }) => {
   const [ingredientName, setIngredientName] = useState(defaultValue)
   const [allergenTypes, setAllergenTypes] = useState<AllergenType[]>([])
-  const [type, setType] = useState<Ingredient['type']>()
 
   const handleSubmit = async () => {
     toast.promise(
       api.post<YKResponse<Ingredient>>('database/ingredient', {
         name: ingredientName,
         allergenType: allergenTypes,
-        type,
       } as Ingredient),
       {
         loading: `${t('creating')} ${t('ingredient')}..`,

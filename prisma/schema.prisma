@@ -170,7 +170,6 @@ model Ingredient {
 
   recipes      RecipeIngredients[]
   allergenType AllergenType[]      @default([])
-  type         String
 }
 
 // Done
