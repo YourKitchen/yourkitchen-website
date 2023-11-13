@@ -1,0 +1,9 @@
+pages:
+- any: ['pages/**/*.ts']
+  all: ['!pages/api/**/*.ts']
+
+frontend:
+- any: ['src/**/*.ts', 'src/**/*.tsx']
+
+backend:
+- any: ['pages/**/*.ts']
