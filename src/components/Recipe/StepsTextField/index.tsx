@@ -8,12 +8,15 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Menu,
+  MenuItem,
+  Select,
   Tooltip,
   debounce,
 } from '@mui/material'
 import Chip from '@mui/material/Chip'
 import TextField from '@mui/material/TextField'
-import { Ingredient } from '@prisma/client'
+import { Ingredient, RecipeIngredients, Unit } from '@prisma/client'
 import { useSession } from 'next-auth/react'
 import { TFunction } from 'next-i18next'
 import React, {
@@ -27,6 +30,7 @@ import React, {
 } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
+import { allUnits } from '#models/units'
 import { YKResponse } from '#models/ykResponse'
 import CreateIngredientDialog from './CreateIngredientDialog'
 import FullSearchDialog from './FullSearchDialog'
@@ -58,6 +62,11 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
   const [createIngredientValue, setCreateIngredientValue] = useState<
     string | null
   >(null)
+  // Select Ingredient
+  const [selectedIngredient, setSelectedIngredient] = useState<Omit<
+    RecipeIngredients,
+    'recipeId'
+  > | null>(null)
 
   // Debounced search value used to search database for ingredients
   const [searchValue, setSearchValue] = useState<string>()
@@ -81,11 +90,11 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
     const inputValue = event.target.value
     setValue(inputValue)
 
-    updateCaretCoordinates()
+    updateCaretCoordinates(true)
   }
 
-  const handleMouseMove = () => {
-    updateCaretCoordinates()
+  const handleMouseDown = () => {
+    updateCaretCoordinates(true)
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -102,7 +111,7 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
 
   const setValueDelayed = useMemo(() => debounce(setSearchValue, 250), [])
 
-  const updateCaretCoordinates = () => {
+  const updateCaretCoordinates = (explicit?: boolean) => {
     // Need to add a timeout to allow the input ref to update first
     setTimeout(() => {
       const inputElement = inputRef.current
@@ -147,7 +156,13 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
         curPosition += 1
       }
 
-      if (!cursorWord || !cursorWord.startsWith('!') || cursorWord === '!') {
+      if (!cursorWord || !cursorWord.startsWith('!')) {
+        setSuggestionPosition(null)
+        return
+      }
+
+      // If the word ends with ! it is a finished ingredient.
+      if (cursorWord.endsWith('!') && !explicit) {
         setSuggestionPosition(null)
         return
       }
@@ -179,6 +194,7 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
 
         cursorWord: cursorWord.replaceAll('!', ''),
       })
+      setSelectedIngredient(null)
     }, 1)
   }
 
@@ -186,8 +202,23 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
     setFullSearchValue(suggestionPosition?.cursorWord ?? '')
   }
 
+  const onUnitSelected = (value: Unit) => {
+    if (!selectedIngredient) {
+      toast.error('No ingredient is selected')
+      return
+    }
+
+    setSelectedIngredient((prev) => (prev ? { ...prev, unit: value } : null))
+  }
+
   const onSearchValueSelected = (value: Ingredient) => {
     // When a search value is selected, show the dialog to select unit.
+    setSelectedIngredient({
+      amount: 0,
+      ingredientId: value.name,
+      unit: 'GRAM',
+    })
+    setFullSearchValue(null)
   }
 
   return (
@@ -230,7 +261,7 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        onMouseDown={handleMouseMove}
+        onMouseDown={handleMouseDown}
         inputRef={inputRef}
         fullWidth
       />
@@ -243,7 +274,19 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
             left: suggestionPosition.left,
           }}
         >
-          {!suggestions || suggestions.data.length === 0 ? (
+          {selectedIngredient ? (
+            <Menu open={selectedIngredient !== null}>
+              {allUnits.map((unit) => (
+                <MenuItem
+                  key={unit}
+                  value={unit}
+                  onClick={() => onUnitSelected(unit)}
+                >
+                  {unit}
+                </MenuItem>
+              ))}
+            </Menu>
+          ) : !suggestions || suggestions.data.length === 0 ? (
             <Chip
               sx={{
                 backdropFilter: 'blur(8px)',
