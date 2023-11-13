@@ -3744,10 +3744,10 @@ slice-ansi@^5.0.0:
     ansi-styles "^6.0.0"
     is-fullwidth-code-point "^4.0.0"
 
-sonner@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/sonner/-/sonner-1.0.3.tgz#3d5c08f1773c28e98e51dba527350d4ac1c912a2"
-  integrity sha512-hBoA2zKuYW3lUnpx4K0vAn8j77YuYiwvP9sLQfieNS2pd5FkT20sMyPTDJnl9S+5T27ZJbwQRPiujwvDBwhZQg==
+sonner@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/sonner/-/sonner-1.2.0.tgz#26e7520d0f93b9f70763130099b4e1b16f121f11"
+  integrity sha512-4bIPKrhF+Z4yEC4EZvNBswcVzMrUhztOQXqyIoiZqiqN1TT39FeK+TgRsQidvvztnYgOn4+S3LdAsri61c7ATA==
 
 source-map-js@^1.0.2:
   version "1.0.2"
