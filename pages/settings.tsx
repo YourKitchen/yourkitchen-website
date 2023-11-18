@@ -23,6 +23,7 @@ import useSWR from 'swr'
 import AccountBox from '#components/Account/AccountBox'
 import AccountTabPanel from '#components/Account/AccountTabPanel'
 import AccountUpdateBox from '#components/Account/AccountUpdateBox'
+import { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
 
 export enum SettingsTab {
@@ -70,7 +71,28 @@ const UserPage: FC = () => {
   }
 
   const updateUser = async (user: Partial<Omit<User, 'id'>>) => {
-    toast.promise(update(user), {
+    const { image, ...rest }: any = user
+
+    if (image) {
+      // Upload image has to be handled seperately
+      // The type is actually File, because it has been selected using input[type='file']
+      const actualImage = image as any as File
+
+      // Upload the file using database/user/image
+      toast.loading(`${t('uploading_image')}..`, {
+        id: 'updating_user', // Allow the following promise to continue on this toast.
+        duration: 30000,
+      })
+      const response = await api.post<YKResponse<string>>(
+        'database/user/image',
+        actualImage,
+      )
+
+      // Set the url of the uploaded image to the rest image endpoint.
+      rest.image = response.data.data as string
+    }
+    toast.promise(update(rest), {
+      id: 'updating_user',
       loading: `${t('updating')} ${t('user')}..`,
       error: (err) => err.message || err,
       success: `${t('succesfully_updated')} ${t('user')}`,
@@ -131,6 +153,7 @@ const UserPage: FC = () => {
             defaultObject={session.user}
             cells={[
               { field: 'name', label: t('name') },
+              { field: 'image', type: 'image', label: t('profile_picture') },
               { field: 'email', label: t('email'), disabled: true },
               {
                 field: 'defaultPersons',

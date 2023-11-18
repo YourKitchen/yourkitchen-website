@@ -38,7 +38,7 @@ const CreateIngredientDialog: FC<CreateIngredientDialogProps> = ({
     toast.promise(
       api.post<YKResponse<Ingredient>>('database/ingredient', {
         name: ingredientName,
-        allergenType: allergenTypes,
+        allergenTypes: allergenTypes,
       } as Ingredient),
       {
         loading: `${t('creating')} ${t('ingredient')}..`,

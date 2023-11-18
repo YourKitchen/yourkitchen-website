@@ -69,6 +69,9 @@ let config = {
       {
         hostname: 'flagcdn.com',
       },
+      {
+        hostname: '2n06sgsdn5gkizgn.public.blob.vercel-storage.com',
+      },
       { hostname: 'play.google.com' },
       { hostname: 'lh3.googleusercontent.com' },
     ],

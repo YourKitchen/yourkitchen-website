@@ -1,3 +1,4 @@
+import { CloudUpload } from '@mui/icons-material'
 import {
   Box,
   Button,
@@ -10,13 +11,14 @@ import {
 import { AllergenType } from '@prisma/client'
 import { TFunction } from 'next-i18next'
 import { FC, useEffect, useMemo, useState } from 'react'
+import { toast } from 'sonner'
 import { allAllergenes } from '#models/allergenes'
 import AccountBox from './AccountBox'
 
 interface AccountCell<T = any> {
   field: keyof T
   label: string
-  type?: 'string' | 'number' | 'allergenes'
+  type?: 'string' | 'number' | 'allergenes' | 'image'
   disabled?: boolean
 }
 
@@ -69,7 +71,14 @@ const AccountUpdateBox: FC<AccountUpdateBoxProps> = <T = any>({
               return (
                 <>
                   <Typography>{cell.label}</Typography>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Box
+                    sx={{
+                      width: '100%',
+                      flexWrap: 'wrap',
+                      display: 'flex',
+                      gap: 1,
+                    }}
+                  >
                     {allAllergenes.map((allergen) => {
                       const exists = (state[cell.field] as string[]).includes(
                         allergen,
@@ -110,9 +119,43 @@ const AccountUpdateBox: FC<AccountUpdateBoxProps> = <T = any>({
                   </Box>
                 </>
               )
+            case 'image':
+              return (
+                <Button
+                  key={cell.field as string}
+                  component="label"
+                  variant="contained"
+                  disabled={!onSave || cell.disabled} // Disable if there is no onSave function
+                  startIcon={<CloudUpload />}
+                >
+                  {t(
+                    state[cell.field] && typeof state[cell.field] !== 'string'
+                      ? 'file_selected'
+                      : cell.label ?? 'upload_file',
+                  )}
+                  <input
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.currentTarget.files?.[0]
+                      if (!file) {
+                        toast.error('No file selected')
+                        return
+                      }
+
+                      setState((prev: any) => ({
+                        ...prev,
+                        [cell.field]: file,
+                      }))
+                    }}
+                    hidden
+                    type="file"
+                  />
+                </Button>
+              )
             default:
               return (
                 <TextField
+                  fullWidth
                   key={cell.field as string}
                   label={cell.label}
                   type={cell.type}

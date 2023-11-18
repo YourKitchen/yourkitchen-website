@@ -71,6 +71,7 @@ export const SigninPage: FC = () => {
         toast.error(response.error)
         return
       } else if (response?.ok) {
+        console.log(response)
         toast.success('Check your email for a magic link!')
       }
     } catch (err) {

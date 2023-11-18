@@ -16,7 +16,7 @@ import {
 } from '@mui/material'
 import Chip from '@mui/material/Chip'
 import TextField from '@mui/material/TextField'
-import { Ingredient, RecipeIngredients, Unit } from '@prisma/client'
+import { Ingredient, RecipeIngredient, Unit } from '@prisma/client'
 import { useSession } from 'next-auth/react'
 import { TFunction } from 'next-i18next'
 import React, {
@@ -64,7 +64,7 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
   >(null)
   // Select Ingredient
   const [selectedIngredient, setSelectedIngredient] = useState<Omit<
-    RecipeIngredients,
+    RecipeIngredient,
     'recipeId'
   > | null>(null)
 
@@ -215,7 +215,7 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
     // When a search value is selected, show the dialog to select unit.
     setSelectedIngredient({
       amount: 0,
-      ingredientId: value.name,
+      ingredientName: value.name,
       unit: 'GRAM',
     })
     setFullSearchValue(null)
