@@ -1,1 +1,9 @@
-{}
+{
+  "home": "Hjem",
+  "about": "Om",
+  "recipes": "Opskrifter",
+  "settings": "Indstillinger",
+  "logout": "Log ud",
+  "get_started": "Kom Igang",
+  "create": "Opret"
+}
