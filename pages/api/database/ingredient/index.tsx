@@ -32,12 +32,12 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     return
   }
 
-  const { name, allergenType } = req.body as Ingredient
+  const { name, allergenTypes } = req.body as Ingredient
 
   const response = await prisma.ingredient.create({
     data: {
       name,
-      allergenType,
+      allergenTypes,
     },
   })
 

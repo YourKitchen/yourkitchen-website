@@ -1,4 +1,4 @@
-import { Recipe } from '@prisma/client'
+import { Recipe, RecipeImage } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
 import prisma from '#pages/api/_base'
@@ -55,7 +55,7 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     preparationTime,
     recipeType,
     steps,
-  } = req.body as Partial<Recipe>
+  } = req.body as Partial<Recipe & { image: RecipeImage[] }>
 
   const recipe = await prisma.recipe.update({
     where: {
@@ -65,7 +65,14 @@ const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
     data: {
       cuisineName,
       description,
-      image,
+      image: image
+        ? {
+            createMany: {
+              data: image,
+              skipDuplicates: true,
+            },
+          }
+        : undefined,
       mealType,
       name,
       persons,

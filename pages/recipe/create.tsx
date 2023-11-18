@@ -1,6 +1,12 @@
 import { Box, Typography } from '@mui/material'
 import { debounce } from '@mui/material/utils'
-import { Ingredient, MealType, Recipe, RecipeType } from '@prisma/client'
+import {
+  Ingredient,
+  MealType,
+  Recipe,
+  RecipeImage,
+  RecipeType,
+} from '@prisma/client'
 import { GetStaticProps } from 'next'
 import { useSession } from 'next-auth/react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
@@ -17,20 +23,22 @@ import PreparationTimePicker from '#components/Recipe/PreparationTimePicker'
 import RecipeTypeSelect from '#components/Recipe/RecipeTypeSelect'
 import StepsTextField from '#components/Recipe/StepsTextField'
 
-const defaultRecipe: Recipe & { ingredients: Ingredient[] } = {
+const defaultRecipe: Recipe & {
+  ingredients: Ingredient[]
+  image?: RecipeImage
+} = {
   id: v4(),
 
   name: '',
   description: '',
   mealType: 'DINNER',
   persons: 4,
-  preparationTime: new Date(0, 0, 0, 1, 0, 0, 0),
+  preparationTime: 60,
   recipeType: 'MAIN',
 
   steps: [],
   ingredients: [],
   cuisineName: '',
-  image: '',
 
   // Will be overwritten by server anyways
   ownerId: '',
@@ -62,6 +70,7 @@ const CreateRecipePage: FC = () => {
       <NextSeo
         title="Create Recipe"
         description="This page allows the user to create a new recipe to add to their recipe collection. This recipe can also be public."
+        noindex
       />
       <Box
         sx={{
@@ -134,9 +143,11 @@ const CreateRecipePage: FC = () => {
           t={t}
           value={recipe.preparationTime}
           onChange={(preparationTime) => {
+            const totalMinutes =
+              preparationTime.getHours() * 60 + preparationTime.getMinutes()
             setRecipe((prev) => ({
               ...prev,
-              preparationTime,
+              preparationTime: totalMinutes,
             }))
           }}
         />

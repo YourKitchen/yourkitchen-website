@@ -1,4 +1,4 @@
-import { Recipe } from '@prisma/client'
+import { Recipe, RecipeImage } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
 import { ApiError } from 'next/dist/server/api-utils'
@@ -66,13 +66,20 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     preparationTime,
     recipeType,
     steps,
-  } = req.body as Omit<Recipe, 'id'>
+  } = req.body as Omit<Recipe & { image: RecipeImage[] }, 'id'>
 
   const response = await prisma.recipe.create({
     data: {
       cuisineName,
       description,
-      image,
+      image: image
+        ? {
+            createMany: {
+              data: image,
+              skipDuplicates: true,
+            },
+          }
+        : undefined,
       mealType,
       name,
       persons,
