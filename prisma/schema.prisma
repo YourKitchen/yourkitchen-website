@@ -73,20 +73,21 @@ model User {
 }
 
 model Follows {
-  follower    User   @relation("follower", fields: [followerId], references: [id])
+  follower    User   @relation("follower", fields: [followerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   followerId  String
-  following   User   @relation("following", fields: [followingId], references: [id])
+  following   User   @relation("following", fields: [followingId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   followingId String
 
   @@id([followerId, followingId])
 }
 
 model Recipe {
-  id          String  @id @default(uuid())
-  owner       User    @relation("recipeOwner", fields: [ownerId], references: [id])
-  ownerId     String
+  id      String  @id @default(uuid())
+  owner   User?   @relation("recipeOwner", fields: [ownerId], references: [id], onUpdate: Cascade, onDelete: SetNull) // Delete recipes when user deletes their account.
+  ownerId String?
+
   name        String
-  description String
+  description String?
   // Cuisine is referenced because it allows them to be used like tags
   cuisine     Cuisine @relation(fields: [cuisineName], references: [name])
   cuisineName String
@@ -94,12 +95,13 @@ model Recipe {
   recipeType RecipeType
   mealType   MealType
 
-  preparationTime DateTime
-  image           String //
-  ingredients     RecipeIngredients[] //
-  steps           String[] //
-  ratings         Rating[]
-  persons         Int                 @default(4)
+  preparationTime Int
+  image           RecipeImage[]
+
+  ingredients RecipeIngredient[]
+  steps       String[]
+  ratings     Rating[]
+  persons     Int                @default(4)
 
   feedItems FeedItem[]
 
@@ -124,14 +126,25 @@ enum MealType {
   DINNER
 }
 
-model RecipeIngredients {
-  recipe   Recipe @relation(fields: [recipeId], references: [id])
+model RecipeImage {
+  link String @id
+
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  recipeId String
+
+  photoRefUrl     String?
+  photographer    String?
+  photographerUrl String?
+}
+
+model RecipeIngredient {
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   recipeId String
 
   unit   Unit
   amount Int
 
-  ingredient   Ingredient @relation(fields: [ingredientId], references: [name])
+  ingredient     Ingredient @relation(fields: [ingredientId], references: [id])
   ingredientId String
 
   @@id([recipeId, ingredientId])
@@ -166,10 +179,11 @@ enum Unit {
 
 // Done
 model Ingredient {
-  name String @id
+  id String @id
+  name String @unique
 
-  recipes      RecipeIngredients[]
-  allergenType AllergenType[]      @default([])
+  recipes       RecipeIngredient[]
+  allergenTypes AllergenType[]     @default([])
 }
 
 // Done
@@ -196,22 +210,22 @@ model Rating {
   id      String  @id @default(uuid())
   score   Int
   message String?
-  owner   User    @relation(fields: [ownerId], references: [id])
+  owner   User    @relation(fields: [ownerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   ownerId String
 
   // Optional relations, depending on which one it concerns. One will be defined
-  recipe     Recipe?   @relation(fields: [recipeId], references: [id])
+  recipe     Recipe?   @relation(fields: [recipeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   recipeId   String?
-  feedItem   FeedItem? @relation(fields: [feedItemId], references: [id])
+  feedItem   FeedItem? @relation(fields: [feedItemId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   feedItemId String?
 }
 
 // Done
 model FeedItem {
   id       String   @id @default(uuid())
-  owner    User     @relation(fields: [ownerId], references: [id])
+  owner    User     @relation(fields: [ownerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   ownerId  String
-  recipe   Recipe   @relation(fields: [recipeId], references: [id])
+  recipe   Recipe   @relation(fields: [recipeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   recipeId String
   ratings  Rating[]
 

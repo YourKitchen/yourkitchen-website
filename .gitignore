@@ -41,3 +41,5 @@ next-env.d.ts
 old-src/
 .vercel
 .env*.local
+
+sitemap*.xml

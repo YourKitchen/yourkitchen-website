@@ -1,1 +1,9 @@
-{}
+{
+  "home": "Home",
+  "about": "About",
+  "recipes": "Recipes",
+  "settings": "Settings",
+  "logout": "Logout",
+  "get_started": "Get Started",
+  "create": "Create"
+}

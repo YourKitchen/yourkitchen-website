@@ -1,5 +1,3 @@
-// @ts-check
-
 const { i18n } = require('./next-i18next.config')
 
 const advancedHeaders = [
@@ -68,6 +66,9 @@ let config = {
     remotePatterns: [
       {
         hostname: 'flagcdn.com',
+      },
+      {
+        hostname: '2n06sgsdn5gkizgn.public.blob.vercel-storage.com',
       },
       { hostname: 'play.google.com' },
       { hostname: 'lh3.googleusercontent.com' },

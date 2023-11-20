@@ -1,4 +1,10 @@
-import { Add, Create, Search } from '@mui/icons-material'
+import {
+  Add,
+  ArrowForward,
+  ArrowRight,
+  Create,
+  Search,
+} from '@mui/icons-material'
 import {
   Autocomplete,
   AutocompleteRenderInputParams,
@@ -8,15 +14,18 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
+  InputBase,
   Menu,
   MenuItem,
+  Paper,
   Select,
   Tooltip,
   debounce,
 } from '@mui/material'
 import Chip from '@mui/material/Chip'
 import TextField from '@mui/material/TextField'
-import { Ingredient, RecipeIngredients, Unit } from '@prisma/client'
+import { Ingredient, RecipeIngredient, Unit } from '@prisma/client'
 import { useSession } from 'next-auth/react'
 import { TFunction } from 'next-i18next'
 import React, {
@@ -24,11 +33,13 @@ import React, {
   Dispatch,
   FC,
   SetStateAction,
+  TextareaHTMLAttributes,
   useMemo,
   useRef,
   useState,
 } from 'react'
 import { toast } from 'sonner'
+import { getIngredientId } from 'src/utils'
 import useSWR from 'swr'
 import { allUnits } from '#models/units'
 import { YKResponse } from '#models/ykResponse'
@@ -54,6 +65,11 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
     left: number
 
     cursorWord?: string
+
+    position: {
+      start: number
+      end: number
+    }
   } | null>(null)
 
   // FullSearchDialog
@@ -63,9 +79,8 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
     string | null
   >(null)
   // Select Ingredient
-  const [selectedIngredient, setSelectedIngredient] = useState<Omit<
-    RecipeIngredients,
-    'recipeId'
+  const [selectedIngredient, setSelectedIngredient] = useState<Partial<
+    Omit<RecipeIngredient, 'recipeId'>
   > | null>(null)
 
   // Debounced search value used to search database for ingredients
@@ -109,6 +124,66 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
     }
   }
 
+  function createCopy(
+    textArea: EventTarget & (HTMLInputElement | HTMLTextAreaElement),
+  ) {
+    const copy = document.createElement('div')
+    copy.textContent = textArea.value
+    const style = getComputedStyle(textArea)
+    const keys = [
+      'fontFamily',
+      'fontSize',
+      'fontWeight',
+      'wordWrap',
+      'whiteSpace',
+      'borderLeftWidth',
+      'borderTopWidth',
+      'borderRightWidth',
+      'borderBottomWidth',
+    ]
+    for (const key of keys) {
+      const anyKey = key as any
+      copy.style[anyKey] = style[anyKey]
+    }
+    copy.style.overflow = 'auto'
+    copy.style.width = `${textArea.offsetWidth}px`
+    copy.style.height = `${textArea.offsetHeight}px`
+    copy.style.position = 'absolute'
+    copy.style.left = `${textArea.offsetLeft}px`
+    copy.style.top = `${textArea.offsetTop}px`
+    document.body.appendChild(copy)
+    return copy
+  }
+
+  function getCaretPosition() {
+    const textArea = inputRef.current
+    if (!textArea) {
+      return
+    }
+
+    const start = textArea.selectionStart
+    const end = textArea.selectionEnd
+    const copy = createCopy(textArea)
+    if (!copy.firstChild) {
+      return
+    }
+    const range = document.createRange()
+    range.setStart(copy.firstChild, start ?? 0)
+    range.setEnd(copy.firstChild, end ?? 0)
+    const selection = document.getSelection()
+    selection?.removeAllRanges()
+    selection?.addRange(range)
+    const rect = range.getBoundingClientRect()
+    document.body.removeChild(copy)
+    textArea.selectionStart = start
+    textArea.selectionEnd = end
+    textArea.focus()
+    return {
+      x: rect.left,
+      y: rect.top + window.scrollY,
+    }
+  }
+
   const setValueDelayed = useMemo(() => debounce(setSearchValue, 250), [])
 
   const updateCaretCoordinates = (explicit?: boolean) => {
@@ -121,17 +196,8 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
         return
       }
 
-      const {
-        offsetLeft,
-        offsetTop,
-        scrollTop,
-        selectionEnd: cursorPosition,
-      } = inputElement
-      const style = getComputedStyle(inputElement)
+      const { selectionEnd: cursorPosition } = inputElement
 
-      const fontSize = parseFloat(style.fontSize)
-      const fontFamily = style.fontFamily
-      const lineHeight = parseFloat(style.lineHeight)
       if (!cursorPosition) {
         setSuggestionPosition(null)
         return
@@ -143,11 +209,21 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
       // Find the word located at the cursorPosition.
       let curPosition = 0
       let cursorWord: string | undefined
+      let position:
+        | {
+            start: number
+            end: number
+          }
+        | undefined = undefined
       for (const word of words) {
         // Add the word length
         curPosition += word.length
 
         if (cursorPosition <= curPosition) {
+          position = {
+            start: curPosition - word.length,
+            end: curPosition + word.length,
+          }
           cursorWord = word
           break
         }
@@ -156,7 +232,7 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
         curPosition += 1
       }
 
-      if (!cursorWord || !cursorWord.startsWith('!')) {
+      if (!cursorWord || !cursorWord.startsWith('!') || !position) {
         setSuggestionPosition(null)
         return
       }
@@ -171,28 +247,14 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
       setValueDelayed(cursorWord.replaceAll('!', ''))
 
       // Set the position of the suggestion element
-
-      // Split the text into lines
-      const textBeforeCaret = inputElement.value.substring(0, cursorPosition)
-
-      // Calculate the size of the text using a canvas
-      const canvas = document.createElement('canvas')
-      const context = canvas.getContext('2d')
-      if (!context) {
-        return
-      }
-      context.font = `${fontSize}px ${fontFamily}`
-      const currentLineIndex = textBeforeCaret.split('\n').length - 1
-      const currentLineWidth = context.measureText(
-        textBeforeCaret.split('\n')[currentLineIndex],
-      ).width
-      canvas.remove()
+      const { x: left, y: top } = getCaretPosition() ?? { x: 0, y: 0 }
 
       setSuggestionPosition({
-        top: offsetTop + currentLineIndex * lineHeight + scrollTop,
-        left: offsetLeft + currentLineWidth + 6, // 6px offset
+        top: top - 8, // Half chip height
+        left: left + 6, // 6px offset
 
         cursorWord: cursorWord.replaceAll('!', ''),
+        position,
       })
       setSelectedIngredient(null)
     }, 1)
@@ -202,20 +264,47 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
     setFullSearchValue(suggestionPosition?.cursorWord ?? '')
   }
 
-  const onUnitSelected = (value: Unit) => {
-    if (!selectedIngredient) {
-      toast.error('No ingredient is selected')
+  const submitSelectedIngredient = () => {
+    if (!suggestionPosition) {
+      toast.error('Position is not correctly marked')
       return
     }
+    if (!selectedIngredient?.amount) {
+      toast.error('An amount is required to add this string')
+      return
+    }
+    if (!selectedIngredient.unit) {
+      toast.error('A unit is required to add this string')
+      return
+    }
+    if (!selectedIngredient.ingredientId) {
+      toast.error('')
+    }
 
-    setSelectedIngredient((prev) => (prev ? { ...prev, unit: value } : null))
+    // Construct the ingredient string
+    const ingredientString = `!${selectedIngredient.amount}:${selectedIngredient.unit}:${selectedIngredient.ingredientId}!`
+
+    // Replace the new
+    const formattedValue =
+      value.substring(0, suggestionPosition.position.start) +
+      ingredientString +
+      value.substring(suggestionPosition.position.end)
+
+    setValue(formattedValue)
+
+    // Replace the position of the cursot to the new end position
+    const updatedEndPosition =
+      suggestionPosition.position.start + ingredientString.length
+
+    inputRef.current?.setSelectionRange(updatedEndPosition, updatedEndPosition)
+    setSelectedIngredient(null)
   }
 
   const onSearchValueSelected = (value: Ingredient) => {
     // When a search value is selected, show the dialog to select unit.
     setSelectedIngredient({
       amount: 0,
-      ingredientId: value.name,
+      ingredientId: getIngredientId(value.name),
       unit: 'GRAM',
     })
     setFullSearchValue(null)
@@ -254,7 +343,7 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
         />
       )}
       <TextField
-        label={label || 'Step'}
+        label={label || 'Step (Use ! to insert ingredient)'}
         multiline
         rows={4}
         variant="outlined"
@@ -275,17 +364,65 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
           }}
         >
           {selectedIngredient ? (
-            <Menu open={selectedIngredient !== null}>
-              {allUnits.map((unit) => (
-                <MenuItem
-                  key={unit}
-                  value={unit}
-                  onClick={() => onUnitSelected(unit)}
-                >
-                  {unit}
-                </MenuItem>
-              ))}
-            </Menu>
+            <Paper
+              id="selected-ingredient-form"
+              sx={{
+                p: '2px 4px',
+                display: 'flex',
+                gap: 2,
+                alignItems: 'center',
+                width: 325,
+              }}
+            >
+              <Select
+                size="small"
+                sx={{ flex: 1 }}
+                defaultValue={selectedIngredient.unit}
+                onChange={(e) => {
+                  setSelectedIngredient((prev) =>
+                    prev ? { ...prev, unit: e.target.value as Unit } : null,
+                  )
+                }}
+                MenuProps={{
+                  sx: {
+                    maxHeight: 300,
+                  },
+                }}
+              >
+                {allUnits.map((unit) => (
+                  <MenuItem key={unit} value={unit}>
+                    {unit}
+                  </MenuItem>
+                ))}
+              </Select>
+              <InputBase
+                autoFocus
+                placeholder={t('amount')}
+                size="small"
+                sx={{
+                  flex: 1,
+                  borderRadius: '20px',
+                }}
+                value={selectedIngredient.amount ?? 0.0}
+                onChange={(e) =>
+                  setSelectedIngredient((prev) =>
+                    prev
+                      ? {
+                          ...prev,
+                          amount:
+                            (!Number.isNaN(Number(e.target.value))
+                              ? Number(e.target.value)
+                              : prev?.amount) ?? undefined,
+                        }
+                      : null,
+                  )
+                }
+                type="number"
+              />
+              <IconButton color="primary" onClick={submitSelectedIngredient}>
+                <ArrowForward />
+              </IconButton>
+            </Paper>
           ) : !suggestions || suggestions.data.length === 0 ? (
             <Chip
               sx={{

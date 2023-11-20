@@ -11,18 +11,16 @@ import {
 } from '@mui/material'
 import { User } from '@prisma/client'
 import { GetStaticProps } from 'next'
-import withAuth from 'next-auth/middleware'
 import { useSession } from 'next-auth/react'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { NextSeo } from 'next-seo'
 import Image from 'next/image'
-import { FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 import { toast } from 'sonner'
-import useSWR from 'swr'
-import AccountBox from '#components/Account/AccountBox'
 import AccountTabPanel from '#components/Account/AccountTabPanel'
 import AccountUpdateBox from '#components/Account/AccountUpdateBox'
+import { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
 
 export enum SettingsTab {
@@ -50,27 +48,44 @@ const UserPage: FC = () => {
   // Translations
   const { t } = useTranslation('settings')
   // Auth
-  const { data: session, status, update } = useSession()
+  const {
+    data: session,
+    status,
+    update,
+  } = useSession({
+    required: true,
+  })
 
   // States
   const [value, setValue] = useState(SettingsTab.General)
 
-  if (status === 'loading') {
+  if (status === 'loading' || !session) {
     return <CircularProgress />
-  }
-  if (status === 'unauthenticated' || !session) {
-    return (
-      <Box>
-        <Typography>
-          You need to be logged in to access your account settings
-        </Typography>
-        <Link href="/auth/signin">Login</Link>
-      </Box>
-    )
   }
 
   const updateUser = async (user: Partial<Omit<User, 'id'>>) => {
-    toast.promise(update(user), {
+    const { image, ...rest }: any = user
+
+    if (image) {
+      // Upload image has to be handled seperately
+      // The type is actually File, because it has been selected using input[type='file']
+      const actualImage = image as any as File
+
+      // Upload the file using database/user/image
+      toast.loading(`${t('uploading_image')}..`, {
+        id: 'updating_user', // Allow the following promise to continue on this toast.
+        duration: 30000,
+      })
+      const response = await api.post<YKResponse<string>>(
+        'database/user/image',
+        actualImage,
+      )
+
+      // Set the url of the uploaded image to the rest image endpoint.
+      rest.image = response.data.data as string
+    }
+    toast.promise(update(rest), {
+      id: 'updating_user',
       loading: `${t('updating')} ${t('user')}..`,
       error: (err) => err.message || err,
       success: `${t('succesfully_updated')} ${t('user')}`,
@@ -131,6 +146,7 @@ const UserPage: FC = () => {
             defaultObject={session.user}
             cells={[
               { field: 'name', label: t('name') },
+              { field: 'image', type: 'image', label: t('profile_picture') },
               { field: 'email', label: t('email'), disabled: true },
               {
                 field: 'defaultPersons',
