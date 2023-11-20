@@ -1,5 +1,4 @@
-import { Box, Typography } from '@mui/material'
-import { debounce } from '@mui/material/utils'
+import { Box, CircularProgress, Typography } from '@mui/material'
 import {
   Ingredient,
   MealType,
@@ -9,14 +8,13 @@ import {
 } from '@prisma/client'
 import { GetStaticProps } from 'next'
 import { useSession } from 'next-auth/react'
+import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import React, { FC, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { v4 } from 'uuid'
 import YKTextField from '#components/General/YKTextField'
-import Link from '#components/Link'
 import CuisineAutocomplete from '#components/Recipe/CuisineAutocomplete'
 import MealTypeSelect from '#components/Recipe/MealTypeSelect'
 import PreparationTimePicker from '#components/Recipe/PreparationTimePicker'
@@ -50,25 +48,21 @@ const CreateRecipePage: FC = () => {
   // Translations
   const { t } = useTranslation('common')
   // Auth
-  const { data: session, status } = useSession()
-  const { pathname } = useRouter()
+  const { data: session, status } = useSession({
+    required: true,
+  })
 
   // States
   const [recipe, setRecipe] = useState(defaultRecipe)
 
-  if (status === 'unauthenticated') {
-    return (
-      <Box>
-        <Typography>You need to be logged in to create a recipe.</Typography>
-        <Link href={`/auth/signin?callbackUrl=${pathname}`}>Login</Link>
-      </Box>
-    )
+  if (status === 'loading' || !session) {
+    return <CircularProgress />
   }
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       <NextSeo
-        title="Create Recipe"
+        title={t('create_recipe')}
         description="This page allows the user to create a new recipe to add to their recipe collection. This recipe can also be public."
         noindex
       />

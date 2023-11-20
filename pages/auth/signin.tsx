@@ -32,9 +32,11 @@ export const SigninPage: FC = () => {
   const navigation = useNavigation()
   const searchParams = useSearchParams()
 
-  if (status === 'authenticated') {
-    navigation.push(searchParams.get('callbackUrl') || '/')
-  }
+  useEffect(() => {
+    if (status === 'authenticated') {
+      navigation.push(searchParams.get('callbackUrl') || '/')
+    }
+  }, [status, navigation, searchParams])
 
   useEffect(() => {
     const error = searchParams.get('error')
@@ -44,6 +46,9 @@ export const SigninPage: FC = () => {
       switch (error) {
         case 'OAuthAccountNotLinked':
           errorMessage = 'Another sign in provider was used for this email'
+          break
+        case 'SessionRequired':
+          errorMessage = 'You need to be logged in to access this page'
           break
         default:
           errorMessage = error

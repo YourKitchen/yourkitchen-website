@@ -82,9 +82,9 @@ model Follows {
 }
 
 model Recipe {
-  id      String @id @default(uuid())
-  owner   User   @relation("recipeOwner", fields: [ownerId], references: [id], onDelete: Cascade) // Delete recipes when user deletes their account.
-  ownerId String
+  id      String  @id @default(uuid())
+  owner   User?   @relation("recipeOwner", fields: [ownerId], references: [id], onUpdate: Cascade, onDelete: SetNull) // Delete recipes when user deletes their account.
+  ownerId String?
 
   name        String
   description String?
@@ -144,10 +144,10 @@ model RecipeIngredient {
   unit   Unit
   amount Int
 
-  ingredient     Ingredient @relation(fields: [ingredientName], references: [name])
-  ingredientName String
+  ingredient     Ingredient @relation(fields: [ingredientId], references: [id])
+  ingredientId String
 
-  @@id([recipeId, ingredientName])
+  @@id([recipeId, ingredientId])
 }
 
 enum Unit {
@@ -179,7 +179,8 @@ enum Unit {
 
 // Done
 model Ingredient {
-  name String @id
+  id String @id
+  name String @unique
 
   recipes       RecipeIngredient[]
   allergenTypes AllergenType[]     @default([])

@@ -2,6 +2,7 @@ import { Ingredient, Recipe } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
 import { ApiError } from 'next/dist/server/api-utils'
+import { getIngredientId } from 'src/utils'
 import { authOptions } from '#pages/api/auth/[...nextauth]'
 import prisma from '../../_base'
 
@@ -36,6 +37,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const response = await prisma.ingredient.create({
     data: {
+      id: getIngredientId(name),
       name,
       allergenTypes,
     },

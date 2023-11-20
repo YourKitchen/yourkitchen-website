@@ -9,9 +9,20 @@ import { put } from '@vercel/blob'
 import { DateTime } from 'luxon'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { OpenAI } from 'openai'
+import { getIngredientId } from 'src/utils'
 import { api } from '#network/index'
 import prisma from '#pages/api/_base'
 import { getRecipeImage } from '#pages/api/_recipeImage'
+
+class ValidationError extends Error {
+  object: any
+
+  constructor(msg: string, obj: any) {
+    super(msg)
+
+    this.object = obj
+  }
+}
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // VALIDATE CRON SECRET
@@ -34,12 +45,14 @@ const openai = new OpenAI()
 const validateIngredient = (
   ingredient: any,
 ): {
+  id: string
   name: string
   unit: string
   amount: number
   allergenType: string | null
 } => {
   const formattedIngredient: Partial<{
+    id: string
     name: string
     unit: string
     amount: number
@@ -49,15 +62,19 @@ const validateIngredient = (
   // Name
   if (ingredient.name && typeof ingredient.name === 'string') {
     formattedIngredient.name = ingredient.name
+    formattedIngredient.id = getIngredientId(ingredient.name)
   } else {
-    throw new Error('Validation Error: ingredient."name" was not a string')
+    throw new ValidationError('ingredient."name" was not a string', ingredient)
   }
 
   // Amount
   if (ingredient.amount && typeof ingredient.amount === 'number') {
     formattedIngredient.amount = ingredient.amount
   } else {
-    throw new Error('Validation Error: ingredient."amount" was not a number')
+    throw new ValidationError(
+      'ingredient."amount" was not a number',
+      ingredient,
+    )
   }
 
   // Unit
@@ -91,12 +108,13 @@ const validateIngredient = (
     if (validUnits.includes(ingredient.unit)) {
       formattedIngredient.unit = ingredient.unit
     } else {
-      throw new Error(
-        `Validation Error: ingredient."unit" was not valid (${ingredient.unit}). Valid values are ${validUnits}`,
+      throw new ValidationError(
+        `ingredient."unit" was not valid (${ingredient.unit}). Valid values are ${validUnits}`,
+        ingredient,
       )
     }
   } else {
-    throw new Error('Validation Error: ingredient."unit" was not a string')
+    throw new ValidationError('ingredient."unit" was not a string', ingredient)
   }
 
   // Allergen Type
@@ -104,12 +122,14 @@ const validateIngredient = (
     formattedIngredient.allergenType = ingredient.allergenType
   } else if (ingredient.allergenType) {
     // Check if it is defined, as it is optional
-    throw new Error(
-      'Validation Error: ingredient."allergenType" was not a string',
+    throw new ValidationError(
+      'ingredient."allergenType" was not a string',
+      ingredient,
     )
   }
 
   return formattedIngredient as {
+    id: string
     name: string
     unit: string
     amount: number
@@ -134,6 +154,10 @@ const validateStep = (
   let index = 0
   for (const split of stepSplit) {
     if (index % 2 === 1) {
+      if (split === '') {
+        // Skip, usually just sentance ending with !.
+        continue
+      }
       // Ingredient
       const colonSplit = split.split(':')
       if (colonSplit.length === 3) {
@@ -155,8 +179,12 @@ const validateStep = (
               .replaceAll(' ', '-')}`,
           )
         } else {
-          throw new Error(
-            `Validation Error: Could not find ingredient with name: ${ingredientName}`,
+          throw new ValidationError(
+            `Could not find ingredient with name: ${ingredientName}`,
+            {
+              query: ingredientName,
+              ingredients,
+            },
           )
         }
       } else {
@@ -182,8 +210,13 @@ const validateStep = (
         }
         if (!found) {
           // If the ingredient was not found in any part, throw.
-          throw new Error(
-            `Validation Error: Could not find ingredientName in step split: ${split}`,
+          throw new ValidationError(
+            `Could not find ingredientName in step split: '${split}'`,
+            {
+              stepPart: split,
+              colonSplit,
+              ingredients,
+            },
           )
         }
       }
@@ -202,6 +235,7 @@ const validateContent = (
 ): Pick<
   Recipe & {
     ingredients: {
+      id: string
       name: string
       unit: Unit
       amount: number
@@ -238,7 +272,7 @@ const validateContent = (
   if (content.name && typeof content.name === 'string') {
     recipe.name = content.name
   } else {
-    throw new Error('Validation failed: "name" is not a string')
+    throw new ValidationError('"name" is not a string', content)
   }
 
   // Meal Type
@@ -252,26 +286,27 @@ const validateContent = (
     if (validMealTypes.includes(content.mealType)) {
       recipe.mealType = content.mealType
     } else {
-      throw new Error(
-        'Validation failed: "mealType" was not "BREAKFAST", "LUNCH" or "DINNER"',
+      throw new ValidationError(
+        '"mealType" was not "BREAKFAST", "LUNCH" or "DINNER"',
+        content,
       )
     }
   } else {
-    throw new Error('Validation failed: "mealType" is not a string')
+    throw new ValidationError('"mealType" is not a string', content)
   }
 
   // Preparation Time
   if (content.preparationTime && typeof content.preparationTime === 'number') {
     recipe.preparationTime = content.preparationTime as number
   } else {
-    throw new Error('Validation failed: "preparationTime" is not a number')
+    throw new ValidationError('"preparationTime" is not a number', content)
   }
 
   // Cuisine
   if (content.cuisineName && typeof content.cuisineName === 'string') {
     recipe.cuisineName = content.cuisineName
   } else {
-    throw new Error('Validation failed: "cuisineName" is not a string')
+    throw new ValidationError('"cuisineName" is not a string', content)
   }
 
   // Ingredients
@@ -286,15 +321,16 @@ const validateContent = (
         validateStep(step, ingredients),
       )
     } else {
-      throw new Error('Validation failed: "steps" is not an array.')
+      throw new ValidationError('"steps" is not an array.', content)
     }
   } else {
-    throw new Error('Validation failed: "ingredients" is not an array.')
+    throw new ValidationError('"ingredients" is not an array.', content)
   }
 
   return recipe as Pick<
     Recipe & {
       ingredients: {
+        id: string
         name: string
         unit: Unit
         amount: number
@@ -315,8 +351,6 @@ const getAndStoreImage = async (
 ): Promise<Omit<RecipeImage, 'recipeId'>> => {
   // Get image for recipe.
   const image = await getRecipeImage(name)
-
-  console.log(name)
 
   const blobResponse = await api.get(image.src.medium, {
     responseType: 'blob',
@@ -378,13 +412,14 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (response) {
       // If we have a response, apply the validator to check that the everything is in the correct format.
-      const recipe = validateContent(response)
+      const recipe = validateContent(JSON.parse(response))
 
       const [recipeImage] = await Promise.all([
         getAndStoreImage(recipe.name),
         // Upsert all the ingredients.
         prisma.ingredient.createMany({
           data: recipe.ingredients.map((ingredient) => ({
+            id: ingredient.id,
             name: ingredient.name,
             allergenTypes: ingredient.allergenType
               ? [ingredient.allergenType]
@@ -401,8 +436,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
         }),
       ])
 
-      console.log(recipeImage)
-
       // Add the recipe to the db.
       const createResponse = await prisma.recipe.create({
         data: {
@@ -414,14 +447,14 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
             // RecipeIngredients have to be created individually for each recipe.
             createMany: {
               data: recipe.ingredients.map((ingredient) => ({
-                ingredientName: ingredient.name,
+                ingredientId: ingredient.id,
                 amount: ingredient.amount,
                 unit: ingredient.unit,
               })),
             },
           },
           steps: recipe.steps,
-          ownerId: '6adc2bb1-a407-4493-aefa-565b0276d4a1', // YourKitchen Bot
+          ownerId: 'f42520b2-c709-4f5e-adfc-c09cd06231a9', // YourKitchen Bot
           cuisineName: recipe.cuisineName,
           image: {
             createMany: {
@@ -433,7 +466,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       })
 
       // TODO: Send newsletter to user.
-      console.log(createResponse)
+      // Use the createResponse to send the newsletter.
 
       return res.json({ ok: true, message: 'Recipe added.' })
     }
@@ -443,6 +476,7 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       message: err.message ?? err,
       code: err.code,
       stack: err.stack,
+      recipe: err instanceof ValidationError ? err.object : undefined,
     })
   }
   res.status(500).json({ ok: false, message: 'An unknown error occurred' })
