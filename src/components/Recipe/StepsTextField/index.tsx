@@ -142,7 +142,8 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
       'borderBottomWidth',
     ]
     for (const key of keys) {
-      copy.style[key as any] = style[key as any]
+      const anyKey = key as any
+      copy.style[anyKey] = style[anyKey]
     }
     copy.style.overflow = 'auto'
     copy.style.width = `${textArea.offsetWidth}px`
