@@ -4,7 +4,9 @@ import prisma from '#pages/api/_base'
 import { authOptions } from '#pages/api/auth/[...nextauth]'
 
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === 'POST') {
+  if (req.method === 'GET') {
+    await handleGET(req, res)
+  } else if (req.method === 'POST') {
     await handlePOST(req, res)
   } else {
     res.status(405).json({
@@ -12,6 +14,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       message: 'Method not allowed',
     })
   }
+}
+
+const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
+  res.status(500).json({ ok: false, message: 'Not implemented yet.' })
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {

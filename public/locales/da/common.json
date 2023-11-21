@@ -25,5 +25,8 @@
   "create_ingredient": "Opret Ingrediens",
   "allergenes": "Allergener",
   "full_search": "Fuld søgning",
-  "search": "Søg"
+  "search": "Søg",
+  "meal_type": "Måltidtype",
+  "popular_recipes": "Populære Opskrifter",
+  "recipes": "Opskrifter"
 }

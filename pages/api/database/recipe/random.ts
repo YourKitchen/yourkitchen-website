@@ -358,10 +358,13 @@ const getAndStoreImage = async (
 
   // Upload to blob storage.
   const blob = await put(
-    `recipes/${image.id}-${name.toLowerCase().replaceAll(' ', '-')}.jpeg`,
-    new Blob([blobResponse.data]),
+    `recipes/${image.id}-${name.toLowerCase().replaceAll(' ', '-')}.jpg`,
+    new Blob([blobResponse.data], {
+      type: blobResponse.headers['Content-Type']?.toString(),
+    }),
     {
       access: 'public',
+      contentType: blobResponse.headers['Content-Type']?.toString(),
     },
   )
 

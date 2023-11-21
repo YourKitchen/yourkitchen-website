@@ -25,5 +25,8 @@
   "create_ingredient": "Create Ingredient",
   "allergenes": "Allergenes",
   "full_search": "Full Search",
-  "search": "Search"
+  "search": "Search",
+  "meal_type": "Meal Type",
+  "popular_recipes": "Popular Recipes",
+  "recipes": "Recipes"
 }

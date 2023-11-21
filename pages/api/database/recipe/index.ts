@@ -1,4 +1,4 @@
-import { Recipe, RecipeImage } from '@prisma/client'
+import { MealType, Prisma, Recipe, RecipeImage } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
 import { ApiError } from 'next/dist/server/api-utils'
@@ -21,28 +21,46 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   // Get all recipes. This uses pagination, to limit the amount of recipes gotten.
 
-  const { page, pageSize } = req.query as { page: string; pageSize: string }
-
-  if (!page) {
-    throw new ApiError(400, 'page is not defined')
-  }
-  if (!pageSize) {
-    throw new ApiError(400, 'pageSize is not defined')
+  const query = req.query as {
+    page?: string
+    pageSize?: string
+    mealType?: MealType
+    cuisineName?: string
   }
 
-  const response = await prisma.recipe.findMany({
-    take: Number.parseInt(pageSize),
-    skip: Number.parseInt(pageSize) * Number.parseInt(page),
-    include: {
-      _count: true,
-    },
-  })
-  console.log(response)
+  const page = Number.parseInt(query.page ?? '0')
+  const pageSize = Number.parseInt(query.pageSize ?? '20')
+
+  const [response, count] = await Promise.all([
+    prisma.recipe.findMany({
+      where: {
+        cuisineName: query.cuisineName,
+        mealType: query.mealType,
+      },
+      take: pageSize,
+      skip: pageSize * page,
+      include: {
+        image: true,
+        ratings: {
+          select: {
+            score: true,
+          },
+        },
+      },
+    }),
+    prisma.recipe.count({
+      where: {
+        cuisineName: query.cuisineName,
+        mealType: query.mealType,
+      },
+    }),
+  ])
+
   return res.json({
     ok: true,
     message: 'Succesfully gotten the recipes',
     data: response,
-    // TODO: Add count
+    count,
   })
 }
 
