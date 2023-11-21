@@ -1,3 +1,4 @@
+import { Cuisine, MealType } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '#pages/api/_base'
 
@@ -16,7 +17,20 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   // Search for the term in the DB
   const searchTerm = req.query.searchTerm as string
 
+  const mealType = req.query.mealType as MealType | undefined
+  const cuisine = req.query.cuisine as Cuisine['name'] | undefined
+  const maxPrepTime = req.query.maxPrepTime as number | undefined
+
   const response = await prisma.recipe.findMany({
+    where: {
+      mealType,
+      cuisineName: cuisine,
+      preparationTime: maxPrepTime
+        ? {
+            lte: maxPrepTime,
+          }
+        : undefined,
+    },
     orderBy: {
       _relevance: {
         fields: 'name',

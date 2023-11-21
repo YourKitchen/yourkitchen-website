@@ -46,24 +46,19 @@ const RecipeBox: FC<RecipeBoxProps> = ({ recipe }) => {
   return (
     <Link
       sx={{
-        width: '250px',
+        display: 'block',
+        width: '100%',
+        maxWidth: '250px',
         height: '300px',
         borderRadius: 4,
         backgroundColor: (theme) => theme.palette.background.paper,
-        position: 'relative',
+        backgroundImage: `url(${image?.link})`,
         textDecoration: 'none',
+        position: 'relative',
         color: 'white',
       }}
       href={`/recipe/${recipe.id}`}
     >
-      {image && (
-        <Image
-          height={300}
-          width={250}
-          src={image?.link}
-          alt={`${recipe.name} by ${image?.photographer}`}
-        />
-      )}
       <Box
         sx={{
           top: 0,

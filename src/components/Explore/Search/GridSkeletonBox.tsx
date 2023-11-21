@@ -6,7 +6,7 @@ import React, { FC, useMemo } from 'react'
 import Link from '#components/Link'
 import { PublicRecipe } from '#pages/recipes'
 
-interface SkeletonRecipeBoxProps {
+interface GridSkeletonRecipeBoxProps {
   name: string
   rating: number
 }
@@ -14,13 +14,16 @@ interface SkeletonRecipeBoxProps {
 /**
  * Component to show recipe on Explore Page
  */
-const SkeletonRecipeBox: FC<SkeletonRecipeBoxProps> = ({ name, rating }) => {
+const GridSkeletonRecipeBox: FC<GridSkeletonRecipeBoxProps> = ({
+  name,
+  rating,
+}) => {
   return (
     <Box
       sx={{
         display: 'block',
         width: '100%',
-        minWidth: '250px',
+        maxWidth: '250px',
         height: '300px',
         borderRadius: 4,
         backgroundColor: (theme) => theme.palette.background.paper,
@@ -48,4 +51,4 @@ const SkeletonRecipeBox: FC<SkeletonRecipeBoxProps> = ({ name, rating }) => {
   )
 }
 
-export default SkeletonRecipeBox
+export default GridSkeletonRecipeBox

@@ -3,15 +3,22 @@ import {
   MenuItem,
   RatingPropsSizeOverrides,
   Select,
+  TextField,
   Typography,
+  debounce,
 } from '@mui/material'
+import Grid from '@mui/material/Unstable_Grid2'
 import { Cuisine, MealType, Rating, Recipe, RecipeImage } from '@prisma/client'
 import { GetStaticProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
 import ExploreRow from '#components/Explore/ExploreRow'
+import RecipeBox from '#components/Explore/RecipeBox'
+import GridSkeletonRecipeBox from '#components/Explore/Search/GridSkeletonBox'
+import SearchResults from '#components/Explore/Search/SearchResults'
+import SkeletonRecipeBox from '#components/Explore/SkeletonRecipeBox'
 import { YKResponse } from '#models/ykResponse'
 
 export type PublicRecipe = Recipe & {
@@ -47,6 +54,12 @@ const RecipesPage = () => {
     }
   }, [cuisines])
 
+  // Search
+  const [value, setValue] = useState('') // Debounced
+  const [searchValue, setSearchValue] = useState('') // Reactive
+
+  const setValueDelayed = useMemo(() => debounce(setValue, 250), [])
+
   return (
     <Box
       sx={{
@@ -63,48 +76,79 @@ const RecipesPage = () => {
           gap: 2,
         }}
       >
-        <Typography variant="h2">{t('recipes')}</Typography>
-        <Typography variant="h4">{t('popular_recipes')}</Typography>
-        <ExploreRow
-          loading={popularLoading}
-          recipes={popularRecipes?.data ?? []}
-        />
-        <Typography variant="h4">
-          {t('meal_type')}{' '}
-          <Select
-            value={mealType}
-            onChange={(e) => setMealType(e.target.value as MealType)}
-          >
-            {[MealType.DINNER, MealType.LUNCH, MealType.BREAKFAST].map(
-              (type) => (
-                <MenuItem key={type} value={type}>
-                  {t(type.toLowerCase())}
-                </MenuItem>
-              ),
-            )}
-          </Select>
-        </Typography>
-        <ExploreRow
-          loading={mealTypeLoading}
-          recipes={mealTypeRecipes?.data ?? []}
-        />
-        <Typography variant="h4">
-          {t('cuisine')}{' '}
-          <Select
-            value={cuisineName}
-            onChange={(e) => setCuisineName(e.target.value)}
-          >
-            {cuisines?.data.map((cuisine) => (
-              <MenuItem key={cuisine.name} value={cuisine.name}>
-                {cuisine.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </Typography>
-        <ExploreRow
-          loading={cuisineLoading}
-          recipes={cuisineRecipes?.data ?? []}
-        />
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Typography variant="h2">{t('recipes')}</Typography>
+          <TextField
+            value={searchValue}
+            onChange={(e) => {
+              setSearchValue(e.target.value)
+              setValueDelayed(e.target.value)
+            }}
+            placeholder={t('search')}
+            sx={{
+              transition: 'ease-in-out',
+              transitionDuration: '0.12s',
+              flex: 0.15,
+              '&:focus,&:focus-within,&:active': {
+                flex: 0.3,
+              },
+            }}
+          />
+        </Box>
+
+        {searchValue.length > 0 ? (
+          <SearchResults cuisines={cuisines?.data ?? []} value={value} />
+        ) : (
+          <>
+            <Typography variant="h4">{t('popular_recipes')}</Typography>
+            <ExploreRow
+              loading={popularLoading}
+              recipes={popularRecipes?.data ?? []}
+            />
+            <Typography variant="h4">
+              {t('meal_type')}{' '}
+              <Select
+                value={mealType}
+                onChange={(e) => setMealType(e.target.value as MealType)}
+              >
+                {[MealType.DINNER, MealType.LUNCH, MealType.BREAKFAST].map(
+                  (type) => (
+                    <MenuItem key={type} value={type}>
+                      {t(type.toLowerCase())}
+                    </MenuItem>
+                  ),
+                )}
+              </Select>
+            </Typography>
+            <ExploreRow
+              loading={mealTypeLoading}
+              recipes={mealTypeRecipes?.data ?? []}
+            />
+            <Typography variant="h4">
+              {t('cuisine')}{' '}
+              <Select
+                value={cuisineName}
+                onChange={(e) => setCuisineName(e.target.value)}
+              >
+                {cuisines?.data.map((cuisine) => (
+                  <MenuItem key={cuisine.name} value={cuisine.name}>
+                    {cuisine.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Typography>
+            <ExploreRow
+              loading={cuisineLoading}
+              recipes={cuisineRecipes?.data ?? []}
+            />
+          </>
+        )}
       </Box>
     </Box>
   )

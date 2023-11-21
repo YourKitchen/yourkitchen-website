@@ -6,7 +6,6 @@ import AppleProvider from 'next-auth/providers/apple'
 import EmailProvider from 'next-auth/providers/email'
 import FacebookProvider from 'next-auth/providers/facebook'
 import GoogleProvider from 'next-auth/providers/google'
-import { v4 } from 'uuid'
 import prisma from '../_base'
 
 // Setup next-auth with 4 providers (passwordless, facebook, google, apple)

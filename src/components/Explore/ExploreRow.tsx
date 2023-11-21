@@ -1,14 +1,5 @@
-import { Label } from '@mui/icons-material'
-import {
-  Box,
-  Chip,
-  MenuItem,
-  Select,
-  Skeleton,
-  Typography,
-} from '@mui/material'
-import { Recipe, RecipeImage } from '@prisma/client'
-import React, { FC, useEffect, useState } from 'react'
+import { Box } from '@mui/material'
+import React, { FC } from 'react'
 import { PublicRecipe } from '#pages/recipes'
 import RecipeBox from './RecipeBox'
 import SkeletonRecipeBox from './SkeletonRecipeBox'
@@ -31,14 +22,18 @@ const ExploreRow: FC<ExploreRowProps> = ({ recipes, loading }) => {
         display: 'flex',
         alignItems: 'center',
         gap: 2,
-        overflowX: 'scroll',
+        overflowX: 'auto',
         minHeight: '350px',
         marginBottom: 6,
       }}
     >
       {loading
-        ? skeletonData.map((data) => (
-            <SkeletonRecipeBox name={data.name} rating={data.rating} />
+        ? skeletonData.map((data, index) => (
+            <SkeletonRecipeBox
+              key={`skeleton-${index}`}
+              name={data.name}
+              rating={data.rating}
+            />
           ))
         : recipes.map((recipe) => (
             <RecipeBox key={recipe.id} recipe={recipe} />

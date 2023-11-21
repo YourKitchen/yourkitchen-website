@@ -17,7 +17,9 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  res.status(500).json({ ok: false, message: 'Not implemented yet.' })
+  const cuisines = await prisma.cuisine.findMany()
+
+  res.json({ ok: true, message: 'Succesfully got cuisines', data: cuisines })
 }
 
 const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
