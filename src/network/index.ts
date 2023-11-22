@@ -3,7 +3,7 @@ import axios, { AxiosError } from 'axios'
 export const api = axios.create({
   baseURL:
     process.env.NODE_ENV === 'production'
-      ? 'https://green-analytics.com/api'
+      ? 'https://yourkitchen.io/api'
       : 'http://localhost:3000/api',
   withCredentials: true,
   headers: {
