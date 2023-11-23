@@ -4,11 +4,18 @@ import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Image from 'next/image'
 import { FC } from 'react'
+import useSWR from 'swr'
 import AppStoreBadge from '#assets/AppStoreBadge.svg'
-import logo from '#assets/Logo-192x192.png'
+import logo from '#assets/Logo-512x512.png'
+import ExploreRow from '#components/Explore/ExploreRow'
+import { YKResponse } from '#models/ykResponse'
+import { PublicRecipe } from './recipes'
 
 const HomePage: FC = () => {
   const { t } = useTranslation('common')
+
+  const { data: popularRecipes, isLoading: popularLoading } =
+    useSWR<YKResponse<PublicRecipe[]>>('recipe/popular')
 
   return (
     <Box
@@ -66,9 +73,27 @@ const HomePage: FC = () => {
           </Link>
         </Box>
       </Box>
-      <Box sx={{ display: 'flex' }}>
-        <Typography variant="h4">{t('explore')}</Typography>
-        {/* TODO: Create different playlists that are shown here (Most popular in different categories) */}
+      <Box sx={{ width: '90%', display: 'flex', margin: 2 }}>
+        <Box sx={{ flex: { sm: 1.0, md: 0.4 }, paddingInline: 2 }}>
+          <Typography variant="h4">{t('explore')}</Typography>
+          <Typography sx={{ textAlign: 'justify', marginTop: 2 }}>
+            {t('explore_description')}
+          </Typography>
+        </Box>
+
+        <Box
+          sx={{
+            display: 'flex',
+            flex: { sm: 1.0, md: 0.6 },
+            flexDirection: 'column',
+          }}
+        >
+          <Typography variant="h4">{t('popular_recipes')}</Typography>
+          <ExploreRow
+            loading={popularLoading}
+            recipes={popularRecipes?.data ?? []}
+          />
+        </Box>
       </Box>
     </Box>
   )

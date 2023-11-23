@@ -144,7 +144,7 @@ model RecipeIngredient {
   unit   Unit
   amount Int
 
-  ingredient     Ingredient @relation(fields: [ingredientId], references: [id])
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
   ingredientId String
 
   @@id([recipeId, ingredientId])
@@ -179,7 +179,7 @@ enum Unit {
 
 // Done
 model Ingredient {
-  id String @id
+  id   String @id
   name String @unique
 
   recipes       RecipeIngredient[]
@@ -218,6 +218,9 @@ model Rating {
   recipeId   String?
   feedItem   FeedItem? @relation(fields: [feedItemId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   feedItemId String?
+
+  updated DateTime @updatedAt
+  created DateTime @default(now())
 }
 
 // Done
