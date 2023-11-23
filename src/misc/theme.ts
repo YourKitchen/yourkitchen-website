@@ -30,8 +30,7 @@ const defaultThemeOptions: ThemeOptions = {
         body: {
           minHeight: '100vh',
           backgroundRepeat: 'no-repeat',
-          background:
-            'linear-gradient(225deg, rgb(192 193 221 / 20%) 20%, rgb(71 73 182 / 20%) 40%, rgb(201 54 182 / 20%) 50%, rgb(255,255,255,0) 60%)',
+          background: 'radial-gradient(circle at top, #fde2c6 , #fdfdfd)',
         },
         ':root': {
           colorScheme: 'light',

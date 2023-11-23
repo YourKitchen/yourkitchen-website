@@ -273,7 +273,7 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
                   textAlign: 'center',
                   display: 'block',
                   position: 'relative',
-                  color: 'white',
+                  color: (theme) => theme.palette.text.primary,
                   '&:hover': {
                     backgroundColor: 'transparent',
                     '&:after': {

@@ -28,5 +28,7 @@
   "search": "Search",
   "meal_type": "Meal Type",
   "popular_recipes": "Popular Recipes",
-  "recipes": "Recipes"
+  "recipes": "Recipes",
+  "explore": "Explore",
+  "explore_description": "The explore section is an easy way to start creating new culinary experiences. The following section curates an experience of some of the most popular recipes currently present on our website."
 }

@@ -55,7 +55,12 @@ const RecipeBox: FC<RecipeBoxProps> = ({ recipe }) => {
         backgroundImage: `url(${image?.link})`,
         textDecoration: 'none',
         position: 'relative',
-        color: 'white',
+        overflow: 'hidden',
+        boxShadow: (theme) =>
+          theme.palette.mode === 'light'
+            ? 'rgba(0, 0, 0, 0.1) 0px 4px 12px;'
+            : undefined,
+        color: (theme) => theme.palette.text.primary,
       }}
       href={`/recipe/${recipe.id}`}
     >
@@ -70,7 +75,10 @@ const RecipeBox: FC<RecipeBoxProps> = ({ recipe }) => {
           alignItems: 'end',
           padding: 2,
           gap: 2,
-          background: 'linear-gradient(0deg, rgba(0,0,0,0.25), transparent)',
+          background: (theme) =>
+            theme.palette.mode === 'dark'
+              ? 'linear-gradient(0deg, rgba(0,0,0,0.25), transparent)'
+              : 'linear-gradient(0deg, rgba(255,255,255,0.75), transparent)',
         }}
       >
         <Box>
