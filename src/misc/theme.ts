@@ -20,8 +20,8 @@ const defaultThemeOptions: ThemeOptions = {
       main: red.A400,
     },
     background: {
-      default: '#ededed',
-      paper: '#dddddd',
+      default: '#eeeeee',
+      paper: '#fdfdfd',
     },
   },
   components: {
