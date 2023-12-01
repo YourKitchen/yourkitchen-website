@@ -25,9 +25,7 @@ import { getSession } from 'next-auth/react'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { NextSeo } from 'next-seo'
-import { useRouter } from 'next/router'
 import React, { FC, useMemo } from 'react'
-import useSWR from 'swr'
 import Link from '#components/Link'
 import YKChip from '#components/Recipe/YKChip'
 import { YKResponse } from '#models/ykResponse'
@@ -38,7 +36,7 @@ interface RecipePageProps {
   recipe: PublicRecipe & {
     ingredients: (RecipeIngredient & { ingredient: Ingredient })[]
   }
-  user: Session['user']
+  user?: Session['user']
 }
 
 /**
@@ -47,8 +45,6 @@ interface RecipePageProps {
 const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
   // Translations
   const { t } = useTranslation('common')
-
-  const router = useRouter()
 
   const image = useMemo(() => {
     if (recipe) {
@@ -84,7 +80,7 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
   }, [recipe])
 
   const errorAllergenes = useMemo(() => {
-    const userAllergenes = user.allergenes as AllergenType[]
+    const userAllergenes = (user?.allergenes ?? []) as AllergenType[]
     // If some of the allergenes are in the users allergenes, they are allergic to the dish. Show the error/warning.
     return allergenes.some((allergen) => userAllergenes.includes(allergen))
   }, [allergenes, user])
@@ -231,19 +227,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
 
-    if (!session) {
-      return {
-        redirect: {
-          destination: `/auth/signin?callbackUrl=${context.resolvedUrl}`,
-          permanent: false,
-          statusCode: 401,
-        },
-      }
-    }
-
     return {
       props: {
-        user: session.user,
+        user: session?.user,
         recipe: recipe.data.data,
         ...(context.locale
           ? {

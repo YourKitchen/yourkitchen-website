@@ -36,8 +36,7 @@ import Link from '../Link'
 
 interface Page {
   label: string
-  href?: string
-  func?: () => void
+  href: string
 }
 
 export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
@@ -46,7 +45,6 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { t } = useTranslation('header')
 
   const router = useRouter()
-  const navigation = useNavigation()
   const [scrollY, setScrollY] = useState(0)
 
   const pages: Page[] = useMemo(
@@ -123,13 +121,7 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   }
 
   const onPageClick = (page: Page) => {
-    if (page.func) {
-      page.func()
-    } else if (page.href) {
-      router.push(page.href)
-    } else {
-      throw new Error('Page must have either href or func')
-    }
+    router.push(page.href)
 
     // Close all menus
     handleCloseUserMenu()
