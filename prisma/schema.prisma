@@ -73,9 +73,9 @@ model User {
 }
 
 model Follows {
-  follower    User   @relation("follower", fields: [followerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  follower    User   @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
   followerId  String
-  following   User   @relation("following", fields: [followingId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  following   User   @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
   followingId String
 
   @@id([followerId, followingId])
@@ -83,7 +83,7 @@ model Follows {
 
 model Recipe {
   id      String  @id @default(uuid())
-  owner   User?   @relation("recipeOwner", fields: [ownerId], references: [id], onUpdate: Cascade, onDelete: SetNull) // Delete recipes when user deletes their account.
+  owner   User?   @relation("recipeOwner", fields: [ownerId], references: [id], onUpdate: Cascade, onDelete: SetNull)
   ownerId String?
 
   name        String
@@ -127,9 +127,10 @@ enum MealType {
 }
 
 model RecipeImage {
-  link String @id
+  id String @id @default(uuid())
+  link String
 
-  recipe   Recipe @relation(fields: [recipeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   recipeId String
 
   photoRefUrl     String?
@@ -138,7 +139,7 @@ model RecipeImage {
 }
 
 model RecipeIngredient {
-  recipe   Recipe @relation(fields: [recipeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   recipeId String
 
   unit   Unit
@@ -210,13 +211,13 @@ model Rating {
   id      String  @id @default(uuid())
   score   Int
   message String?
-  owner   User    @relation(fields: [ownerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  owner   User    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId String
 
   // Optional relations, depending on which one it concerns. One will be defined
-  recipe     Recipe?   @relation(fields: [recipeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  recipe     Recipe?   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   recipeId   String?
-  feedItem   FeedItem? @relation(fields: [feedItemId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  feedItem   FeedItem? @relation(fields: [feedItemId], references: [id], onDelete: Cascade)
   feedItemId String?
 
   updated DateTime @updatedAt
@@ -226,9 +227,9 @@ model Rating {
 // Done
 model FeedItem {
   id       String   @id @default(uuid())
-  owner    User     @relation(fields: [ownerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  owner    User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId  String
-  recipe   Recipe   @relation(fields: [recipeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  recipe   Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   recipeId String
   ratings  Rating[]
 

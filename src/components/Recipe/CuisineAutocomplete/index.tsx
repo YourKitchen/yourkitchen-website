@@ -1,8 +1,9 @@
+import { YKResponse } from '#models/ykResponse'
+import { api } from '#network/index'
 import {
   Autocomplete,
   AutocompleteRenderInputParams,
   Button,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -13,11 +14,9 @@ import { debounce } from '@mui/material/utils'
 import { Cuisine } from '@prisma/client'
 import { useSession } from 'next-auth/react'
 import { TFunction } from 'next-i18next'
-import React, { FC, useEffect, useMemo, useState } from 'react'
+import { FC, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
-import { YKResponse } from '#models/ykResponse'
-import { api } from '#network/index'
 
 interface CuisineAutocompleteProps {
   t: TFunction
@@ -42,6 +41,10 @@ const CuisineAutocomplete: FC<CuisineAutocompleteProps> = ({
   const { data, isValidating: cuisineLoading } = useSWR<YKResponse<Cuisine[]>>(
     value.length > 2 ? { url: 'cuisine/search', searchTerm: value } : null,
   )
+  const { data: defaultCuisines } = useSWR<YKResponse<Cuisine[]>>({
+    url: 'cuisine',
+    take: '5',
+  })
 
   const setValueDelayed = useMemo(() => debounce(setValue, 250), [])
 
@@ -101,7 +104,11 @@ const CuisineAutocomplete: FC<CuisineAutocompleteProps> = ({
           )
           onChange(cuisine)
         }}
-        options={data?.data.map((cuisine) => cuisine.name) ?? []}
+        options={
+          data?.data.map((cuisine) => cuisine.name) ??
+          defaultCuisines?.data.map((cuisine) => cuisine.name) ??
+          []
+        }
         renderInput={(params: AutocompleteRenderInputParams) => (
           <TextField {...params} label={t('cuisine')} />
         )}

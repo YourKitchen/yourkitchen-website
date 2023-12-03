@@ -20,9 +20,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const recipe = await prisma.recipe.findFirst({
+  const recipe = await prisma.recipe.findUnique({
     where: {
       id: req.query.id as string,
+    },
+    include: {
+      image: true,
+      ingredients: {
+        select: {
+          amount: true,
+          unit: true,
+          ingredient: true,
+        },
+      },
+      owner: true,
+      ratings: true,
     },
   })
   if (!recipe) {

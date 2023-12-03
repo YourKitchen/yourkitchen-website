@@ -1,53 +1,33 @@
+import { allUnits } from '#models/units'
+import { YKResponse } from '#models/ykResponse'
+import { ArrowForward, Delete, Search } from '@mui/icons-material'
 import {
-  Add,
-  ArrowForward,
-  ArrowRight,
-  Create,
-  Search,
-} from '@mui/icons-material'
-import {
-  Autocomplete,
-  AutocompleteRenderInputParams,
   Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   IconButton,
   InputBase,
-  Menu,
   MenuItem,
   Paper,
   Select,
   Tooltip,
+  Typography,
   debounce,
 } from '@mui/material'
 import Chip from '@mui/material/Chip'
 import TextField from '@mui/material/TextField'
 import { Ingredient, RecipeIngredient, Unit } from '@prisma/client'
-import { useSession } from 'next-auth/react'
 import { TFunction } from 'next-i18next'
-import React, {
-  ChangeEventHandler,
-  Dispatch,
-  FC,
-  SetStateAction,
-  TextareaHTMLAttributes,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { FC, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { getIngredientId } from 'src/utils'
 import useSWR from 'swr'
-import { allUnits } from '#models/units'
-import { YKResponse } from '#models/ykResponse'
 import CreateIngredientDialog from './CreateIngredientDialog'
 import FullSearchDialog from './FullSearchDialog'
 
 interface StepsTextFieldProps {
   t: TFunction
+  index: number
+  deleteStep: () => void
+  length: number
   value: string
   setValue: (newValue: string) => void
   label?: string
@@ -55,6 +35,9 @@ interface StepsTextFieldProps {
 
 const StepsTextField: FC<StepsTextFieldProps> = ({
   t,
+  index,
+  length,
+  deleteStep,
   value,
   setValue,
   label,
@@ -86,10 +69,23 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
   // Debounced search value used to search database for ingredients
   const [searchValue, setSearchValue] = useState<string>()
 
+  /**
+   * Helper function to get only the last part (The name of the ingredient)
+   */
+  const searchTerm = useMemo(() => {
+    const split = searchValue?.split(':')
+
+    if (split && split.length > 0) {
+      return split[split.length - 1]
+    }
+
+    return null
+  }, [searchValue])
+
   // Load the suggestions
   const { data: suggestions } = useSWR<YKResponse<Ingredient[]>>(
-    searchValue
-      ? { url: 'ingredient/search', searchTerm: searchValue, count: 1 }
+    searchTerm
+      ? { url: 'ingredient/search', searchTerm: searchTerm, count: 1 }
       : null,
   )
 
@@ -317,6 +313,39 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
         width: '100%',
       }}
     >
+      {/* Numbering */}
+      <Typography
+        sx={{
+          position: 'absolute',
+          left: '-35px',
+          borderRadius: '100%',
+          width: '30px',
+          height: '30px',
+          backgroundColor: (theme) => theme.palette.primary.main,
+          textAlign: 'center',
+          lineHeight: '30px',
+        }}
+      >
+        {`#${index + 1}`}
+      </Typography>
+      {/* Actions */}
+      {length > 1 && (
+        <IconButton
+          onClick={deleteStep}
+          sx={{
+            position: 'absolute',
+            right: '-35px',
+            borderRadius: '100%',
+            width: '30px',
+            height: '30px',
+            textAlign: 'center',
+            lineHeight: '30px',
+          }}
+        >
+          <Delete color="error" />
+        </IconButton>
+      )}
+
       {fullSearchValue && (
         <FullSearchDialog
           t={t}
