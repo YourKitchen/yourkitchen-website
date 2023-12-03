@@ -1,7 +1,7 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from 'next-auth'
 import prisma from '#pages/api/_base'
 import { authOptions } from '#pages/api/auth/[...nextauth]'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { getServerSession } from 'next-auth'
 
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
@@ -17,7 +17,11 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
-  const cuisines = await prisma.cuisine.findMany()
+  const take = req.query.take as string | undefined
+
+  const cuisines = await prisma.cuisine.findMany({
+    take: take ? Number.parseInt(take) : undefined,
+  })
 
   res.json({ ok: true, message: 'Succesfully got cuisines', data: cuisines })
 }

@@ -1,29 +1,29 @@
-import { Box, CircularProgress, Typography } from '@mui/material'
-import {
-  Ingredient,
-  MealType,
-  Recipe,
-  RecipeImage,
-  RecipeType,
-} from '@prisma/client'
+import YKTextField from '#components/General/YKTextField'
+import CuisineAutocomplete from '#components/Recipe/CuisineAutocomplete'
+import ImageSelect from '#components/Recipe/ImageSelect'
+import MealTypeSelect from '#components/Recipe/MealTypeSelect'
+import PreparationTimePicker from '#components/Recipe/PreparationTimePicker'
+import RecipeTypeSelect from '#components/Recipe/RecipeTypeSelect'
+import StepsTextField from '#components/Recipe/StepsTextField'
+import { YKResponse } from '#models/ykResponse'
+import { api } from '#network/index'
+import { Box, Button, CircularProgress, Typography } from '@mui/material'
+import { Recipe, RecipeImage, RecipeIngredient } from '@prisma/client'
 import { GetStaticProps } from 'next'
 import { useSession } from 'next-auth/react'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { NextSeo } from 'next-seo'
-import { useRouter } from 'next/router'
-import React, { FC, useState } from 'react'
+import { redirect } from 'next/navigation'
+import { FC, useState } from 'react'
+import { toast } from 'sonner'
+import { getGetIngredientsFromStep } from 'src/utils'
+import { validateContent } from 'src/utils/validator'
 import { v4 } from 'uuid'
-import YKTextField from '#components/General/YKTextField'
-import CuisineAutocomplete from '#components/Recipe/CuisineAutocomplete'
-import MealTypeSelect from '#components/Recipe/MealTypeSelect'
-import PreparationTimePicker from '#components/Recipe/PreparationTimePicker'
-import RecipeTypeSelect from '#components/Recipe/RecipeTypeSelect'
-import StepsTextField from '#components/Recipe/StepsTextField'
 
 const defaultRecipe: Recipe & {
-  ingredients: Ingredient[]
-  image?: RecipeImage
+  ingredients: RecipeIngredient[]
+  image: (RecipeImage & { file?: File })[]
 } = {
   id: v4(),
 
@@ -34,9 +34,10 @@ const defaultRecipe: Recipe & {
   preparationTime: 60,
   recipeType: 'MAIN',
 
-  steps: [],
+  steps: [''],
   ingredients: [],
   cuisineName: '',
+  image: [],
 
   // Will be overwritten by server anyways
   ownerId: '',
@@ -55,8 +56,71 @@ const CreateRecipePage: FC = () => {
   // States
   const [recipe, setRecipe] = useState(defaultRecipe)
 
+  const [stepList, setStepList] = useState<{ key: string; value: string }[]>(
+    recipe.steps.map((step) => ({
+      key: v4(),
+      value: step,
+    })),
+  )
+
   if (status === 'loading' || !session) {
     return <CircularProgress />
+  }
+
+  const submit = async () => {
+    const formattedRecipe = recipe
+
+    formattedRecipe.steps = stepList.map((step) => step.value)
+
+    toast.promise(
+      async () => {
+        if (recipe.image.length === 0) {
+          throw new Error('No image(s) not selected')
+        }
+        // Extract ingredients from steps.
+        formattedRecipe.ingredients = recipe.steps.flatMap((step) =>
+          getGetIngredientsFromStep(step, recipe.id),
+        )
+
+        // We validate the recipe before beginning any kind of upload.
+        const validatedRecipe = validateContent(formattedRecipe)
+
+        // Upload all images that contain files.
+        const responses: RecipeImage[] = await Promise.all(
+          recipe.image.map(async (image) => {
+            if (image.file) {
+              // Upload new file
+              const uploadResponse = await api.post<YKResponse<string>>(
+                'database/recipe/image',
+                image.file,
+                {
+                  params: {
+                    recipeId: image.recipeId,
+                    id: image.id,
+                  },
+                },
+              )
+
+              image.link = uploadResponse.data.data
+            }
+
+            return image
+          }),
+        )
+
+        formattedRecipe.image = responses
+
+        return api.post<YKResponse<Recipe>>('database/recipe', validatedRecipe)
+      },
+      {
+        loading: `${t('creating')} ${t('recipe')}..`,
+        error: (err) => err.message ?? err,
+        success: (response) => {
+          // Navigate to the newly created recipe.
+          redirect(`recipe/${response.data.data.id}`)
+        },
+      },
+    )
   }
 
   return (
@@ -99,6 +163,17 @@ const CreateRecipePage: FC = () => {
             }))
           }}
           placeholder={t('description')}
+        />
+        <ImageSelect
+          t={t}
+          recipeId={recipe.id}
+          value={recipe.image}
+          onChange={(images) =>
+            setRecipe((prev) => ({
+              ...prev,
+              image: images,
+            }))
+          }
         />
         <CuisineAutocomplete
           t={t}
@@ -145,13 +220,49 @@ const CreateRecipePage: FC = () => {
             }))
           }}
         />
-        <StepsTextField
-          t={t}
-          value={recipe.steps[0]}
-          setValue={(value) => {
-            setRecipe((prev) => ({ ...prev, steps: [value] }))
+        {stepList.map((step, index) => (
+          <StepsTextField
+            key={step.key}
+            t={t}
+            index={index}
+            length={stepList.length}
+            deleteStep={() => {
+              setStepList((prev) =>
+                prev.filter((prevStep) => prevStep.key !== step.key),
+              )
+            }}
+            value={step.value}
+            setValue={(value) => {
+              setStepList((prev) =>
+                prev.map((prevStep) =>
+                  prevStep.key === step.key
+                    ? { key: step.key, value }
+                    : prevStep,
+                ),
+              )
+            }}
+          />
+        ))}
+        {/* Add step button */}
+        <Button
+          fullWidth
+          variant="contained"
+          onClick={() => {
+            setStepList((prev) => [...prev, { key: v4(), value: '' }])
           }}
-        />
+        >
+          {t('add_step')}
+        </Button>
+
+        <Button
+          sx={{
+            mt: 2,
+          }}
+          variant="contained"
+          onClick={submit}
+        >
+          {t('create')}
+        </Button>
       </Box>
     </Box>
   )

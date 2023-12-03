@@ -1,10 +1,8 @@
+import Logo from '#assets/Logo-192x192.png'
 import {
   Add,
-  Description,
-  Logout,
   Menu as MenuIcon,
   MoreVert as MoreIcon,
-  Settings,
 } from '@mui/icons-material'
 import {
   AppBar,
@@ -14,24 +12,15 @@ import {
   Menu,
   MenuItem,
   Toolbar,
-  Tooltip,
   Typography,
 } from '@mui/material'
 import useTheme from '@mui/system/useTheme'
 import { useSession } from 'next-auth/react'
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
-import { useRouter as useNavigation } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import { useRouter } from 'next/router'
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
-import Logo from '#assets/Logo-192x192.png'
-import LanguageSelect from '../Footer/LanguageSelect'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from '../Link'
 
 interface Page {
@@ -121,12 +110,7 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   }
 
   const onPageClick = (page: Page) => {
-    router.push(page.href)
-
-    // Close all menus
-    handleCloseUserMenu()
-    handleCloseNavMenu()
-    handleMobileMenuClose()
+    redirect(page.href)
   }
 
   const mobileMenuId = 'primary-menu-mobile'
