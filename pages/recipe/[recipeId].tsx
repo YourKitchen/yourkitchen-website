@@ -1,36 +1,28 @@
+import Link from '#components/Link'
+import YKChip from '#components/Recipe/YKChip'
+import { YKResponse } from '#models/ykResponse'
+import { api } from '#network/index'
+import { PublicRecipe } from '#pages/recipes'
 import { CheckCircle, Error as ErrorIcon } from '@mui/icons-material'
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Box,
-  Chip,
-  CircularProgress,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
   Typography,
 } from '@mui/material'
-import {
-  AllergenType,
-  Ingredient,
-  Recipe,
-  RecipeIngredient,
-} from '@prisma/client'
+import { AllergenType, Ingredient, RecipeIngredient } from '@prisma/client'
 import { DateTime } from 'luxon'
-import { GetServerSideProps, GetStaticPaths, GetStaticProps } from 'next'
-import { Session, getServerSession } from 'next-auth'
+import { GetServerSideProps } from 'next'
+import { Session } from 'next-auth'
 import { getSession } from 'next-auth/react'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { NextSeo } from 'next-seo'
-import React, { FC, useMemo } from 'react'
-import Link from '#components/Link'
-import YKChip from '#components/Recipe/YKChip'
-import { YKResponse } from '#models/ykResponse'
-import { api } from '#network/index'
-import { PublicRecipe } from '#pages/recipes'
+import { FC, useMemo } from 'react'
 
 interface RecipePageProps {
   recipe: PublicRecipe & {
