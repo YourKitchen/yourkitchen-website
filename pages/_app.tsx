@@ -1,3 +1,8 @@
+import { Footer } from '#components/Footer'
+import { Header } from '#components/Header'
+import createEmotionCache from '#misc/createEmotionCache'
+import theme, { darkTheme } from '#misc/theme'
+import { api } from '#network/index'
 import { CacheProvider, EmotionCache } from '@emotion/react'
 import { Box, useMediaQuery } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -11,11 +16,6 @@ import { AppProps } from 'next/app'
 import { FC, useEffect, useMemo } from 'react'
 import { Toaster, toast } from 'sonner'
 import { SWRConfig } from 'swr'
-import { Footer } from '#components/Footer'
-import { Header } from '#components/Header'
-import createEmotionCache from '#misc/createEmotionCache'
-import theme, { darkTheme } from '#misc/theme'
-import { api } from '#network/index'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -30,7 +30,7 @@ const MyApp: FC<MyAppProps> = (props) => {
 
   useEffect(() => {
     try {
-      initGA('0892f6c1-6c87-4d28-8df5-239da7d4d69c')
+      initGA('aab4595a-ab94-4c99-b444-bfb5abc5adb1')
     } catch (err: any) {
       console.error('Failed to start green-analytics: ', err)
     }
