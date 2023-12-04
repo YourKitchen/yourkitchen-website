@@ -61,7 +61,7 @@
     "@types/nodemailer": "^6.4.14",
     "@types/uuid": "^9.0.7",
     "husky": "^8.0.3",
-    "lint-staged": "^15.1.0",
+    "lint-staged": "^15.2.0",
     "next-bundle-analyzer": "^0.6.8",
     "prisma": "^5.6.0",
     "typescript": "^5.3.2"
