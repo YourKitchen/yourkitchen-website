@@ -222,6 +222,9 @@ model Rating {
 
   updated DateTime @updatedAt
   created DateTime @default(now())
+
+  @@unique([recipeId, ownerId])
+  @@unique([feedItemId, ownerId])
 }
 
 // Done

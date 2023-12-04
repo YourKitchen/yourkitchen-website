@@ -18,7 +18,7 @@ import useTheme from '@mui/system/useTheme'
 import { useSession } from 'next-auth/react'
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
-import { redirect } from 'next/navigation'
+import { useRouter as useNavigation } from 'next/navigation'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from '../Link'
@@ -34,6 +34,7 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { t } = useTranslation('header')
 
   const router = useRouter()
+  const navigation = useNavigation()
   const [scrollY, setScrollY] = useState(0)
 
   const pages: Page[] = useMemo(
@@ -110,7 +111,7 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   }
 
   const onPageClick = (page: Page) => {
-    redirect(page.href)
+    navigation.push(page.href)
   }
 
   const mobileMenuId = 'primary-menu-mobile'
