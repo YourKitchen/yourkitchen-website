@@ -4,7 +4,7 @@ import { GetServerSideProps } from 'next'
 
 const RecipesSitemap = () => {}
 
-const locales = ['da', 'en']
+const locales = ['da', 'en', 'de', 'es']
 const SITE_URL = process.env.SITE_URL ?? 'https://yourkitchen.io'
 
 function generateSiteMap(
