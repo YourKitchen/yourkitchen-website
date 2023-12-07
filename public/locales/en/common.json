@@ -38,5 +38,10 @@
   "rating": "Rating",
   "message": "Message",
   "updating": "Updating",
-  "updated": "Updated"
+  "updated": "Updated",
+  "followers": "Followers",
+  "following": "Following",
+  "recipe": "Recipe",
+  "feed": "Feed",
+  "joined_in": "Joined in"
 }
