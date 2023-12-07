@@ -1,0 +1,13 @@
+{
+  "name": "Name",
+  "profile_picture": "Profilbild",
+  "email": "Email",
+  "default_persons": "Standard Personen",
+  "allergenes": "Allergenes",
+  "uploading_image": "Bild wird hochgeladen",
+  "updating": "Aktualisierung",
+  "user": "Benutzer",
+  "succesfully_updated": "Erfolgreich aktualisiert",
+  "file_selected": "Datei ausgewählt",
+  "upload_file": "Datei hochladen"
+}

@@ -20,9 +20,12 @@ import { GetServerSideProps } from 'next'
 import { Session, getServerSession } from 'next-auth'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { NextSeo } from 'next-seo'
+import { NextSeo, RecipeJsonLd } from 'next-seo'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { FC, useMemo, useState } from 'react'
+
+const SITE_URL = process.env.SITE_URL ?? 'https://yourkitchen.io'
 
 interface RecipePageProps {
   recipe: PublicRecipe & {
@@ -38,6 +41,9 @@ interface RecipePageProps {
 const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
   // Translations
   const { t } = useTranslation('common')
+
+  // Router
+  const router = useRouter()
 
   // States
   const [completedStep, setCompletedStep] = useState(-1)
@@ -83,6 +89,8 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
     return allergenes.filter((allergen) => userAllergenes.includes(allergen))
   }, [allergenes, user])
 
+  console.log(router.pathname)
+
   return (
     <Box
       sx={{
@@ -95,6 +103,27 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
       <NextSeo
         title={recipe.name}
         description={recipe.description ?? t('recipe_page_default_description')}
+      />
+      <RecipeJsonLd
+        name={recipe.name}
+        authorName={recipe.owner.name ?? 'YourKitchen'} // It is required, and will often be set.
+        description={recipe.description ?? t('recipe_page_default_description')}
+        category={recipe.recipeType}
+        cuisine={recipe.cuisineName}
+        datePublished={recipe.created as any as string} // It is a string
+        yields={`${recipe.persons} Portions`}
+        ingredients={recipe.ingredients.map(
+          (ingredient) =>
+            `${ingredient.amount} ${ingredient.unit} ${ingredient.ingredient.name}`,
+        )}
+        aggregateRating={{
+          ratingValue: recipe.rating.toString(),
+          ratingCount: recipe.ratings.length.toString(),
+        }}
+        instructions={recipe.steps.map((step, index) => ({
+          text: step,
+          url: `${SITE_URL}/${router.pathname}#step${index}`,
+        }))}
       />
       <Box
         sx={{
@@ -269,6 +298,7 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
             </List>
           </Box>
         </Box>
+        JR
       </Box>
     </Box>
   )

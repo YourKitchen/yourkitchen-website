@@ -1,4 +1,4 @@
-const locales = ['en', 'da']
+const locales = ['en', 'da', 'de', 'es']
 const siteUrl = process.env.SITE_URL || 'https://yourkitchen.io'
 
 /** @type {import('next-sitemap').IConfig} */

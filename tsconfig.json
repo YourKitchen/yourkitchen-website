@@ -50,7 +50,8 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "scripts/translate-site.mts"
   ],
   "exclude": [
     "node_modules"

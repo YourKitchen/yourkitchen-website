@@ -5,7 +5,7 @@ module.exports = {
   // https://www.i18next.com/overview/configuration-options#logging
   debug: false,
   i18n: {
-    locales: ['default', 'en', 'da'],
+    locales: ['default', 'en', 'da', 'de', 'es'],
     defaultLocale: 'default',
     localeDetection: false,
   },
