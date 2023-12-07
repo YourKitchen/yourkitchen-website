@@ -4,7 +4,7 @@ about: Create a bug report
 title: "[BUG]"
 labels: bug
 assignees: MakakWasTaken
-
+projects: ["YourKitchen/projects/1"]
 ---
 
 # Issue

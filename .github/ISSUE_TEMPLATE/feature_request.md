@@ -1,10 +1,10 @@
 ---
 name: Feature request
 about: Suggest an idea
-title: "[FEATURE_REQUEST]"
+title: ""
 labels: feature request
 assignees: ''
-
+projects: ["YourKitchen/projects/1"]
 ---
 
 # Feature Request

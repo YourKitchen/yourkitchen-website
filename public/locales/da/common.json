@@ -29,6 +29,14 @@
   "meal_type": "Måltidtype",
   "popular_recipes": "Populære Opskrifter",
   "recipes": "Opskrifter",
+  "ingredients": "Ingredienser",
+  "steps": "Skridt",
+  "preparation_time": "Forberedelsestid",
   "explore": "Udforsk",
-  "explore_description": "Udforsk sektionen giver dig en god indgangsvinkel til at komme igang med at lave nye lækre retter. Den følgende sektion beskriver nogle af de mest populære opskrifter på vores hjemmeside lige nu."
+  "explore_description": "Udforsk sektionen giver dig en god indgangsvinkel til at komme igang med at lave nye lækre retter. Den følgende sektion beskriver nogle af de mest populære opskrifter på vores hjemmeside lige nu.",
+  "recipe_page_default_description": "Recipe page describes the various step needed to reproduce this recipe.",
+  "rating": "Vurdering",
+  "message": "Anmeldelse",
+  "updating": "Opdaterer",
+  "updated": "Opdateret"
 }

@@ -1,29 +1,32 @@
+import ExploreRow from '#components/Explore/ExploreRow'
+import SearchResults from '#components/Explore/Search/SearchResults'
+import { YKResponse } from '#models/ykResponse'
 import {
   Box,
   MenuItem,
-  RatingPropsSizeOverrides,
   Select,
   TextField,
   Typography,
   debounce,
 } from '@mui/material'
-import Grid from '@mui/material/Unstable_Grid2'
-import { Cuisine, MealType, Rating, Recipe, RecipeImage } from '@prisma/client'
+import {
+  Cuisine,
+  MealType,
+  Rating,
+  Recipe,
+  RecipeImage,
+  User,
+} from '@prisma/client'
 import { GetStaticProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
-import ExploreRow from '#components/Explore/ExploreRow'
-import RecipeBox from '#components/Explore/RecipeBox'
-import GridSkeletonRecipeBox from '#components/Explore/Search/GridSkeletonBox'
-import SearchResults from '#components/Explore/Search/SearchResults'
-import SkeletonRecipeBox from '#components/Explore/SkeletonRecipeBox'
-import { YKResponse } from '#models/ykResponse'
 
 export type PublicRecipe = Recipe & {
   image: RecipeImage[]
   ratings: Pick<Rating, 'score'>[]
+  owner: User
 }
 
 /**

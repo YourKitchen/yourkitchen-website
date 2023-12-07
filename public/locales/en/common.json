@@ -29,6 +29,19 @@
   "meal_type": "Meal Type",
   "popular_recipes": "Popular Recipes",
   "recipes": "Recipes",
+  "ingredients": "Ingredients",
+  "steps": "Steps",
+  "preparation_time": "Preparation Time",
   "explore": "Explore",
-  "explore_description": "The explore section is an easy way to start creating new culinary experiences. The following section curates an experience of some of the most popular recipes currently present on our website."
+  "explore_description": "The explore section is an easy way to start creating new culinary experiences. The following section curates an experience of some of the most popular recipes currently present on our website.",
+  "recipe_page_default_description": "Recipe page describes the various step needed to reproduce this recipe.",
+  "rating": "Rating",
+  "message": "Message",
+  "updating": "Updating",
+  "updated": "Updated",
+  "followers": "Followers",
+  "following": "Following",
+  "recipe": "Recipe",
+  "feed": "Feed",
+  "joined_in": "Joined in"
 }

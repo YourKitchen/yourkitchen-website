@@ -1,14 +1,8 @@
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Link,
-  Tab,
-  Table,
-  Tabs,
-  Typography,
-  tabClasses,
-} from '@mui/material'
+import AccountUpdateBox from '#components/Account/AccountUpdateBox'
+import AccountTabPanel from '#components/Account/TabPanel'
+import { YKResponse } from '#models/ykResponse'
+import { api } from '#network/index'
+import { Box, CircularProgress, Tab, Tabs, Typography } from '@mui/material'
 import { User } from '@prisma/client'
 import { GetStaticProps } from 'next'
 import { useSession } from 'next-auth/react'
@@ -18,10 +12,6 @@ import { NextSeo } from 'next-seo'
 import Image from 'next/image'
 import { FC, useState } from 'react'
 import { toast } from 'sonner'
-import AccountTabPanel from '#components/Account/AccountTabPanel'
-import AccountUpdateBox from '#components/Account/AccountUpdateBox'
-import { YKResponse } from '#models/ykResponse'
-import { api } from '#network/index'
 
 export enum SettingsTab {
   General = 0,
