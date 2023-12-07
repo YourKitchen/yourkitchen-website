@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import React from 'react'
 
 interface TabPanelProps {
@@ -7,7 +7,7 @@ interface TabPanelProps {
   value: number
 }
 
-const AccountTabPanel = (props: TabPanelProps) => {
+const TabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props
 
   return (
@@ -23,4 +23,4 @@ const AccountTabPanel = (props: TabPanelProps) => {
   )
 }
 
-export default AccountTabPanel
+export default TabPanel

@@ -33,6 +33,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
       name: true,
       ratings: true,
       recipes: true,
+      created: true,
     },
   })
   if (!user) {

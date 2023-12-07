@@ -112,6 +112,8 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
         cuisine={recipe.cuisineName}
         datePublished={recipe.created as any as string} // It is a string
         yields={`${recipe.persons} Portions`}
+        images={recipe.image.map((image) => image.link)}
+        totalTime={`PT${recipe.preparationTime}M`}
         ingredients={recipe.ingredients.map(
           (ingredient) =>
             `${ingredient.amount} ${ingredient.unit} ${ingredient.ingredient.name}`,
@@ -122,7 +124,7 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
         }}
         instructions={recipe.steps.map((step, index) => ({
           text: step,
-          url: `${SITE_URL}/${router.pathname}#step${index}`,
+          url: `${SITE_URL}/recipe/${recipe.id}#step${index}`,
         }))}
       />
       <Box
@@ -298,7 +300,6 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
             </List>
           </Box>
         </Box>
-        JR
       </Box>
     </Box>
   )
