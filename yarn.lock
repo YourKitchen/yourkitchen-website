@@ -2572,10 +2572,10 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.9:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz#4183e4e8bf08bb6e05bbb2f7d2e0c8f712ca40e3"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
-green-analytics-js@^1.0.12:
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/green-analytics-js/-/green-analytics-js-1.0.12.tgz#8bcc83f2a6e6a0986e82facbacda109cc6369f2a"
-  integrity sha512-hvqBtI0hqkvuiI6pfpbeUatCUj/7IN5JwRS/d6AjkyeSwyFtqyk3ShXoQpCFacLhYd6XcLQ8uFPKvKTd8r1EqQ==
+green-analytics-js@^1.0.17:
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/green-analytics-js/-/green-analytics-js-1.0.17.tgz#9472611244068c1d95444c3e9c10a5e54e92d099"
+  integrity sha512-YJHs+oyVA30O/myLOFo2+KxnYHeWsoQpk3qYM31wLQXt8Ere6leIk7j0W17aSbNEhHU7csB6SPgnMlLa2HK5QA==
 
 gzip-size@^6.0.0:
   version "6.0.0"

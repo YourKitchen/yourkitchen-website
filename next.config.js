@@ -1,4 +1,5 @@
 const { i18n } = require('./next-i18next.config')
+const bundleAnalyzer = require('@next/bundle-analyzer')
 
 const advancedHeaders = [
   {

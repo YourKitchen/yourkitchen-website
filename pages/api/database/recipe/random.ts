@@ -29,29 +29,28 @@ const openai = new OpenAI()
 
 const getAndStoreImage = async (
   name: string,
+  recipeId: string,
 ): Promise<Omit<RecipeImage, 'recipeId'>> => {
   // Get image for recipe.
   const image = await getRecipeImage(name)
 
   const blobResponse = await api.get(image.src.medium, {
-    responseType: 'blob',
+    responseType: 'arraybuffer',
   }) // Upload medium
 
+  const blob = new Blob([blobResponse.data], {
+    type: blobResponse.headers['content-type'],
+  })
+
   // Upload to blob storage.
-  const blob = await put(
-    `recipes/${image.id}-${name.toLowerCase().replaceAll(' ', '-')}.jpg`,
-    new Blob([blobResponse.data], {
-      type: blobResponse.headers['Content-Type']?.toString(),
-    }),
-    {
-      access: 'public',
-      contentType: blobResponse.headers['Content-Type']?.toString(),
-    },
-  )
+  const imageBlob = await put(`recipes/${recipeId}/${image.id}.jpg`, blob, {
+    access: 'public',
+    contentType: blobResponse.headers['Content-Type']?.toString(),
+  })
 
   return {
     id: v4(),
-    link: blob.url,
+    link: imageBlob.url,
     photoRefUrl: image.url,
     photographer: image.photographer,
     photographerUrl: image.photographer_url,
@@ -64,24 +63,67 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       messages: [
         {
           role: 'system',
-          content: `You are a chef writing a cookbook. The output should be outputted in the following json format:
+          content: `You are a chef writing a cookbook. The structure of the response should follow the following typescript definition:
           {
-            "name": string,
-            "mealType": 'BREAKFAST' | 'LUNCH' | 'DINNER',
-            "preparationTime": number, // Number of minutes
-            "difficulty": 'EASY' | 'INTERMEDIATE' | 'EXPERT',
-            "cuisineName": string,
-            "ingredients": {
-               "unit": 'TEASPOON' | 'TABLESPOON' | 'FLUID_OUNCE' | 'CUP' | 'PINT' | 'QUART' | 'GALLON' | 'MILLILITER' | 'LITER' | 'GRAM' | 'KILOGRAM' | 'OUNCE' | 'POUND' | 'PINCH' | 'DASH' | 'DROP' | 'SLICE' | 'PIECE' | 'CLOVE' | 'BULB' | 'STICK' | 'CUBIC_INCH' | 'CUBIC_FOOT' | 'PACKAGE',
-               "amount": number,
-               "name": string,
-               "allergenType": 'NUT' | 'PEANUTS' | 'LACTOSE' | 'EGGS' | 'FISH' | 'SHELLFISH' | 'SOY' | 'WHEAT' | 'GLUTEN' | 'SESAME' | 'MUSTARD' | 'SULFITES' | 'CELERY' | 'LUPIN' | 'MOLLUSKUS' | null}[],
-            "steps": string[]
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "mealType": {
+                "type": "string",
+                "enum": ["BREAKFAST", "LUNCH", "DINNER"]
+              },
+              "preparationTime": {
+                "type": "number"
+              },
+              "difficulty": {
+                "type": "string",
+                "enum": ["EASY", "INTERMEDIATE", "EXPERT"]
+              },
+              "cuisineName": {
+                "type": "string"
+              },
+              "ingredients": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "unit": {
+                      "type": "string",
+                      "enum": ["TEASPOON", "TABLESPOON", "FLUID_OUNCE", "CUP", "PINT", "QUART", "GALLON", "MILLILITER", "LITER", "GRAM", "KILOGRAM", "OUNCE", "POUND", "PINCH", "DASH", "DROP", "SLICE", "PIECE", "CLOVE", "BULB", "STICK", "CUBIC_INCH", "CUBIC_FOOT", "PACKAGE"]
+                    },
+                    "amount": {
+                      "type": "number"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "allergenType": {
+                      "type": ["string", "null"],
+                      "enum": ["NUT", "PEANUTS", "LACTOSE", "EGGS", "FISH", "SHELLFISH", "SOY", "WHEAT", "GLUTEN", "SESAME", "MUSTARD", "SULFITES", "CELERY", "LUPIN", "MOLLUSKUS", null]
+                    }
+                  },
+                  "required": ["unit", "amount", "name", "allergenType"]
+                }
+              },
+              "steps": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": ["name", "mealType", "preparationTime", "difficulty", "cuisineName", "ingredients", "steps"]
           }
+          
 
-           The steps should be generated in a specific manner where every time an ingredient is mentioned it will be using the following format:
-           !amount:unit:name! these three values should come from the ingredients array. An example could look like this:
-           "Add the minced !2:cloves:garlic! and sauté for another minute." if the provided ingredient is {"unit": "cloves", "amount": 2, "name": "Garlic"}.`,
+          If the recipe does not follow this format exactly it is invalid.
+
+          The steps should be generated in a specific manner where every time an ingredient is mentioned it will be using the following format:
+          !amount:unit:name! these three values should come from the ingredients array. An example could look like this:
+          "Add the minced !2:CLOVES:garlic! and sauté for another minute." if the ingredient is {"unit": "cloves", "amount": 2, "name": "Garlic"}.`,
         },
         {
           role: 'user',
@@ -95,12 +137,14 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
     })
     const response = completion.choices[0].message.content
 
-    if (response) {
+    if (response !== null) {
       // If we have a response, apply the validator to check that the everything is in the correct format.
       const recipe = validateContent(JSON.parse(response))
 
+      const recipeId = v4()
+
       const [recipeImage] = await Promise.all([
-        getAndStoreImage(recipe.name),
+        getAndStoreImage(recipe.name, recipeId),
         // Upsert all the ingredients.
         prisma.ingredient.createMany({
           data: recipe.ingredients.map((ingredient) => ({
@@ -124,11 +168,14 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       // Add the recipe to the db.
       const createResponse = await prisma.recipe.create({
         data: {
+          id: recipeId,
           name: recipe.name,
           mealType: recipe.mealType,
           preparationTime: recipe.preparationTime,
           recipeType: 'MAIN',
           ingredients: {
+            // There is a difference between the ingredients generated here, and above.
+            // The ones generated above is of type Ingredient, the ones geneated here is RecipeIngredients, which contains amount & unit.
             // RecipeIngredients have to be created individually for each recipe.
             createMany: {
               data: recipe.ingredients.map((ingredient) => ({
@@ -164,7 +211,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       recipe: err instanceof ValidationError ? err.object : undefined,
     })
   }
-  res.status(500).json({ ok: false, message: 'An unknown error occurred' })
 }
 
 export default handler

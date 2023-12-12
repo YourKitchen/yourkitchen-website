@@ -6,7 +6,20 @@ import { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
 import { authOptions } from '#pages/api/auth/[...nextauth]'
 import { PublicRecipe } from '#pages/recipes'
-import { Box, Button, Grid, Tab, Tabs, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  List,
+  ListItem,
+  Tab,
+  Tabs,
+  Typography,
+} from '@mui/material'
 import { FeedItem, Rating, User } from '@prisma/client'
 import { DateTime } from 'luxon'
 import { GetServerSideProps } from 'next'
@@ -71,6 +84,35 @@ const UserPage: FC<UserPageProps> = ({ ownUser, user }) => {
         title={user.name ?? 'User'}
         description={t('user_default_description')}
       />
+      <Dialog
+        open={followDialogOpen !== null}
+        onClose={() => setFollowDialogOpen(null)}
+      >
+        <DialogTitle>{t(followDialogOpen as string)}</DialogTitle>
+        <DialogContent>
+          {/* Show list of selected type of follow */}
+          <List>
+            {user[followDialogOpen as 'followers' | 'following'].map(
+              (followUser) => (
+                <Link href={`/user/${followUser.id}`} key={followUser.id}>
+                  <ListItem>
+                    <Image
+                      alt={`${followUser.name}'s profile picture`}
+                      width={30}
+                      height={30}
+                      src={followUser.image ?? Logo}
+                    />
+                    {followUser.name}
+                  </ListItem>
+                </Link>
+              ),
+            )}
+          </List>
+        </DialogContent>
+        <DialogActions onClick={() => setFollowDialogOpen(null)}>
+          {t('okay')}
+        </DialogActions>
+      </Dialog>
       <Image
         alt={`${user.name}'s profile picture`}
         width={256}
@@ -113,46 +155,56 @@ const UserPage: FC<UserPageProps> = ({ ownUser, user }) => {
         <Tab value={0} label={t('recipes')} />
         <Tab value={1} label={t('feed')} />
       </Tabs>
-      <TabPanel value={tab} index={0}>
-        <Grid
-          sx={{
-            width: { sm: '70%', md: '60%', lg: '50%' },
-          }}
-          columns={3}
-          justifyContent={'flex-start'}
-        >
-          {user.recipes.map((recipe) => (
-            <Link
-              href={`/recipe/${recipe.id}`}
-              sx={{
-                display: 'block',
-                width: '300px',
-                height: '300px',
-                backgroundColor: (theme) => theme.palette.background.default,
-                backgroundImage: `url(${recipe.image?.[0].link})`,
-                backgroundSize: 'cover',
-                borderRadius: 2,
-                transition: '0.25s',
-                position: 'relative',
-                fontSize: '25px',
+      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+        <TabPanel value={tab} index={0}>
+          <Grid
+            sx={{
+              width: { sm: '300px', md: '930px' },
+              display: 'flex',
+              gap: '10px',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between',
+            }}
+            columns={3}
+          >
+            {user.recipes.map((recipe) => (
+              <Link
+                href={`/recipe/${recipe.id}`}
+                sx={{
+                  display: 'block',
+                  width: '300px',
+                  height: '300px',
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'light' ? '#fff' : '#000',
+                  color: (theme) => theme.palette.text.primary,
+                  backgroundImage: `url(${recipe.image?.[0].link})`,
+                  backgroundSize: 'cover',
+                  borderRadius: 2,
+                  transition: '0.25s',
+                  position: 'relative',
+                  fontSize: '25px',
 
-                '&:hover': {
-                  boxShadow: 'inset 0 0 0 2000px rgba(0,0,0, 0.3)',
-                },
-                '&:hover:after': {
-                  color: 'white',
-                  textAlign: 'center',
-                  position: 'absolute',
-                  top: '100px',
-                  right: '5px',
-                  left: '5px',
-                  content: `"${recipe.name}"`,
-                },
-              }}
-            />
-          ))}
-        </Grid>
-      </TabPanel>
+                  '&:hover': {
+                    boxShadow: 'inset 0 0 0 2000px rgba(0,0,0, 0.3)',
+                  },
+                  '&:hover:after': {
+                    color: 'white',
+                    textAlign: 'center',
+                    position: 'absolute',
+                    top: '100px',
+                    right: '5px',
+                    left: '5px',
+                    content: `"${recipe.name}"`,
+                  },
+                }}
+              />
+            ))}
+          </Grid>
+        </TabPanel>
+        <TabPanel value={tab} index={0}>
+          {/* TODO: Implement the feed view for the user. */}
+        </TabPanel>
+      </Box>
     </Box>
   )
 }

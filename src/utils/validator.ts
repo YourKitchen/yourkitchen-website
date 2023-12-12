@@ -77,10 +77,15 @@ const validateIngredient = (
     if (validUnits.includes(ingredient.unit)) {
       formattedIngredient.unit = ingredient.unit
     } else {
-      throw new ValidationError(
-        `ingredient."unit" was not valid (${ingredient.unit}). Valid values are ${validUnits}`,
-        ingredient,
-      )
+      const convertedUnit = convertUnitAbbreviationToFullName(ingredient.unit)
+      if (convertedUnit) {
+        formattedIngredient.unit = convertedUnit
+      } else {
+        throw new ValidationError(
+          `ingredient."unit" was not valid (${ingredient.unit}). Valid values are ${validUnits}`,
+          ingredient,
+        )
+      }
     }
   } else {
     throw new ValidationError('ingredient."unit" was not a string', ingredient)
@@ -106,6 +111,61 @@ const validateIngredient = (
   }
 }
 
+function convertUnitAbbreviationToFullName(unitAbbreviation: string) {
+  switch (unitAbbreviation.toUpperCase()) {
+    case 'TSP':
+      return 'TEASPOON'
+    case 'TBSP':
+      return 'TABLESPOON'
+    case 'FL_OZ':
+      return 'FLUID_OUNCE'
+    case 'CUP':
+      return 'CUP'
+    case 'PT':
+      return 'PINT'
+    case 'QT':
+      return 'QUART'
+    case 'GAL':
+      return 'GALLON'
+    case 'ML':
+      return 'MILLILITER'
+    case 'L':
+      return 'LITER'
+    case 'G':
+      return 'GRAM'
+    case 'KG':
+      return 'KILOGRAM'
+    case 'OZ':
+      return 'OUNCE'
+    case 'LB':
+      return 'POUND'
+    case 'PINCH':
+      return 'PINCH'
+    case 'DASH':
+      return 'DASH'
+    case 'DROP':
+      return 'DROP'
+    case 'SLICE':
+      return 'SLICE'
+    case 'PIECE':
+      return 'PIECE'
+    case 'CLOVE':
+      return 'CLOVE'
+    case 'BULB':
+      return 'BULB'
+    case 'STICK':
+      return 'STICK'
+    case 'CU_IN':
+      return 'CUBIC_INCH'
+    case 'CU_FT':
+      return 'CUBIC_FOOT'
+    case 'PKG':
+      return 'PACKAGE'
+    default:
+      return null
+  }
+}
+
 const validateStep = (
   step: string,
   ingredients: {
@@ -114,17 +174,18 @@ const validateStep = (
     amount: number
     allergenType: string | null
   }[],
-): string => {
+): { content: string; numberOfIngredients: number } => {
   // Validate that all ingredients are valid.
   const stepSplit = step.split('!')
   const newSplit: string[] = []
+  let numIngredients = 0
 
   // If % 2: 0 = description, 1 = ingredient
   let index = 0
   for (const split of stepSplit) {
     if (index % 2 === 1) {
       if (split === '') {
-        // Skip, usually just sentance ending with !.
+        // Skip, usually just sentence ending with !.
         continue
       }
       // Ingredient
@@ -142,6 +203,7 @@ const validateStep = (
         })
 
         if (ingredient) {
+          numIngredients += 1
           newSplit.push(
             `${ingredient.amount}:${ingredient.unit}:${ingredient.name
               .toLowerCase()
@@ -167,6 +229,7 @@ const validateStep = (
           )
 
           if (ingredient) {
+            numIngredients += 1
             // We found the ingredient, we can now replace this split part with
             newSplit.push(
               `${ingredient.amount}:${ingredient.unit}:${ingredient.name
@@ -196,7 +259,7 @@ const validateStep = (
     index++
   }
 
-  return newSplit.join('!')
+  return { content: newSplit.join('!'), numberOfIngredients: numIngredients }
 }
 
 export const validateContent = (
@@ -286,11 +349,22 @@ export const validateContent = (
 
     // Steps (Steps requires ingredients)
     if (content.steps && Array.isArray(content.steps)) {
-      recipe.steps = content.steps.map((step: string) =>
-        validateStep(step, ingredients),
-      )
+      let numIngredients = 0
+      recipe.steps = content.steps.map((step: string) => {
+        const formattedStep = validateStep(step, ingredients)
+
+        numIngredients += formattedStep.numberOfIngredients
+
+        return formattedStep.content
+      })
+      if (numIngredients === 0) {
+        throw new ValidationError(
+          '"steps" did not contain a single ingredient, indicating error.',
+          content.steps,
+        )
+      }
     } else {
-      throw new ValidationError('"steps" is not an array.', content)
+      throw new ValidationError('"steps" is not an array.', content.steps)
     }
   } else {
     throw new ValidationError('"ingredients" is not an array.', content)

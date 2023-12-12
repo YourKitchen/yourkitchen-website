@@ -69,6 +69,7 @@ model User {
   ratings              Rating[]
   role                 String?
 
+  updated DateTime @updatedAt
   created DateTime @default(now())
 }
 
@@ -127,7 +128,7 @@ enum MealType {
 }
 
 model RecipeImage {
-  id String @id @default(uuid())
+  id   String @id @default(uuid())
   link String
 
   recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)

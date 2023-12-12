@@ -1,3 +1,4 @@
+import AnalyticsWrapper from '#components/AnalyticsWrapper'
 import { Footer } from '#components/Footer'
 import { Header } from '#components/Header'
 import createEmotionCache from '#misc/createEmotionCache'
@@ -103,7 +104,9 @@ const MyApp: FC<MyAppProps> = (props) => {
           >
             <Header />
             <Box sx={{ minHeight: 'calc(100vh - 72.5px)' }}>
-              <Component {...pageProps} />
+              <AnalyticsWrapper>
+                <Component {...pageProps} />
+              </AnalyticsWrapper>
             </Box>
             <Footer />
             <Toaster

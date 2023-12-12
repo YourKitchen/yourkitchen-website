@@ -1,21 +1,10 @@
-import {
-  Facebook,
-  Google,
-  Visibility,
-  VisibilityOff,
-} from '@mui/icons-material'
-import {
-  Button,
-  IconButton,
-  InputAdornment,
-  TextField,
-  Typography,
-} from '@mui/material'
-import { Box } from '@mui/material'
+import { Facebook, Google } from '@mui/icons-material'
+import { Box, Button, TextField, Typography } from '@mui/material'
 import { GetStaticProps } from 'next'
 import { signIn, useSession } from 'next-auth/react'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { NextSeo } from 'next-seo'
 import { useRouter as useNavigation, useSearchParams } from 'next/navigation'
 import { FC, useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -95,6 +84,10 @@ export const SigninPage: FC = () => {
         alignItems: 'center',
       }}
     >
+      <NextSeo
+        title="Sign In"
+        description="Sign in to access additional features of YourKitchen sucha as a personalized mealplan"
+      />
       <form
         onSubmit={(e) => {
           e.preventDefault()

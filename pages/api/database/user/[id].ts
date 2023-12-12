@@ -32,7 +32,11 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
       image: true,
       name: true,
       ratings: true,
-      recipes: true,
+      recipes: {
+        include: {
+          image: true,
+        },
+      },
       created: true,
     },
   })
