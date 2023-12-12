@@ -39,7 +39,7 @@ const apiHeaders = [
 ]
 
 /** @type {import('next').NextConfig} */
-let config = {
+const nextConfig = {
   pageExtensions: ['ts', 'tsx'],
   transpilePackages: ['@mui/system', '@mui/material', '@mui/icons-material'],
   modularizeImports: {
@@ -76,10 +76,9 @@ let config = {
   },
 }
 
-if (process.env.ANALYZE?.toString() === 'true') {
-  // @ts-ignore
-  const withNextBundleAnalyzer = require('next-bundle-analyzer')()
-  config = withNextBundleAnalyzer(config)
-}
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+})
+const config = withBundleAnalyzer(nextConfig)
 
 module.exports = config
