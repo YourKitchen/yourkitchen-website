@@ -7,23 +7,14 @@
     "ignoreUnknown": true
   },
   "formatter": {
-    "ignore": [
-      "public/**",
-      "coverage/**",
-      "node_modules/**",
-      ".next/**"
-    ],
+    "ignore": ["public/**", "coverage/**", "node_modules/**", ".next/**"],
     "enabled": true,
     "formatWithErrors": true,
     "indentStyle": "space",
     "indentWidth": 2
   },
   "linter": {
-    "ignore": [
-      "coverage/**",
-      "node_modules/**",
-      ".next/**"
-    ],
+    "ignore": ["coverage/**", "node_modules/**", ".next/**"],
     "enabled": true,
     "rules": {
       "recommended": true,

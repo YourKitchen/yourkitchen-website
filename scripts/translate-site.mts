@@ -1,12 +1,12 @@
-import { client } from "@gradio/client";
-import { existsSync } from 'fs';
-import { mkdir, readFile, readdir, writeFile } from 'fs/promises';
-import { createRequire } from "module";
-import { dirname, resolve, sep } from 'path';
-const require = createRequire(import.meta.url);
-global.EventSource = require('eventsource');
+import { client } from '@gradio/client'
+import { existsSync } from 'fs'
+import { mkdir, readFile, readdir, writeFile } from 'fs/promises'
+import { createRequire } from 'module'
+import { dirname, resolve, sep } from 'path'
+const require = createRequire(import.meta.url)
+global.EventSource = require('eventsource')
 
-const languages: {[key:string]: string} = {
+const languages: { [key: string]: string } = {
   es: 'Spanish',
   de: 'German',
   da: 'Danish',
@@ -28,9 +28,12 @@ const writeToFile = async (destinationPath: string, content: string) => {
 }
 
 const localizeTranslationFiles = async () => {
-  const app = await client('https://gundeep-open-translate.hf.space/--replicas/7xrk4/', {
-    hf_token: (process.env.HF_TOKEN  as `hf_${string}`),
-  })
+  const app = await client(
+    'https://gundeep-open-translate.hf.space/--replicas/7xrk4/',
+    {
+      hf_token: process.env.HF_TOKEN as `hf_${string}`,
+    },
+  )
   const dir = './public/locales/en'
   const files = await readdir(dir)
 
@@ -45,7 +48,7 @@ const localizeTranslationFiles = async () => {
     const localeIndex = destinationSplit.findLastIndex((val) => val === 'en')
 
     for (const isoCode in languages) {
-      let translations: {[key:string]: string} = {}
+      let translations: { [key: string]: string } = {}
       destinationSplit[localeIndex] = isoCode
       const destination = destinationSplit.join(sep)
       // If previous translations for this language exists, use them as the default
@@ -65,9 +68,9 @@ const localizeTranslationFiles = async () => {
         const text = defaultTranslations[key]
 
         try {
-          const response = await app.predict('/translate', [		
-            text, // string  in 'Input Text' Textbox component		
-            "Auto Detect", // string  in 'Source Language' Dropdown component		
+          const response = await app.predict('/translate', [
+            text, // string  in 'Input Text' Textbox component
+            'Auto Detect', // string  in 'Source Language' Dropdown component
             language, // string  in 'Target Language' Dropdown component
           ])
 
@@ -79,7 +82,7 @@ const localizeTranslationFiles = async () => {
 
           if (result.data.length > 0) {
             translations[key] = result.data[0]
-          } 
+          }
         } catch (err) {
           console.error(err)
         }

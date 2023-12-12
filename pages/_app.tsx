@@ -77,14 +77,13 @@ const MyApp: FC<MyAppProps> = (props) => {
                 if (typeof args === 'string') {
                   const response = await api.get(`/database/${args}`)
                   return response.data
-                } else {
-                  const { url, ...rest } = args
-
-                  const response = await api.get(`/database/${url}`, {
-                    params: rest,
-                  })
-                  return response.data
                 }
+                const { url, ...rest } = args
+
+                const response = await api.get(`/database/${url}`, {
+                  params: rest,
+                })
+                return response.data
               },
               errorRetryCount: 1, // only retry once, then throw error
               onErrorRetry: (error, key: string) => {

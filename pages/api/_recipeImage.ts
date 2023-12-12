@@ -18,9 +18,8 @@ export const getRecipeImage = async (name: string) => {
       throw new Error('Could not fetch image')
     }
     return photos[0]
-  } else {
-    // Must be error.
-    const error = response as ErrorResponse
-    throw new Error(error.error)
   }
+  // Must be error.
+  const error = response as ErrorResponse
+  throw new Error(error.error)
 }

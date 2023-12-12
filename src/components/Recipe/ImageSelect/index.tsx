@@ -103,20 +103,19 @@ const ImageSelect: FC<ImageSelectProps> = ({
             ? { ...image, link: '', file: file?.file }
             : image,
         )
-      } else {
-        // Create
-        prev.push({
-          id: v4(),
-          link: '', // If file is present, it will be preffered.
-          photographer: session.user.name,
-          photographerUrl: `https://yourkitchen.io/user/${session.user.id}`,
-          recipeId,
-          photoRefUrl: null,
-          file: file?.file,
-        })
-
-        return prev
       }
+      // Create
+      prev.push({
+        id: v4(),
+        link: '', // If file is present, it will be preffered.
+        photographer: session.user.name,
+        photographerUrl: `https://yourkitchen.io/user/${session.user.id}`,
+        recipeId,
+        photoRefUrl: null,
+        file: file?.file,
+      })
+
+      return prev
     })
     setAddOpen(false)
   }
