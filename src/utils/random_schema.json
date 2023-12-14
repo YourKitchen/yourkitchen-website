@@ -7,24 +7,14 @@
     },
     "mealType": {
       "type": "string",
-      "enum": [
-        "DESSERT",
-        "MAIN",
-        "SIDE",
-        "STARTER",
-        "SNACK"
-      ]
+      "enum": ["DESSERT", "MAIN", "SIDE", "STARTER", "SNACK"]
     },
     "preparationTime": {
       "type": "number"
     },
     "difficulty": {
       "type": "string",
-      "enum": [
-        "EASY",
-        "INTERMEDIATE",
-        "EXPERT"
-      ]
+      "enum": ["EASY", "INTERMEDIATE", "EXPERT"]
     },
     "cuisineName": {
       "type": "string"
@@ -70,10 +60,7 @@
             "type": "string"
           },
           "allergenType": {
-            "type": [
-              "string",
-              "null"
-            ],
+            "type": ["string", "null"],
             "enum": [
               "NUT",
               "PEANUTS",
@@ -94,12 +81,7 @@
             ]
           }
         },
-        "required": [
-          "unit",
-          "amount",
-          "name",
-          "allergenType"
-        ]
+        "required": ["unit", "amount", "name", "allergenType"]
       }
     },
     "steps": {
