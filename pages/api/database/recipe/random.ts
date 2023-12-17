@@ -16,8 +16,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(401).end('Unauthorized')
   }
 
-  if (req.method === 'POST') {
-    await handlePOST(req, res)
+  if (req.method === 'GET') {
+    await handleGET(req, res)
   } else {
     res.status(405).json({
       ok: false,
@@ -58,7 +58,7 @@ const getAndStoreImage = async (
   }
 }
 
-const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const completion = await openai.chat.completions.create({
       messages: [
