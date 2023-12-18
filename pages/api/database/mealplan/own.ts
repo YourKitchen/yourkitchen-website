@@ -44,12 +44,28 @@ const handleGET = async (
       ownerId: session.user.id,
     },
     include: {
-      recipes: true,
+      recipes: {
+        include: {
+          recipe: {
+            include: {
+              image: true,
+              owner: true,
+              ratings: true,
+            },
+          },
+        },
+      },
     },
   })
 
+  const weekDate = DateTime.fromISO((req.query.weekDate ?? '') as string) // Empty will cause invalid DateTime. This is checked below
+
   // Apply any updates
-  const response = await updateMealplan(currentMealPlan, session)
+  const response = await updateMealplan(
+    currentMealPlan,
+    session.user,
+    weekDate.isValid ? weekDate : undefined,
+  )
 
   res.json(response)
 }
@@ -84,7 +100,7 @@ const handlePUT = async (
 
   if (!currentMealPlan) {
     // Apply any updates
-    currentMealPlan = await updateMealplan(currentMealPlan, session)
+    currentMealPlan = await updateMealplan(currentMealPlan, session.user)
   }
 
   // We now have the meal plan. So now we can update it.

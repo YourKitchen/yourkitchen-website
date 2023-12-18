@@ -112,8 +112,8 @@ model Recipe {
 
   feedItems FeedItem[]
 
-  updated        DateTime         @updatedAt
-  created        DateTime         @default(now())
+  updated DateTime @updatedAt
+  created DateTime @default(now())
 
   // The connection to the meal plans that this recipe occurs in.
   mealPlanRecipes MealPlanRecipe[]
@@ -272,6 +272,8 @@ model MealPlan {
   id      String @id @default(uuid())
   owner   User   @relation("owner", fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId String @unique
+
+  public Boolean @default(true)
 
   followers User[] @relation("followedMealPlans")
 
