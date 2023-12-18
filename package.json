@@ -59,7 +59,7 @@
     "@biomejs/biome": "1.4.1",
     "@commitlint/cli": "^18.4.3",
     "@commitlint/config-conventional": "^18.4.3",
-    "@types/luxon": "^3.3.4",
+    "@types/luxon": "^3.3.7",
     "@types/node": "20.10.4",
     "@types/nodemailer": "^6.4.14",
     "@types/uuid": "^9.0.7",
