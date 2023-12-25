@@ -35,7 +35,7 @@
     "@vercel/blob": "^0.15.1",
     "accept-language": "^3.0.18",
     "axios": "^1.6.2",
-    "green-analytics-js": "^1.0.17",
+    "green-analytics-js": "^1.1.6",
     "i18next": "^23.7.7",
     "luxon": "^3.4.4",
     "next": "^14.0.4",
