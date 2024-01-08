@@ -28,7 +28,7 @@
     "@emotion/styled": "^11.11.0",
     "@gradio/client": "^0.9.4",
     "@mui/icons-material": "^5.15.2",
-    "@mui/material": "^5.15.2",
+    "@mui/material": "^5.15.3",
     "@mui/x-date-pickers": "^6.18.4",
     "@next/bundle-analyzer": "^14.0.4",
     "@prisma/client": "^5.7.1",
