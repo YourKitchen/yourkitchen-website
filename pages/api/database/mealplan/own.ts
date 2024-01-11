@@ -78,6 +78,8 @@ const handlePUT = async (
   // The input for updating a meal plan should be a MealPlanRecipe
   const newRecipe = req.body.recipe as Omit<MealPlanRecipe, 'mealPlanId' | 'id'>
 
+  newRecipe.date = new Date(newRecipe.date as any as string)
+
   if (!newRecipe) {
     res.status(400).json({
       ok: false,
@@ -94,7 +96,16 @@ const handlePUT = async (
       ownerId: session.user.id,
     },
     include: {
-      recipes: true,
+      recipes: {
+        include: {
+          recipe: {
+            include: {
+              image: true,
+              ratings: true
+            }
+          }
+        }
+      },
     },
   })
 
@@ -105,15 +116,14 @@ const handlePUT = async (
 
   // We now have the meal plan. So now we can update it.
   // Check if there is a recipe that needs to be deleted.
-  const deleteRecipe = currentMealPlan.recipes.find(
-    (recipe) =>
+  const deleteRecipe = currentMealPlan.recipes.find((recipe) => 
       recipe.mealType === newRecipe.mealType &&
       recipe.recipeType === newRecipe.recipeType &&
       sameDate(
         DateTime.fromJSDate(recipe.date),
         DateTime.fromJSDate(newRecipe.date),
-      ),
-  )
+      )
+    )
 
   if (deleteRecipe) {
     await prisma.mealPlanRecipe.delete({
@@ -123,15 +133,31 @@ const handlePUT = async (
     })
   }
 
+
   // Create the new mealPlanRecipe
   const response = await prisma.mealPlanRecipe.create({
     data: {
       ...newRecipe,
       mealPlanId: currentMealPlan.id,
     },
+    include: {
+      recipe: {
+        include: {
+          image: true,
+          ratings: true
+        }
+      },
+    }
   })
 
-  currentMealPlan.recipes.push(response)
+  const replaceIndex = currentMealPlan.recipes.findIndex((recipe) => recipe.id === deleteRecipe?.id)
+
+  if (replaceIndex) {
+    // If we are replacing an old recipe, keep its location intact
+    currentMealPlan.recipes[replaceIndex] = response
+  } else {
+    currentMealPlan.recipes.push(response)
+  }
 
   res.json({ ok: true, message: 'Meal plan updated', data: currentMealPlan })
 }

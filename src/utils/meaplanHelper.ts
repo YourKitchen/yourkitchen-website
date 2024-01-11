@@ -3,7 +3,9 @@ import {
   MealPlan,
   MealPlanRecipe,
   MealType,
+  Rating,
   Recipe,
+  RecipeImage,
   RecipeType,
   User,
 } from '@prisma/client'
@@ -98,10 +100,10 @@ export const sameDate = (dateTime1: DateTime, dateTime2: DateTime) => {
 }
 
 export const updateMealplan = async (
-  currentMealPlan: (MealPlan & { recipes: MealPlanRecipe[] }) | null,
+  currentMealPlan: (MealPlan & { recipes: (MealPlanRecipe & {recipe: (Recipe & {image: RecipeImage[], ratings: Rating[]})})[] }) | null,
   user: User,
   startDate: DateTime = DateTime.utc().startOf('week'),
-): Promise<MealPlan & { recipes: MealPlanRecipe[] }> => {
+): Promise<MealPlan & { recipes: (MealPlanRecipe & {recipe: (Recipe & {image: RecipeImage[], ratings: Rating[]})})[] }> => {
   let tmpMealPlan = currentMealPlan
   if (!currentMealPlan) {
     tmpMealPlan = {
@@ -216,7 +218,16 @@ export const updateMealplan = async (
         ownerId: user.id,
       },
       include: {
-        recipes: true,
+        recipes: {
+          include: {
+            recipe: {
+              include: {
+                image: true,
+                ratings: true,
+              }
+            },
+          }
+        },
       },
     })
 
