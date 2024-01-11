@@ -101,10 +101,10 @@ const handlePUT = async (
           recipe: {
             include: {
               image: true,
-              ratings: true
-            }
-          }
-        }
+              ratings: true,
+            },
+          },
+        },
       },
     },
   })
@@ -116,14 +116,15 @@ const handlePUT = async (
 
   // We now have the meal plan. So now we can update it.
   // Check if there is a recipe that needs to be deleted.
-  const deleteRecipe = currentMealPlan.recipes.find((recipe) => 
+  const deleteRecipe = currentMealPlan.recipes.find(
+    (recipe) =>
       recipe.mealType === newRecipe.mealType &&
       recipe.recipeType === newRecipe.recipeType &&
       sameDate(
         DateTime.fromJSDate(recipe.date),
         DateTime.fromJSDate(newRecipe.date),
-      )
-    )
+      ),
+  )
 
   if (deleteRecipe) {
     await prisma.mealPlanRecipe.delete({
@@ -132,7 +133,6 @@ const handlePUT = async (
       },
     })
   }
-
 
   // Create the new mealPlanRecipe
   const response = await prisma.mealPlanRecipe.create({
@@ -144,13 +144,15 @@ const handlePUT = async (
       recipe: {
         include: {
           image: true,
-          ratings: true
-        }
+          ratings: true,
+        },
       },
-    }
+    },
   })
 
-  const replaceIndex = currentMealPlan.recipes.findIndex((recipe) => recipe.id === deleteRecipe?.id)
+  const replaceIndex = currentMealPlan.recipes.findIndex(
+    (recipe) => recipe.id === deleteRecipe?.id,
+  )
 
   if (replaceIndex) {
     // If we are replacing an old recipe, keep its location intact

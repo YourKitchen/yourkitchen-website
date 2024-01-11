@@ -96,10 +96,12 @@ const MealCell: FC<MealCellProps> = ({ t, meal, editMealRecipe }) => {
         </Button>
       )}
       {meal.map((mealRecipe) => (
-        <Box sx={{
-          display: 'flex',
-          gap: '4px',
-        }}>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: '4px',
+          }}
+        >
           <Link
             href={`/recipe/${mealRecipe.id}`}
             key={mealRecipe.id}
@@ -169,7 +171,7 @@ const MealPlanPage: FC = () => {
   const { t } = useTranslation('common')
 
   useSession({
-    required: true
+    required: true,
   })
 
   // States
@@ -254,14 +256,17 @@ const MealPlanPage: FC = () => {
 
     // Update the meal plan
     toast.promise(
-      api.put<YKResponse<MealPlan & {recipes: Meal}>>('database/mealplan/own', {
-        recipe: {
-          date: editMealPosition.date.toJSDate(),
-          mealType: editMealPosition.meal,
-          recipeId: newRecipe.id,
-          recipeType: newRecipe.recipeType,
+      api.put<YKResponse<MealPlan & { recipes: Meal }>>(
+        'database/mealplan/own',
+        {
+          recipe: {
+            date: editMealPosition.date.toJSDate(),
+            mealType: editMealPosition.meal,
+            recipeId: newRecipe.id,
+            recipeType: newRecipe.recipeType,
+          },
         },
-      }),
+      ),
       {
         loading: `${t('updating')} ${t('meal_plan')}`,
         error: (err) => err.message ?? err,

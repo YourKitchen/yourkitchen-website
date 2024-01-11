@@ -100,10 +100,22 @@ export const sameDate = (dateTime1: DateTime, dateTime2: DateTime) => {
 }
 
 export const updateMealplan = async (
-  currentMealPlan: (MealPlan & { recipes: (MealPlanRecipe & {recipe: (Recipe & {image: RecipeImage[], ratings: Rating[]})})[] }) | null,
+  currentMealPlan:
+    | (MealPlan & {
+        recipes: (MealPlanRecipe & {
+          recipe: Recipe & { image: RecipeImage[]; ratings: Rating[] }
+        })[]
+      })
+    | null,
   user: User,
   startDate: DateTime = DateTime.utc().startOf('week'),
-): Promise<MealPlan & { recipes: (MealPlanRecipe & {recipe: (Recipe & {image: RecipeImage[], ratings: Rating[]})})[] }> => {
+): Promise<
+  MealPlan & {
+    recipes: (MealPlanRecipe & {
+      recipe: Recipe & { image: RecipeImage[]; ratings: Rating[] }
+    })[]
+  }
+> => {
   let tmpMealPlan = currentMealPlan
   if (!currentMealPlan) {
     tmpMealPlan = {
@@ -224,9 +236,9 @@ export const updateMealplan = async (
               include: {
                 image: true,
                 ratings: true,
-              }
+              },
             },
-          }
+          },
         },
       },
     })
