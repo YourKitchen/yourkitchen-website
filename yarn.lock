@@ -465,10 +465,10 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.1.6.tgz#22958c042e10b67463997bd6ea7115fe28cbcaf9"
   integrity sha512-OfX7E2oUDYxtBvsuS4e/jSn4Q9Qb6DzgeYtsAdkPZ47znpoNsMgZw0+tVijiv3uGNR6dgNlty6r9rzIzHjtd/A==
 
-"@gradio/client@^0.9.4":
-  version "0.9.4"
-  resolved "https://registry.yarnpkg.com/@gradio/client/-/client-0.9.4.tgz#58abba4927a4c4b715b66d30212c5f8411e98fbc"
-  integrity sha512-Cx7mly8EjenEr5udLtwfMFW3gKci4ZBAlp/f0oCtSgbWNnsqymMYuaItBUD/WiNPS14Y68ptG0HjIfaWti7QAg==
+"@gradio/client@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@gradio/client/-/client-0.10.0.tgz#47f56f4b2863566934c8d3e779c36d0030671e17"
+  integrity sha512-B1Gqjm91FJ3lV0OfMfy1cRKrgH/AnhRBxJ3KIbS2z/YqGn6yb0z34LZRDm4W2jILBWfIHwe/iyWIzsnxzR/KtQ==
   dependencies:
     bufferutil "^4.0.7"
     semiver "^1.1.0"
