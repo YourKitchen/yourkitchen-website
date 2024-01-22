@@ -44,7 +44,7 @@
     "next-seo": "^6.1.0",
     "next-sitemap": "^4.2.3",
     "nodemailer": "^6.9.7",
-    "openai": "^4.24.1",
+    "openai": "^4.25.0",
     "pexels": "^1.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
