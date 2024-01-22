@@ -2411,10 +2411,10 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.11,
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz#4183e4e8bf08bb6e05bbb2f7d2e0c8f712ca40e3"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
-green-analytics-js@^1.1.6:
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/green-analytics-js/-/green-analytics-js-1.1.6.tgz#1cc951378c2831469be97918a8857841281a7f96"
-  integrity sha512-Ikrro25ESTa0gh8OHdaCBNv10KxETWQ+4BZLe4MtdQXSlEfE77c0fur/o+hEYROJrjfC/325XST9PVoHR0owbw==
+green-analytics-js@^1.1.12:
+  version "1.1.12"
+  resolved "https://registry.yarnpkg.com/green-analytics-js/-/green-analytics-js-1.1.12.tgz#d2b2d134c06c8b1c40300acd3d6b9e48ac5fdec4"
+  integrity sha512-tqGcp/oN1cMprjTVZTRG+F0FRRN+a7MqpvF0E8erKCOE+BpbEtEMcLtxkIX0uAnYVK+z2spdVo4VSCKBBtigBw==
   dependencies:
     sanitize-html "^2.11.0"
 
