@@ -31,7 +31,7 @@
     "@mui/material": "^5.15.6",
     "@mui/x-date-pickers": "^6.19.2",
     "@next/bundle-analyzer": "^14.0.4",
-    "@prisma/client": "^5.7.1",
+    "@prisma/client": "^5.9.1",
     "@vercel/blob": "^0.17.0",
     "accept-language": "^3.0.18",
     "axios": "^1.6.2",
