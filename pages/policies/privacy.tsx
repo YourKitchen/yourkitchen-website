@@ -22,12 +22,11 @@ const PrivacyPage: React.FC = () => {
         .
       </p>
       <p>
-        When you visit our website{' '}
-        <a href="https://yourkitchen.io">https://yourkitchen.io</a>, mobile
-        application, and use our services, you trust us with your personal
-        information. We take your privacy very seriously. In this privacy
-        policy, we seek to explain to you in the clearest way possible what
-        information we collect, how we use it and what rights you have in
+        When you visit our website <a href="/">https://yourkitchen.io</a>,
+        mobile application, and use our services, you trust us with your
+        personal information. We take your privacy very seriously. In this
+        privacy policy, we seek to explain to you in the clearest way possible
+        what information we collect, how we use it and what rights you have in
         relation to it. We hope you take some time to read through it carefully,
         as it is important. If there are any terms in this privacy policy that
         you do not agree with, please discontinue use of our Sites or Apps and
@@ -35,8 +34,7 @@ const PrivacyPage: React.FC = () => {
       </p>
       <p>
         This privacy policy applies to all information collected through our
-        website (such as{' '}
-        <a href="https://yourkitchen.io">https://yourkitchen.io</a>), mobile
+        website (such as <a href="/">https://yourkitchen.io</a>), mobile
         application (Apps), and/or any related services, sales, marketing or
         events (we refer to them collectively in this privacy policy as the{' '}
         <strong>"Services"</strong>).

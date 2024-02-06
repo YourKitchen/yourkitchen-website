@@ -85,9 +85,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
         },
         {
           role: 'user',
-          content: `Generate a recipe that would fit well with the ingredients available in Denmark in ${
-            DateTime.utc().monthLong
-          }`,
+          content: 'Generate a recipe using the above provided instructions.',
         },
       ],
       model: 'gpt-3.5-turbo-1106',
