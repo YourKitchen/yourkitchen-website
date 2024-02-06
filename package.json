@@ -68,5 +68,6 @@
     "lint-staged": "^15.2.0",
     "prisma": "^5.7.0",
     "typescript": "^5.3.2"
-  }
+  },
+  "packageManager": "yarn@4.1.0"
 }

@@ -8,9 +8,11 @@ import FacebookProvider from 'next-auth/providers/facebook'
 import GoogleProvider from 'next-auth/providers/google'
 import prisma from '../_base'
 
+const prismaAdapter = PrismaAdapter(prisma)
+
 // Setup next-auth with 4 providers (passwordless, facebook, google, apple)
 export const authOptions: AuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  adapter: prismaAdapter as any,
   providers: [
     EmailProvider({
       from: `YourKitchen <${process.env.GMAIL_FROM}>`,
