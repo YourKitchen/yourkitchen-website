@@ -73,22 +73,12 @@ const HomePage: FC = () => {
           </Link>
         </Box>
       </Box>
-      <Box sx={{ width: '90%', display: 'flex', margin: 2 }}>
-        <Box sx={{ flex: { sm: 1.0, md: 0.4 }, paddingInline: 2 }}>
-          <Typography variant="h4">{t('explore')}</Typography>
-          <Typography sx={{ textAlign: 'justify', marginTop: 2 }}>
-            {t('explore_description')}
+      <Box sx={{ width: '90%', display: 'inline-block', margin: 2 }}>
+        <Box sx={{ paddingInline: 2 }}>
+          <Typography sx={{ my: 2 }} variant="h4">
+            {t('popular_recipes')}
           </Typography>
-        </Box>
-
-        <Box
-          sx={{
-            display: 'flex',
-            flex: { sm: 1.0, md: 0.6 },
-            flexDirection: 'column',
-          }}
-        >
-          <Typography variant="h4">{t('popular_recipes')}</Typography>
+          <Typography sx={{ my: 2 }}>{t('explore_description')}</Typography>
           <ExploreRow
             loading={popularLoading}
             recipes={popularRecipes?.data ?? []}

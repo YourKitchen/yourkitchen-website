@@ -1,6 +1,7 @@
 import { api } from '#network/index'
 import prisma from '#pages/api/_base'
 import { getRecipeImage } from '#pages/api/_recipeImage'
+import randomSchema from '#utils/random_schema.json'
 import { RecipeImage } from '@prisma/client'
 import { put } from '@vercel/blob'
 import { DateTime } from 'luxon'
@@ -15,8 +16,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(401).end('Unauthorized')
   }
 
-  if (req.method === 'POST') {
-    await handlePOST(req, res)
+  if (req.method === 'GET') {
+    await handleGET(req, res)
   } else {
     res.status(405).json({
       ok: false,
@@ -57,67 +58,14 @@ const getAndStoreImage = async (
   }
 }
 
-const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const completion = await openai.chat.completions.create({
       messages: [
         {
           role: 'system',
-          content: `You are a chef writing a cookbook. The structure of the response should follow the following typescript definition:
-          {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "mealType": {
-                "type": "string",
-                "enum": ["BREAKFAST", "LUNCH", "DINNER"]
-              },
-              "preparationTime": {
-                "type": "number"
-              },
-              "difficulty": {
-                "type": "string",
-                "enum": ["EASY", "INTERMEDIATE", "EXPERT"]
-              },
-              "cuisineName": {
-                "type": "string"
-              },
-              "ingredients": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "unit": {
-                      "type": "string",
-                      "enum": ["TEASPOON", "TABLESPOON", "FLUID_OUNCE", "CUP", "PINT", "QUART", "GALLON", "MILLILITER", "LITER", "GRAM", "KILOGRAM", "OUNCE", "POUND", "PINCH", "DASH", "DROP", "SLICE", "PIECE", "CLOVE", "BULB", "STICK", "CUBIC_INCH", "CUBIC_FOOT", "PACKAGE"]
-                    },
-                    "amount": {
-                      "type": "number"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "allergenType": {
-                      "type": ["string", "null"],
-                      "enum": ["NUT", "PEANUTS", "LACTOSE", "EGGS", "FISH", "SHELLFISH", "SOY", "WHEAT", "GLUTEN", "SESAME", "MUSTARD", "SULFITES", "CELERY", "LUPIN", "MOLLUSKUS", null]
-                    }
-                  },
-                  "required": ["unit", "amount", "name", "allergenType"]
-                }
-              },
-              "steps": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            },
-            "required": ["name", "mealType", "preparationTime", "difficulty", "cuisineName", "ingredients", "steps"]
-          }
-          
+          content: `You are a chef writing a cookbook. The structure of the response should follow the following json schema as closely as possible:
+          ${randomSchema}
 
           If the recipe does not follow this format exactly it is invalid.
 

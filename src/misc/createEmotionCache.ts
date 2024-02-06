@@ -8,7 +8,7 @@ const isBrowser = typeof document !== 'undefined'
  *
  */
 export const createEmotionCache = (): EmotionCache => {
-  let insertionPoint
+  let insertionPoint: HTMLMetaElement | undefined
 
   if (isBrowser) {
     const emotionInsertionPoint = document.querySelector<HTMLMetaElement>(

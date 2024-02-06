@@ -43,11 +43,7 @@ const handleGET = async (
     },
   })
 
-  return res.json({
-    ok: true,
-    message: 'Succesfully got rating',
-    data: rating,
-  })
+  return res.json(rating)
 }
 
 const handlePUT = async (

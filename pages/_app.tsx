@@ -66,6 +66,7 @@ const MyApp: FC<MyAppProps> = (props) => {
           },
         ]}
         titleTemplate="%s | YourKitchen"
+        defaultTitle="YourKitchen"
       />
       <ThemeProvider theme={selectedTheme}>
         <SessionProvider session={pageProps.session}>

@@ -71,6 +71,12 @@ model User {
 
   updated DateTime @updatedAt
   created DateTime @default(now())
+
+  // The Meal Plan that the user owns
+  ownMealPlan MealPlan? @relation("owner")
+
+  // Any followed meal plans
+  followedMealPlans MealPlan[] @relation("followedMealPlans")
 }
 
 model Follows {
@@ -108,6 +114,9 @@ model Recipe {
 
   updated DateTime @updatedAt
   created DateTime @default(now())
+
+  // The connection to the meal plans that this recipe occurs in.
+  mealPlanRecipes MealPlanRecipe[]
 }
 
 model Cuisine {
@@ -117,8 +126,11 @@ model Cuisine {
 }
 
 enum RecipeType {
+  DESSERT
   MAIN
   SIDE
+  STARTER
+  SNACK
 }
 
 enum MealType {
@@ -238,6 +250,34 @@ model FeedItem {
   ratings  Rating[]
 
   description String
+
+  updated DateTime @updatedAt
+  created DateTime @default(now())
+}
+
+model MealPlanRecipe {
+  id String @id @default(uuid())
+
+  date       DateTime
+  mealType   MealType
+  recipeType RecipeType
+  recipe     Recipe     @relation(fields: [recipeId], references: [id])
+
+  mealPlan   MealPlan @relation(fields: [mealPlanId], references: [id])
+  mealPlanId String
+  recipeId   String
+}
+
+model MealPlan {
+  id      String @id @default(uuid())
+  owner   User   @relation("owner", fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId String @unique
+
+  public Boolean @default(true)
+
+  followers User[] @relation("followedMealPlans")
+
+  recipes MealPlanRecipe[]
 
   updated DateTime @updatedAt
   created DateTime @default(now())
