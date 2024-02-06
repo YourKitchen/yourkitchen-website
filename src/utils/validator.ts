@@ -112,7 +112,12 @@ const validateIngredient = (
 }
 
 function convertUnitAbbreviationToFullName(unitAbbreviation: string) {
-  switch (unitAbbreviation.toUpperCase()) {
+  const tmpUnit = unitAbbreviation.toUpperCase().endsWith('S')
+    ? unitAbbreviation
+        .toUpperCase()
+        .substring(0, -1) // Remove last character (It is just the plural form of the word most likely)
+    : unitAbbreviation.toUpperCase()
+  switch (tmpUnit) {
     case 'TSP':
       return 'TEASPOON'
     case 'TBSP':
@@ -304,7 +309,11 @@ export const validateContent = (
   if (content.name && typeof content.name === 'string') {
     recipe.name = content.name
   } else {
-    throw new ValidationError('"name" is not a string', content)
+    if (content.recipeName && typeof content.recipeName === 'string') {
+      recipe.name = content.recipeName
+    } else {
+      throw new ValidationError('"name" is not a string', content)
+    }
   }
 
   // Meal Type
@@ -324,7 +333,7 @@ export const validateContent = (
       )
     }
   } else {
-    throw new ValidationError('"mealType" is not a string', content)
+    recipe.mealType = 'DINNER'
   }
 
   // Preparation Time

@@ -68,10 +68,20 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
           ${randomSchema}
 
           If the recipe does not follow this format exactly it is invalid.
+          The main required fields on the root level of the JSON structure is:
+          "name", "mealType", "preparationTime", "difficulty", "cuisineName", "steps"
+          These fields are required for the output to be valid.
+
+          "mealType" can have one of the following values "BREAKFAST", "LUNCH", "DINNER"
+          "preparationTime" should be a number.
+          "difficulty" can have one of the following values "EASY", "INTERMEDIATE", "EXPERT"
+          "steps" should contains a string array. 
 
           The steps should be generated in a specific manner where every time an ingredient is mentioned it will be using the following format:
           !amount:unit:name! these three values should come from the ingredients array. An example could look like this:
-          "Add the minced !2:CLOVES:garlic! and sauté for another minute." if the ingredient is {"unit": "cloves", "amount": 2, "name": "Garlic"}.`,
+          "Add the minced !2:CLOVE:garlic! and sauté for another minute." if the ingredient is {"unit": "clove", "amount": 2, "name": "Garlic"}.
+          
+          Valid units are as follows: TEASPOON,TABLESPOON,FLUID_OUNCE,CUP,PINT,QUART,GALLON,MILLILITER,LITER,GRAM,KILOGRAM,OUNCE,POUND,PINCH,DASH,DROP,SLICE,PIECE,CLOVE,BULB,STICK,CUBIC_INCH,CUBIC_FOOT,PACKAGE`,
         },
         {
           role: 'user',
@@ -84,6 +94,8 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
       response_format: { type: 'json_object' },
     })
     const response = completion.choices[0].message.content
+
+    console.log(response)
 
     if (response !== null) {
       // If we have a response, apply the validator to check that the everything is in the correct format.
