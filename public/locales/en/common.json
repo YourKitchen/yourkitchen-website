@@ -43,5 +43,13 @@
   "following": "Following",
   "recipe": "Recipe",
   "feed": "Feed",
-  "joined_in": "Joined in"
+  "joined_in": "Joined in",
+  "change_meal": "Change Meal",
+  "change_meal_description": "Select a new recipe to add it to the current day",
+  "search_for_recipe": "Search for recipe",
+  "meal_plan": "Meal Plan",
+  "my_meal_plan": "My Meal Plan",
+  "add_recipe": "Add Recipe",
+  "week": "Week",
+  "meal": "Meal"
 }

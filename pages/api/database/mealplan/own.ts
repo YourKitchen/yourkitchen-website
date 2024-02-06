@@ -58,7 +58,9 @@ const handleGET = async (
     },
   })
 
-  const weekDate = DateTime.fromISO((req.query.weekDate ?? '') as string) // Empty will cause invalid DateTime. This is checked below
+  const weekDate = DateTime.fromISO(
+    (req.query.weekDate ?? '') as string,
+  ).startOf('week') // Empty will cause invalid DateTime. This is checked below
 
   // Apply any updates
   const response = await updateMealplan(

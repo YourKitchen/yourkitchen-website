@@ -46,9 +46,9 @@ const RecipeBox: FC<RecipeBoxProps> = ({ recipe }) => {
   return (
     <Link
       sx={{
-        display: 'block',
-        width: '100%',
-        maxWidth: '250px',
+        display: 'inline-block',
+        width: '225px',
+        mr: 2,
         height: '300px',
         borderRadius: 4,
         backgroundColor: (theme) => theme.palette.background.paper,
@@ -70,6 +70,8 @@ const RecipeBox: FC<RecipeBoxProps> = ({ recipe }) => {
           left: 0,
           right: 0,
           bottom: 0,
+          width: '250px',
+          height: '300px',
           position: 'absolute',
           display: 'flex',
           alignItems: 'end',

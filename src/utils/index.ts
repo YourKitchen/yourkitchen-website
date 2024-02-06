@@ -37,3 +37,7 @@ export const getGetIngredientsFromStep = (
 
   return ingredients
 }
+
+export const avg = (list: number[]) => {
+  return list.reduce((prev, cur) => prev + cur, 0) / list.length
+}

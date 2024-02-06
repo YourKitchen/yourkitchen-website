@@ -81,9 +81,6 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
   // Translations
   const { t } = useTranslation('common')
 
-  // Router
-  const router = useRouter()
-
   // States
   const [completedStep, setCompletedStep] = useState(-1)
   const [allergenesOpen, setAllergenesOpen] = useState(false)
@@ -454,6 +451,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     }
   } catch (err) {
+    console.error(err)
     return {
       notFound: true,
     }

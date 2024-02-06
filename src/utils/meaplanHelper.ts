@@ -18,6 +18,7 @@ export const getRandomRecipes = async (
     recipeType,
     mealType,
     excludeIds,
+    count,
   }: {
     cuisineName?: string
     recipeType: RecipeType
@@ -29,7 +30,7 @@ export const getRandomRecipes = async (
 ): Promise<Recipe[]> => {
   const allergenList = user.allergenes
 
-  const count = await prisma.recipe.count({
+  const recipeCount = await prisma.recipe.count({
     where: {
       id: {
         notIn: excludeIds,
@@ -52,16 +53,12 @@ export const getRandomRecipes = async (
 
   // Get a random indexes
   const indexes: number[] = []
-  for (let i = 0; indexes.length < count; i++) {
-    const index = Math.round(Math.random() * (count - 1))
+  while (indexes.length < Math.min(count, recipeCount)) {
+    const index = Math.round(Math.random() * (recipeCount - 1))
 
     if (!indexes.includes(index)) {
       // To prevent same recip multiple times.
       indexes.push(index)
-    }
-    if (index === count - 1) {
-      // To prevent infinite loop
-      break
     }
   }
 
@@ -137,6 +134,18 @@ export const updateMealplan = async (
     throw new Error('Not possible')
   }
 
+  // Remove old recipes
+  tmpMealPlan = {
+    ...tmpMealPlan,
+    // Remove old recipes
+    recipes: tmpMealPlan.recipes.filter(
+      (meal) =>
+        meal.recipeType === RecipeType.MAIN &&
+        meal.mealType === MealType.DINNER &&
+        DateTime.utc().hasSame(DateTime.fromJSDate(meal.date), 'week'),
+    ),
+  }
+
   // Check that there are at least recipes for the next week.
   const currentRecipeIds = tmpMealPlan.recipes.map((recipe) => recipe.recipeId)
 
@@ -152,26 +161,15 @@ export const updateMealplan = async (
     })
   }
 
-  const missingDates: DateTime[] = dates
-    .map((currentDateTime) => {
-      if (!tmpMealPlan) {
-        throw new Error('Not possible, but here for typescript')
-      }
-      // Check if a main dish already exists for dinner for the currentDateTime
-      if (
-        tmpMealPlan.recipes.some(
-          (recipe) =>
-            recipe.mealType === MealType.DINNER &&
-            recipe.recipeType === RecipeType.MAIN &&
-            sameDate(DateTime.fromJSDate(recipe.date), currentDateTime),
-        )
-      ) {
-        return null
-      }
-
-      return currentDateTime
-    })
-    .filter((date) => date !== null) as DateTime[]
+  const missingDates: DateTime[] = dates.filter((currentDateTime) => {
+    // Check if a main dish already exists for dinner for the currentDateTime
+    return !tmpMealPlan?.recipes.some(
+      (recipe) =>
+        recipe.mealType === MealType.DINNER &&
+        recipe.recipeType === RecipeType.MAIN &&
+        sameDate(DateTime.fromJSDate(recipe.date), currentDateTime),
+    )
+  })
 
   // Add a recipe for this datetime
   const recipes = await getRandomRecipes(

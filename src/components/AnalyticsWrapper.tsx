@@ -3,10 +3,10 @@ import { useSession } from 'next-auth/react'
 import { FC, PropsWithChildren, useEffect } from 'react'
 
 const AnalyticsWrapper: FC<PropsWithChildren> = ({ children }) => {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
 
   useEffect(() => {
-    if (session) {
+    if (status === 'authenticated') {
       const user = session.user
       setPerson({
         id: user.id,
@@ -20,7 +20,7 @@ const AnalyticsWrapper: FC<PropsWithChildren> = ({ children }) => {
         },
       })
     }
-  }, [session])
+  }, [session, status])
 
   return <>{children}</>
 }

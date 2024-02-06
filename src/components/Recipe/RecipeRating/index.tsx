@@ -1,3 +1,4 @@
+import { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
 import { Comment } from '@mui/icons-material'
 import {
@@ -14,6 +15,8 @@ import {
 import { Rating, Recipe } from '@prisma/client'
 import { useSession } from 'next-auth/react'
 import { TFunction } from 'next-i18next'
+import { useRouter as useNavigation } from 'next/navigation'
+import { useRouter } from 'next/router'
 import { FC, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
@@ -26,8 +29,11 @@ interface RecipeRatingProps {
 const RecipeRating: FC<RecipeRatingProps> = ({ t, recipe }) => {
   const { data: session } = useSession()
 
+  const router = useRouter()
+  const navigation = useNavigation()
+
   // Get the user's rating for this recipe if any.
-  const { data: rating, mutate } = useSWR<Rating>(
+  const { data: rating, mutate } = useSWR<Rating | null>(
     session ? `recipe/${recipe.id}/rating/own` : null,
   )
 
@@ -82,18 +88,20 @@ const RecipeRating: FC<RecipeRatingProps> = ({ t, recipe }) => {
               gap: 2,
             }}
           >
-            <Box>
-              <MuiRating
-                name="recipe-rating"
-                value={dialogValue.score}
-                color={rating ? 'success' : undefined}
-                size="large"
-                onChange={(_e, newValue) =>
-                  setDialogValue((prev) => ({ ...prev, score: newValue }))
+            <MuiRating
+              name="recipe-rating"
+              value={dialogValue.score}
+              color={rating ? 'success' : undefined}
+              size="large"
+              onChange={(_e, newValue) => {
+                if (!session) {
+                  navigation.push(`/auth/signin?callbackUrl=${router.pathname}`)
+                  return
                 }
-                precision={0.25}
-              />
-            </Box>
+                setDialogValue((prev) => ({ ...prev, score: newValue }))
+              }}
+              precision={0.5}
+            />
             <TextField
               placeholder={t('message')}
               value={dialogValue.message}
@@ -121,15 +129,26 @@ const RecipeRating: FC<RecipeRatingProps> = ({ t, recipe }) => {
         value={recipe.rating ?? rating?.score ?? 0}
         color={rating ? 'success' : undefined}
         size="large"
-        onChange={(_e, newValue) => handleChange(newValue)}
+        onChange={(_e, newValue) => {
+          if (!session) {
+            navigation.push(`/auth/signin?callbackUrl=${router.pathname}`)
+            return
+          }
+          handleChange(newValue)
+        }}
         precision={0.25}
-        readOnly={!session}
       />
-      {session && (
-        <IconButton onClick={() => setCommentDialogOpen(true)}>
-          <Comment />
-        </IconButton>
-      )}
+      <IconButton
+        onClick={() => {
+          if (!session) {
+            navigation.push(`/auth/signin?callbackUrl=${router.pathname}`)
+            return
+          }
+          setCommentDialogOpen(true)
+        }}
+      >
+        <Comment />
+      </IconButton>
     </Box>
   )
 }

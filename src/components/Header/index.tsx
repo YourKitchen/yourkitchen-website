@@ -26,6 +26,7 @@ import Link from '../Link'
 interface Page {
   label: string
   href: string
+  authState?: 'authenticated' | 'unauthenticated'
 }
 
 export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
@@ -51,20 +52,28 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
         label: t('recipes'),
         href: '/recipes',
       },
+      {
+        label: t('meal_plan'),
+        href: '/meal-plan',
+        authState: 'authenticated',
+      },
     ],
     [t],
   )
 
-  const settings: Page[] =
-    status === 'authenticated'
-      ? [
-          { label: t('settings'), href: '/settings' },
-          {
-            label: t('logout'),
-            href: '/auth/signout',
-          },
-        ]
-      : [{ label: t('get_started'), href: '/auth/signin' }]
+  const settings: Page[] = [
+    { label: t('settings'), href: '/settings', authState: 'authenticated' },
+    {
+      label: t('logout'),
+      href: '/auth/signout',
+      authState: 'authenticated',
+    },
+    {
+      label: t('get_started'),
+      href: '/auth/signin',
+      authState: 'unauthenticated',
+    },
+  ]
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null)
@@ -131,14 +140,14 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      {settings.map((settingsPage) => (
-        <MenuItem
-          key={settingsPage.label}
-          onClick={() => onPageClick(settingsPage)}
-        >
-          {settingsPage.label}
-        </MenuItem>
-      ))}
+      {settings.map(
+        (page) =>
+          (page.authState === undefined || page.authState === status) && (
+            <MenuItem key={page.label} onClick={() => onPageClick(page)}>
+              {page.label}
+            </MenuItem>
+          ),
+      )}
     </Menu>
   )
 
@@ -216,11 +225,18 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page.label} onClick={() => onPageClick(page)}>
-                  <Typography textAlign="center">{page.label}</Typography>
-                </MenuItem>
-              ))}
+              {pages.map(
+                (page) =>
+                  (page.authState === undefined ||
+                    page.authState === status) && (
+                    <MenuItem
+                      key={page.label}
+                      onClick={() => onPageClick(page)}
+                    >
+                      <Typography textAlign="center">{page.label}</Typography>
+                    </MenuItem>
+                  ),
+              )}
             </Menu>
           </Box>
           <Typography
@@ -241,39 +257,42 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
             YourKitchen
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page.label}
-                href={page.href}
-                sx={{
-                  mx: 1,
-                  textAlign: 'center',
-                  display: 'block',
-                  position: 'relative',
-                  color: (theme) => theme.palette.text.primary,
-                  '&:hover': {
-                    backgroundColor: 'transparent',
-                    '&:after': {
-                      width: '80%',
-                    },
-                  },
-                  '&:after': {
-                    transition: 'width 0.2s ease-in-out',
-                    position: 'absolute',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    display: 'block',
-                    content: '""',
-                    height: '4px',
-                    borderRadius: '2px',
-                    backgroundColor: (theme) => theme.palette.primary.main,
-                    width: router.pathname === page.href ? '100%' : '0%',
-                  },
-                }}
-              >
-                {page.label}
-              </Button>
-            ))}
+            {pages.map(
+              (page) =>
+                (page.authState === undefined || page.authState === status) && (
+                  <Button
+                    key={page.label}
+                    href={page.href}
+                    sx={{
+                      mx: 1,
+                      textAlign: 'center',
+                      display: 'block',
+                      position: 'relative',
+                      color: (theme) => theme.palette.text.primary,
+                      '&:hover': {
+                        backgroundColor: 'transparent',
+                        '&:after': {
+                          width: '80%',
+                        },
+                      },
+                      '&:after': {
+                        transition: 'width 0.2s ease-in-out',
+                        position: 'absolute',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        display: 'block',
+                        content: '""',
+                        height: '4px',
+                        borderRadius: '2px',
+                        backgroundColor: (theme) => theme.palette.primary.main,
+                        width: router.pathname === page.href ? '100%' : '0%',
+                      },
+                    }}
+                  >
+                    {page.label}
+                  </Button>
+                ),
+            )}
           </Box>
           {/* DIVIDER */}
           <Box
@@ -286,11 +305,7 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
             <Button
               sx={{ display: 'flex', gap: 1 }}
               variant="contained"
-              href={
-                session
-                  ? '/recipe/create'
-                  : '/auth/signin?callbackUrl=/recipe/create'
-              }
+              href={'/recipe/create'}
             >
               <Add />
               {t('create')}
@@ -321,16 +336,20 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {settings.map((setting) => (
-                    <MenuItem
-                      key={setting.label}
-                      onClick={() => onPageClick(setting)}
-                    >
-                      <Typography textAlign="center">
-                        {setting.label}
-                      </Typography>
-                    </MenuItem>
-                  ))}
+                  {settings.map(
+                    (page) =>
+                      (page.authState === undefined ||
+                        page.authState === status) && (
+                        <MenuItem
+                          key={page.label}
+                          onClick={() => onPageClick(page)}
+                        >
+                          <Typography textAlign="center">
+                            {page.label}
+                          </Typography>
+                        </MenuItem>
+                      ),
+                  )}
                 </Menu>
               </>
             ) : (
