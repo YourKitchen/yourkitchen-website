@@ -95,8 +95,6 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
     })
     const response = completion.choices[0].message.content
 
-    console.log(response)
-
     if (response !== null) {
       // If we have a response, apply the validator to check that the everything is in the correct format.
       const recipe = validateContent(JSON.parse(response))
