@@ -142,7 +142,7 @@ export const updateMealplan = async (
       (meal) =>
         meal.recipeType === RecipeType.MAIN &&
         meal.mealType === MealType.DINNER &&
-        DateTime.utc().hasSame(DateTime.fromJSDate(meal.date), 'week'),
+        startDate.hasSame(DateTime.fromJSDate(meal.date), 'week'),
     ),
   }
 
@@ -167,7 +167,7 @@ export const updateMealplan = async (
       (recipe) =>
         recipe.mealType === MealType.DINNER &&
         recipe.recipeType === RecipeType.MAIN &&
-        sameDate(DateTime.fromJSDate(recipe.date), currentDateTime),
+        DateTime.fromJSDate(recipe.date).hasSame(currentDateTime, 'day'),
     )
   })
 

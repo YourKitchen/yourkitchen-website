@@ -33,5 +33,16 @@
   "rating": "Puntuación",
   "message": "Mensaje",
   "updating": "Actualizando",
-  "updated": "Actualizado"
+  "updated": "Actualizado",
+  "followers": "Seguidores",
+  "following": "A continuación",
+  "feed": "Fuente",
+  "joined_in": "Ingresó",
+  "change_meal": "Cambiar la comida",
+  "change_meal_description": "Seleccione una nueva receta para añadirla al día actual",
+  "search_for_recipe": "Buscar receta",
+  "meal_plan": "Meal Plan",
+  "my_meal_plan": "Mi plan de comidas",
+  "week": "Semana",
+  "meal": "Comida"
 }

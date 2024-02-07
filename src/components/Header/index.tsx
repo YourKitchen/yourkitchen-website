@@ -55,7 +55,6 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
       {
         label: t('meal_plan'),
         href: '/meal-plan',
-        authState: 'authenticated',
       },
     ],
     [t],

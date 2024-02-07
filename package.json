@@ -16,19 +16,19 @@
     "analyze": "cross-env ANALYZE=true next build",
     "prepare": "husky install",
     "typescript:check": "tsc --noEmit",
-    "translate": "ts-node --esm ./scripts/translate-site.mts"
+    "translate": "npx tsx ./scripts/translate-site.mts"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "biome format --write --no-errors-on-unmatched",
     "*.{js,jsx,ts,tsx|json}": "biome lint --apply --no-errors-on-unmatched"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "^1.3.2",
+    "@auth/prisma-adapter": "^1.3.3",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
-    "@gradio/client": "^0.10.1",
+    "@gradio/client": "^0.11.0",
     "@mui/icons-material": "^5.15.8",
-    "@mui/material": "^5.15.8",
+    "@mui/material": "5.15.7",
     "@mui/x-date-pickers": "^6.19.3",
     "@next/bundle-analyzer": "^14.1.0",
     "@prisma/client": "^5.9.1",

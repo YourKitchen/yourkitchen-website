@@ -38,5 +38,14 @@
   "rating": "Vurdering",
   "message": "Anmeldelse",
   "updating": "Opdaterer",
-  "updated": "Opdateret"
+  "updated": "Opdateret",
+  "followers": "Tilhængere",
+  "following": "Efter",
+  "joined_in": "Tilsluttede sig",
+  "change_meal": "Ændr måltid",
+  "change_meal_description": "Vælg en ny opskrift for at tilføje den til den aktuelle dag",
+  "search_for_recipe": "Søg efter opskrift",
+  "meal_plan": "Meal Plan",
+  "my_meal_plan": "Min madplan",
+  "meal": "Måltid"
 }

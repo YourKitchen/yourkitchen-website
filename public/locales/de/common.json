@@ -32,5 +32,15 @@
   "rating": "Bewertung",
   "message": "Nachricht",
   "updating": "Aktualisierung",
-  "updated": "Aktualisiert"
+  "updated": "Aktualisiert",
+  "followers": "Folger************************************************************************************************************************************************************************************************************************************",
+  "following": "Nachstehend:",
+  "joined_in": "Verbunden mit",
+  "change_meal": "Mahlzeiten ändern",
+  "change_meal_description": "Wählen Sie ein neues Rezept, um es dem aktuellen Tag hinzuzufügen",
+  "search_for_recipe": "Nach Rezept suchen",
+  "meal_plan": "Meal Plan",
+  "my_meal_plan": "Mein Essensplan",
+  "week": "Woche",
+  "meal": "Mahlzeit"
 }

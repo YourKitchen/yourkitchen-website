@@ -83,9 +83,7 @@ const localizeTranslationFiles = async () => {
           if (result.data.length > 0) {
             translations[key] = result.data[0]
           }
-        } catch (err) {
-          console.error(err)
-        }
+        } catch (err) {}
       }
 
       // Save the translations file
