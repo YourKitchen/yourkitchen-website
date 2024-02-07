@@ -31,7 +31,7 @@ const MyApp: FC<MyAppProps> = (props) => {
 
   useEffect(() => {
     try {
-      initGA('aab4595a-ab94-4c99-b444-bfb5abc5adb1')
+      initGA('731cf069-65d8-4fc2-9a6e-82ca3fbc87ae')
     } catch (err: any) {
       console.error('Failed to start green-analytics: ', err)
     }
