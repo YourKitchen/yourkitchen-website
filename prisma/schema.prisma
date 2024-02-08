@@ -73,15 +73,15 @@ model User {
   created DateTime @default(now())
 
   // The Meal Plan that the user owns
-  ownMealPlan MealPlan? @relation("owner")
-
-  // Any followed meal plans
-  followedMealPlans MealPlan[] @relation("followedMealPlans")
+  mealPlan MealPlan? @relation("owner")
 }
 
 model Follows {
-  follower    User   @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
-  followerId  String
+  // The person that is following someone
+  follower   User   @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followerId String
+
+  // The person that is being followed
   following   User   @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
   followingId String
 
@@ -274,8 +274,6 @@ model MealPlan {
   ownerId String @unique
 
   public Boolean @default(true)
-
-  followers User[] @relation("followedMealPlans")
 
   recipes MealPlanRecipe[]
 

@@ -55,6 +55,7 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
       {
         label: t('meal_plan'),
         href: '/meal-plan',
+        authState: 'authenticated',
       },
     ],
     [t],
@@ -119,7 +120,11 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   }
 
   const onPageClick = (page: Page) => {
-    navigation.push(page.href)
+    if (page.authState === 'authenticated' && status === 'unauthenticated') {
+      navigation.push(`/auth/signin?callbackUrl=${page.href}`)
+    } else {
+      navigation.push(page.href)
+    }
   }
 
   const mobileMenuId = 'primary-menu-mobile'
@@ -224,18 +229,11 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map(
-                (page) =>
-                  (page.authState === undefined ||
-                    page.authState === status) && (
-                    <MenuItem
-                      key={page.label}
-                      onClick={() => onPageClick(page)}
-                    >
-                      <Typography textAlign="center">{page.label}</Typography>
-                    </MenuItem>
-                  ),
-              )}
+              {pages.map((page) => (
+                <MenuItem key={page.label} onClick={() => onPageClick(page)}>
+                  <Typography textAlign="center">{page.label}</Typography>
+                </MenuItem>
+              ))}
             </Menu>
           </Box>
           <Typography
@@ -256,42 +254,39 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
             YourKitchen
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map(
-              (page) =>
-                (page.authState === undefined || page.authState === status) && (
-                  <Button
-                    key={page.label}
-                    href={page.href}
-                    sx={{
-                      mx: 1,
-                      textAlign: 'center',
-                      display: 'block',
-                      position: 'relative',
-                      color: (theme) => theme.palette.text.primary,
-                      '&:hover': {
-                        backgroundColor: 'transparent',
-                        '&:after': {
-                          width: '80%',
-                        },
-                      },
-                      '&:after': {
-                        transition: 'width 0.2s ease-in-out',
-                        position: 'absolute',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        display: 'block',
-                        content: '""',
-                        height: '4px',
-                        borderRadius: '2px',
-                        backgroundColor: (theme) => theme.palette.primary.main,
-                        width: router.pathname === page.href ? '100%' : '0%',
-                      },
-                    }}
-                  >
-                    {page.label}
-                  </Button>
-                ),
-            )}
+            {pages.map((page) => (
+              <Button
+                key={page.label}
+                onClick={() => onPageClick(page)}
+                sx={{
+                  mx: 1,
+                  textAlign: 'center',
+                  display: 'block',
+                  position: 'relative',
+                  color: (theme) => theme.palette.text.primary,
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    '&:after': {
+                      width: '80%',
+                    },
+                  },
+                  '&:after': {
+                    transition: 'width 0.2s ease-in-out',
+                    position: 'absolute',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    display: 'block',
+                    content: '""',
+                    height: '4px',
+                    borderRadius: '2px',
+                    backgroundColor: (theme) => theme.palette.primary.main,
+                    width: router.pathname === page.href ? '100%' : '0%',
+                  },
+                }}
+              >
+                {page.label}
+              </Button>
+            ))}
           </Box>
           {/* DIVIDER */}
           <Box

@@ -36,17 +36,15 @@ const handleGET = async (
   // Get the user's meal plan.
   const response = await prisma.mealPlan.findMany({
     where: {
-      OR: [
-        {
-          // If we are a follower of the meal plan
-          followers: {
-            some: {
-              id: session.user.id,
-            },
+      public: true,
+      owner: {
+        followers: {
+          some: {
+            // If we are following the owner, show their meal plan
+            followerId: session.user.id,
           },
-          public: true,
         },
-      ],
+      },
     },
     include: {
       owner: true,

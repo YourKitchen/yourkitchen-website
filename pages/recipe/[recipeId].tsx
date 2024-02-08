@@ -419,6 +419,7 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
+    console.log(`database/recipe/${context.params?.recipeId}`)
     const recipe = await api.get<YKResponse<['recipe']>>(
       `database/recipe/${context.params?.recipeId}`,
     )
