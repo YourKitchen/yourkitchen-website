@@ -1,4 +1,6 @@
-import { Delete } from '@mui/icons-material'
+import { YKResponse } from '#models/ykResponse'
+import { api } from '#network/index'
+import { CheckCircle, Delete } from '@mui/icons-material'
 import {
   Box,
   Button,
@@ -9,15 +11,19 @@ import {
   DialogTitle,
   IconButton,
   List,
+  ListItem,
   TextField,
   Typography,
+  debounce,
 } from '@mui/material'
 import { RecipeImage } from '@prisma/client'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import { TFunction } from 'next-i18next'
-import { FC, useEffect, useState } from 'react'
+import { Photo } from 'pexels'
+import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
+import useSWR from 'swr'
 import { v4 } from 'uuid'
 
 interface ImageSelectProps {
@@ -39,6 +45,21 @@ const ImageSelect: FC<ImageSelectProps> = ({
   // States
   const [open, setOpen] = useState(false)
   const [addOpen, setAddOpen] = useState(false)
+
+  // Search
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState('') // Debounced
+  const [searchValue, setSearchValue] = useState('') // Reactive
+
+  const setValueDelayed = useMemo(
+    () => debounce(setDebouncedSearchValue, 250),
+    [],
+  )
+
+  const { data: searchPhotos } = useSWR<YKResponse<Photo[]>>(
+    debouncedSearchValue.length >= 2
+      ? { url: 'recipe/search/image', searchTerm: debouncedSearchValue }
+      : null,
+  )
 
   const [files, setFiles] = useState<
     (RecipeImage & { link?: string; file?: File })[]
@@ -134,56 +155,91 @@ const ImageSelect: FC<ImageSelectProps> = ({
       <Dialog fullWidth maxWidth="sm" open={open}>
         <DialogTitle>{t('images')}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            The following contains a list of the images linked to this recipe.
-          </DialogContentText>
-          {files && (
-            <List>
-              {files.map((image) => (
+          <TextField
+            placeholder={t('search')}
+            fullWidth
+            value={searchValue}
+            onChange={(e) => {
+              setSearchValue(e.target.value)
+              setValueDelayed(e.target.value)
+            }}
+          />
+          <Box
+            sx={{
+              width: '100%',
+              borderRadius: 2,
+              display: 'flex',
+              flexWrap: 'wrap',
+              mt: 2,
+              justifyContent: 'flex-start',
+              gap: 'calc((100% - (4*120px)) / 3)',
+            }}
+          >
+            {[
+              ...files,
+              ...(searchPhotos?.data
+                .filter(
+                  (photo) =>
+                    !files.some((file) => file.id === photo.id.toString()),
+                )
+                .map(
+                  (photo) =>
+                    ({
+                      id: photo.id.toString(),
+                      link: photo.url,
+                      photographer: photo.photographer,
+                      photographerUrl: photo.photographer_url,
+                      recipeId,
+                      photoRefUrl: photo.src.original,
+                    }) as (typeof files)[0],
+                ) ?? []),
+            ].map((image) => {
+              const checked = files.some((file) => file.id === image.id)
+
+              return (
                 <Box
                   key={image.id}
                   sx={{
-                    width: '100%',
-                    borderRadius: 2,
-                    display: 'flex',
-                    justifyContent: 'space-between',
+                    position: 'relative',
+                    cursor: 'pointer',
                   }}
-                >
-                  <Button
-                    sx={{
-                      flex: 1,
-                      justifyContent: 'left',
-                      color: (theme) => theme.palette.text.primary,
-                    }}
-                    onClick={() => {
-                      // Start edit
-                      setCurrentFile({
-                        id: image.id,
-                        url: image.link,
-                      })
-                      setAddOpen(true)
-                    }}
-                  >
-                    {`${t('photography_by')} ${image.photographer}`}
-                  </Button>
-                  <IconButton
-                    sx={{
-                      width: '40px',
-                      height: '40px',
-                    }}
-                    onClick={() => {
-                      console.log(files, image.id)
+                  onClick={() => {
+                    if (checked) {
+                      // Remove file
                       setFiles((prev) =>
                         prev.filter((file) => file.id !== image.id),
                       )
-                    }}
-                  >
-                    <Delete color="error" />
-                  </IconButton>
+                    } else {
+                      // Add file
+                      setFiles((prev) => [...(prev ?? []), image])
+                    }
+                  }}
+                >
+                  {checked && (
+                    <CheckCircle
+                      sx={{
+                        position: 'absolute',
+                        fontSize: 30,
+                        top: -10,
+                        left: -15,
+                      }}
+                      color="success"
+                    />
+                  )}
+                  {/* biome-ignore lint/a11y/useAltText: <explanation> */}
+                  <img
+                    src={
+                      image.file
+                        ? URL.createObjectURL(image.file)
+                        : image.photoRefUrl ?? undefined
+                    }
+                    width={120}
+                    height={120}
+                  />
                 </Box>
-              ))}
-            </List>
-          )}
+              )
+            })}
+          </Box>
           <Button
             fullWidth
             variant="contained"
