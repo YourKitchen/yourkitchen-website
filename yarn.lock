@@ -962,9 +962,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/icons-material@npm:^5.15.8":
-  version: 5.15.8
-  resolution: "@mui/icons-material@npm:5.15.8"
+"@mui/icons-material@npm:^5.15.9":
+  version: 5.15.9
+  resolution: "@mui/icons-material@npm:5.15.9"
   dependencies:
     "@babel/runtime": "npm:^7.23.9"
   peerDependencies:
@@ -974,7 +974,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10c0/b552dd4b1729b4854a3fb7a93de303e9ab3de24d5af4f90c1a0893f06f8afe397460b802de3fc5f4a49e7790dc40cdb02ea5b8f77296e085f9f55fdd6ef5690a
+  checksum: 10c0/2f3eac547a59ee091f17c1504bf4bdd53fe0804d8a314ede074f70cdac18f5b72005b041b51381e09cf1e3c1c80f4f378c39ebbfa55dc307295da85e9df3d6e7
   languageName: node
   linkType: hard
 
@@ -7149,7 +7149,7 @@ __metadata:
     "@emotion/react": "npm:^11.11.3"
     "@emotion/styled": "npm:^11.11.0"
     "@gradio/client": "npm:^0.12.0"
-    "@mui/icons-material": "npm:^5.15.8"
+    "@mui/icons-material": "npm:^5.15.9"
     "@mui/material": "npm:5.15.7"
     "@mui/x-date-pickers": "npm:^6.19.4"
     "@next/bundle-analyzer": "npm:^14.1.0"
