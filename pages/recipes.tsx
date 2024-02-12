@@ -20,6 +20,8 @@ import {
 import { GetStaticProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { SiteLinksSearchBoxJsonLd } from 'next-seo'
+import { useParams, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
 
@@ -34,6 +36,8 @@ export type PublicRecipe = Recipe & {
  */
 const RecipesPage = () => {
   const { t } = useTranslation('common')
+
+  const params = useSearchParams()
 
   const [mealType, setMealType] = useState<MealType>(MealType.DINNER)
   const [cuisineName, setCuisineName] = useState<string>('')
@@ -58,8 +62,10 @@ const RecipesPage = () => {
   }, [cuisines])
 
   // Search
-  const [value, setValue] = useState('') // Debounced
-  const [searchValue, setSearchValue] = useState('') // Reactive
+  const [value, setValue] = useState(params.get('search_query') ?? '') // Debounced
+  const [searchValue, setSearchValue] = useState(
+    params.get('search_query') ?? '',
+  ) // Reactive
 
   const setValueDelayed = useMemo(() => debounce(setValue, 250), [])
 
@@ -71,6 +77,15 @@ const RecipesPage = () => {
         justifyContent: 'center',
       }}
     >
+      <SiteLinksSearchBoxJsonLd
+        url={process.env.NEXTAUTH_URL ?? ''}
+        potentialActions={[
+          {
+            target: `${process.env.NEXTAUTH_URL ?? ''}recipes?search_query`,
+            queryInput: 'search_term_string',
+          },
+        ]}
+      />
       <Box
         sx={{
           width: { sm: '100%', md: '80%' },
@@ -104,7 +119,6 @@ const RecipesPage = () => {
             }}
           />
         </Box>
-
         {searchValue.length > 0 ? (
           <SearchResults cuisines={cuisines?.data ?? []} value={value} />
         ) : (
@@ -152,6 +166,7 @@ const RecipesPage = () => {
             />
           </>
         )}
+        S
       </Box>
     </Box>
   )
