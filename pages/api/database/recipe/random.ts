@@ -33,7 +33,8 @@ const getAndStoreImage = async (
   recipeId: string,
 ): Promise<Omit<RecipeImage, 'recipeId'>> => {
   // Get image for recipe.
-  const image = await getRecipeImage(name)
+  const images = await getRecipeImage(name)
+  const image = images[0]
 
   const blobResponse = await api.get(image.src.medium, {
     responseType: 'arraybuffer',
