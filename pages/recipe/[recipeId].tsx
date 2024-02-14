@@ -81,7 +81,6 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
   // Translations
   const { t } = useTranslation('common')
 
-  // States
   const [completedStep, setCompletedStep] = useState(-1)
   const [allergenesOpen, setAllergenesOpen] = useState(false)
   const [hoveredStep, setHoveredStep] = useState(-1)

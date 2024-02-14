@@ -54,7 +54,6 @@ const UserPage: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   const [followDialogOpen, setFollowDialogOpen] = useState<
     null | 'followers' | 'following'
   >(null)
-
   const [following, setFollowing] = useState(
     user.followers.some((follower) => follower),
   )
@@ -79,7 +78,6 @@ const UserPage: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
       toast.error(err.message ?? err)
     }
   }
-
   return (
     <Box
       sx={{
