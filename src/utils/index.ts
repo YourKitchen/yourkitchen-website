@@ -4,6 +4,7 @@ export const toTitleCase = () => {}
 
 export const getIngredientId = (name: string): string => {
   return name
+    .trim()
     .toLowerCase()
     .replaceAll(/ ?\(.*/g, '')
     .replaceAll(/[^\w\d\s]/g, '')

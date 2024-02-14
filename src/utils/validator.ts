@@ -1,5 +1,6 @@
-import { AllergenType, Recipe, Unit } from '@prisma/client'
+import { AllergenType, Recipe, RecipeType, Unit } from '@prisma/client'
 import { getIngredientId } from '.'
+import { extract, token_set_ratio } from 'fuzzball'
 
 export class ValidationError extends Error {
   object: any
@@ -10,6 +11,52 @@ export class ValidationError extends Error {
     this.object = obj
   }
 }
+
+const findBestMatch = (query: string, target: string) => {
+  // Split the step by spaced
+  const targetWords = target.split(' ')
+
+  // Find the best place that the name fits
+  const best = extract(query, targetWords, {
+    scorer: token_set_ratio,
+    cutoff: 90,
+    returnObjects: true,
+    sortBySimilarity: true,
+  })
+
+  if (best.length === 0) {
+    return null
+  }
+
+  return best.map((match) => match.choice).join(' ')
+}
+
+export const validUnits = [
+  'TEASPOON',
+  'TABLESPOON',
+  'FLUID_OUNCE',
+  'CUP',
+  'PINT',
+  'QUART',
+  'GALLON',
+  'MILLILITER',
+  'LITER',
+  'GRAM',
+  'KILOGRAM',
+  'OUNCE',
+  'POUND',
+  'PINCH',
+  'DASH',
+  'DROP',
+  'SLICE',
+  'PIECE',
+  'CLOVE',
+  'BULB',
+  'STICK',
+  'CUBIC_INCH',
+  'CUBIC_FOOT',
+  'PACKAGE',
+]
 
 const validateIngredient = (
   ingredient: any,
@@ -48,32 +95,6 @@ const validateIngredient = (
 
   // Unit
   if (ingredient.unit && typeof ingredient.unit === 'string') {
-    const validUnits = [
-      'TEASPOON',
-      'TABLESPOON',
-      'FLUID_OUNCE',
-      'CUP',
-      'PINT',
-      'QUART',
-      'GALLON',
-      'MILLILITER',
-      'LITER',
-      'GRAM',
-      'KILOGRAM',
-      'OUNCE',
-      'POUND',
-      'PINCH',
-      'DASH',
-      'DROP',
-      'SLICE',
-      'PIECE',
-      'CLOVE',
-      'BULB',
-      'STICK',
-      'CUBIC_INCH',
-      'CUBIC_FOOT',
-      'PACKAGE',
-    ]
     if (validUnits.includes(ingredient.unit)) {
       formattedIngredient.unit = ingredient.unit
     } else {
@@ -182,7 +203,7 @@ const validateStep = (
 ): { content: string; numberOfIngredients: number } => {
   // Validate that all ingredients are valid.
   const stepSplit = step.split('!')
-  const newSplit: string[] = []
+  let newSplit: string[] = []
   let numIngredients = 0
 
   // If % 2: 0 = description, 1 = ingredient
@@ -210,9 +231,9 @@ const validateStep = (
         if (ingredient) {
           numIngredients += 1
           newSplit.push(
-            `${ingredient.amount}:${ingredient.unit}:${ingredient.name
-              .toLowerCase()
-              .replaceAll(' ', '-')}`,
+            `${ingredient.amount.toFixed(2)}:${
+              ingredient.unit
+            }:${ingredient.name.toLowerCase().replaceAll(' ', '-')}`,
           )
         } else {
           throw new ValidationError(
@@ -237,9 +258,9 @@ const validateStep = (
             numIngredients += 1
             // We found the ingredient, we can now replace this split part with
             newSplit.push(
-              `${ingredient.amount}:${ingredient.unit}:${ingredient.name
-                .toLowerCase()
-                .replaceAll(' ', '-')}`,
+              `${ingredient.amount.toFixed(2)}:${
+                ingredient.unit
+              }:${getIngredientId(ingredient.name)}`,
             )
             found = true
             break
@@ -262,6 +283,27 @@ const validateStep = (
     }
 
     index++
+  }
+
+  if (numIngredients === 0) {
+    // No ingredients where found in the step, try another method.
+    // We go through each ingredient and find the best matches for the ingredients if there are any.
+    let newStep = step
+    for (let i = 0; i < ingredients.length; i++) {
+      const ingredient = ingredients[i]
+      const bestMatch = findBestMatch(ingredient.name, step)
+
+      if (bestMatch !== null) {
+        newStep = newStep.replace(
+          bestMatch,
+          `!${ingredient.amount.toFixed(2)}:${
+            ingredient.unit
+          }:${getIngredientId(ingredient.name)}!`,
+        )
+        numIngredients++
+      }
+    }
+    newSplit = newStep.split('!')
   }
 
   return { content: newSplit.join('!'), numberOfIngredients: numIngredients }
@@ -302,6 +344,8 @@ export const validateContent = (
       | 'cuisineName'
       | 'ingredients'
       | 'steps'
+      | 'persons'
+      | 'recipeType'
     >
   > = {}
 
@@ -379,6 +423,28 @@ export const validateContent = (
     throw new ValidationError('"ingredients" is not an array.', content)
   }
 
+  if (typeof content.persons === 'string') {
+    recipe.persons = Number.parseInt(
+      content.persons.toString().match(/\d+/g)?.toString() ?? '4',
+    )
+  }
+  if (typeof content.persons === 'number') {
+    recipe.persons = content.persons
+  }
+
+  if (typeof content.recipeType === 'string') {
+    // Validate the meal type value
+    const validRecipeTypes = ['DESSERT', 'MAIN', 'SIDE', 'SNACK', 'STARTER']
+    let parsedRecipeType = 'MAIN'
+
+    // If it is an array, get the index of the value
+    if (validRecipeTypes.includes(content.recipeType.toUpperCase())) {
+      parsedRecipeType = content.recipeType
+    }
+
+    recipe.recipeType = parsedRecipeType as RecipeType
+  }
+
   return recipe as Pick<
     Recipe & {
       ingredients: {
@@ -395,5 +461,7 @@ export const validateContent = (
     | 'cuisineName'
     | 'ingredients'
     | 'steps'
+    | 'persons'
+    | 'recipeType'
   >
 }
