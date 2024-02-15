@@ -3857,9 +3857,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html-recipe-parser@git@github.com:MakakWasTaken/html-recipe-parser.git":
+"html-recipe-parser@https://github.com/MakakWasTaken/html-recipe-parser.git":
   version: 1.0.14
-  resolution: "html-recipe-parser@git@github.com:MakakWasTaken/html-recipe-parser.git#commit=bcc6efc8156f8e1f3f9ce2c2079d0c137d21fdcd"
+  resolution: "html-recipe-parser@https://github.com/MakakWasTaken/html-recipe-parser.git#commit=bcc6efc8156f8e1f3f9ce2c2079d0c137d21fdcd"
   dependencies:
     "@types/humanize-duration": "npm:^3.27.4"
     "@types/node-fetch": "npm:^2.6.2"
@@ -7350,7 +7350,7 @@ __metadata:
     eventsource: "npm:^2.0.2"
     fuzzball: "npm:^2.1.2"
     green-analytics-js: "npm:^1.1.14"
-    html-recipe-parser: "git@github.com:MakakWasTaken/html-recipe-parser.git"
+    html-recipe-parser: "https://github.com/MakakWasTaken/html-recipe-parser.git"
     husky: "npm:^9.0.10"
     i18next: "npm:^23.8.2"
     lint-staged: "npm:^15.2.2"
