@@ -61,29 +61,17 @@ const handleGET = async (
   res: NextApiResponse,
   session?: Session,
 ) => {
-  const url = req.query.url
+  const content = req.query.content
 
-  if (!url || typeof url !== 'string') {
+  if (!content || typeof content !== 'string') {
     res.status(400).json({
       ok: false,
-      message: "'url' is not valid",
+      message: "'content' is not valid",
     })
     return
   }
 
-  const response = await axios.get(url)
-
-  // Extract the structured data from the response
-
-  if (!response.headers['content-type'].includes('text/html')) {
-    res.status(400).json({
-      ok: false,
-      message: 'The url does not link to a website',
-    })
-    return
-  }
-
-  const parsedRecipe = await parseHTML(response.data)
+  const parsedRecipe = await parseHTML(content)
 
   if (typeof parsedRecipe === 'string') {
     throw new Error(parsedRecipe)

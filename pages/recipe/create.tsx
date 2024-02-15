@@ -20,6 +20,7 @@ import {
   Typography,
 } from '@mui/material'
 import { Recipe, RecipeImage, RecipeIngredient } from '@prisma/client'
+import axios from 'axios'
 import { GetStaticProps } from 'next'
 import { useSession } from 'next-auth/react'
 import { useTranslation } from 'next-i18next'
@@ -142,18 +143,26 @@ const CreateRecipePage: FC = () => {
 
   const handleImportSubmit = () => {
     toast.promise(
-      api.get<
-        YKResponse<
-          Recipe & {
-            ingredients: RecipeIngredient[]
-            image: (RecipeImage & { file?: File })[]
-          }
-        >
-      >('database/recipe/structured-data', {
-        params: {
-          url: importUrl,
-        },
-      }),
+      async () => {
+        // We do this client side to prevent SSRF attacks
+        const contentResponse = await axios.get(importUrl, {
+          headers: {
+            Accept: 'text/html',
+          },
+        })
+        return api.get<
+          YKResponse<
+            Recipe & {
+              ingredients: RecipeIngredient[]
+              image: (RecipeImage & { file?: File })[]
+            }
+          >
+        >('database/recipe/structured-data', {
+          params: {
+            content: contentResponse.data,
+          },
+        })
+      },
       {
         loading: t('importing_recipe'),
         error: (err) => err.message ?? err,
