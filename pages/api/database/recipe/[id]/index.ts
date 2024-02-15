@@ -28,7 +28,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   const [recipe, rating] = await Promise.all([
-    prisma.recipe.findUnique({
+    prisma.recipe.findFirst({
       where: {
         id: req.query.id as string,
       },

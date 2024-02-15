@@ -26,6 +26,7 @@ import Link from '../Link'
 interface Page {
   label: string
   href: string
+  authState?: 'authenticated' | 'unauthenticated'
 }
 
 export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
@@ -51,20 +52,28 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
         label: t('recipes'),
         href: '/recipes',
       },
+      {
+        label: t('meal_plan'),
+        href: '/meal-plan',
+        authState: 'authenticated',
+      },
     ],
     [t],
   )
 
-  const settings: Page[] =
-    status === 'authenticated'
-      ? [
-          { label: t('settings'), href: '/settings' },
-          {
-            label: t('logout'),
-            href: '/auth/signout',
-          },
-        ]
-      : [{ label: t('get_started'), href: '/auth/signin' }]
+  const settings: Page[] = [
+    { label: t('settings'), href: '/settings', authState: 'authenticated' },
+    {
+      label: t('logout'),
+      href: '/auth/signout',
+      authState: 'authenticated',
+    },
+    {
+      label: t('get_started'),
+      href: '/auth/signin',
+      authState: 'unauthenticated',
+    },
+  ]
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null)
@@ -111,7 +120,11 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   }
 
   const onPageClick = (page: Page) => {
-    navigation.push(page.href)
+    if (page.authState === 'authenticated' && status === 'unauthenticated') {
+      navigation.push(`/auth/signin?callbackUrl=${page.href}`)
+    } else {
+      navigation.push(page.href)
+    }
   }
 
   const mobileMenuId = 'primary-menu-mobile'
@@ -131,14 +144,14 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      {settings.map((settingsPage) => (
-        <MenuItem
-          key={settingsPage.label}
-          onClick={() => onPageClick(settingsPage)}
-        >
-          {settingsPage.label}
-        </MenuItem>
-      ))}
+      {settings.map(
+        (page) =>
+          (page.authState === undefined || page.authState === status) && (
+            <MenuItem key={page.label} onClick={() => onPageClick(page)}>
+              {page.label}
+            </MenuItem>
+          ),
+      )}
     </Menu>
   )
 
@@ -244,7 +257,7 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
             {pages.map((page) => (
               <Button
                 key={page.label}
-                href={page.href}
+                onClick={() => onPageClick(page)}
                 sx={{
                   mx: 1,
                   textAlign: 'center',
@@ -286,11 +299,7 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
             <Button
               sx={{ display: 'flex', gap: 1 }}
               variant="contained"
-              href={
-                session
-                  ? '/recipe/create'
-                  : '/auth/signin?callbackUrl=/recipe/create'
-              }
+              href={'/recipe/create'}
             >
               <Add />
               {t('create')}
@@ -321,16 +330,20 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {settings.map((setting) => (
-                    <MenuItem
-                      key={setting.label}
-                      onClick={() => onPageClick(setting)}
-                    >
-                      <Typography textAlign="center">
-                        {setting.label}
-                      </Typography>
-                    </MenuItem>
-                  ))}
+                  {settings.map(
+                    (page) =>
+                      (page.authState === undefined ||
+                        page.authState === status) && (
+                        <MenuItem
+                          key={page.label}
+                          onClick={() => onPageClick(page)}
+                        >
+                          <Typography textAlign="center">
+                            {page.label}
+                          </Typography>
+                        </MenuItem>
+                      ),
+                  )}
                 </Menu>
               </>
             ) : (

@@ -7,8 +7,20 @@ import RecipeTypeSelect from '#components/Recipe/RecipeTypeSelect'
 import StepsTextField from '#components/Recipe/StepsTextField'
 import { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
-import { Box, Button, CircularProgress, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Typography,
+} from '@mui/material'
 import { Recipe, RecipeImage, RecipeIngredient } from '@prisma/client'
+import axios from 'axios'
 import { GetStaticProps } from 'next'
 import { useSession } from 'next-auth/react'
 import { useTranslation } from 'next-i18next'
@@ -54,6 +66,8 @@ const CreateRecipePage: FC = () => {
   })
 
   // States
+  const [importOpen, setImportOpen] = useState(false)
+  const [importUrl, setImportUrl] = useState('')
   const [recipe, setRecipe] = useState(defaultRecipe)
 
   const [stepList, setStepList] = useState<{ key: string; value: string }[]>(
@@ -123,6 +137,54 @@ const CreateRecipePage: FC = () => {
     )
   }
 
+  const handleImportClose = () => {
+    setImportOpen(false)
+  }
+
+  const handleImportSubmit = () => {
+    toast.promise(
+      async () => {
+        // We do this client side to prevent SSRF attacks
+        const contentResponse = await axios.get(importUrl, {
+          headers: {
+            Accept: 'text/html',
+          },
+        })
+        return api.get<
+          YKResponse<
+            Recipe & {
+              ingredients: RecipeIngredient[]
+              image: (RecipeImage & { file?: File })[]
+            }
+          >
+        >('database/recipe/structured-data', {
+          params: {
+            content: contentResponse.data,
+          },
+        })
+      },
+      {
+        loading: t('importing_recipe'),
+        error: (err) => err.message ?? err,
+        success: (response) => {
+          const data = response.data.data
+
+          setRecipe(data)
+          setStepList(
+            data.steps.map((step) => ({
+              key: v4(),
+              value: step,
+            })),
+          )
+
+          handleImportClose()
+
+          return t('succesfully_imported_recipe')
+        },
+      },
+    )
+  }
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       <NextSeo
@@ -130,6 +192,32 @@ const CreateRecipePage: FC = () => {
         description="This page allows the user to create a new recipe to add to their recipe collection. This recipe can also be public."
         noindex
       />
+      <Dialog
+        maxWidth="sm"
+        fullWidth
+        open={importOpen}
+        onClose={handleImportClose}
+      >
+        <DialogTitle>{t('import_recipe')}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {t('import_recipe_description')}
+          </DialogContentText>
+          <TextField
+            fullWidth
+            value={importUrl}
+            placeholder={t('import_url')}
+            type="url"
+            onChange={(e) => setImportUrl(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleImportClose}>{t('cancel')}</Button>
+          <Button color="success" onClick={handleImportSubmit}>
+            {t('submit')}
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Box
         sx={{
           width: {
@@ -142,7 +230,17 @@ const CreateRecipePage: FC = () => {
           gap: 1,
         }}
       >
-        <Typography variant="h3">{t('create_recipe')}</Typography>
+        <Typography sx={{ mb: 2 }} variant="h3">
+          {t('create_recipe')}
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={() => setImportOpen(true)}
+          fullWidth
+        >
+          {t('import_recipe')}
+        </Button>
+        <Typography>{t('or')}</Typography>
         <YKTextField
           value={recipe.name}
           onChange={(e) => {
@@ -175,85 +273,111 @@ const CreateRecipePage: FC = () => {
             }))
           }
         />
-        <CuisineAutocomplete
-          t={t}
-          defaultCuisine={recipe.cuisineName}
-          onChange={(cuisine) =>
-            setRecipe((prev) => ({ ...prev, cuisineName: cuisine?.name ?? '' }))
-          }
-        />
-        <MealTypeSelect
-          t={t}
-          value={recipe.mealType}
-          onChange={(mealType) => setRecipe((prev) => ({ ...prev, mealType }))}
-        />
-        <YKTextField
-          value={recipe.persons}
-          onChange={(e) => {
-            setRecipe((prev) => ({
-              ...prev,
-              persons: Number.parseInt(e.target.value),
-            }))
-          }}
-          type="number"
-          placeholder={t('persons')}
-        />
-        <RecipeTypeSelect
-          t={t}
-          value={recipe.recipeType}
-          onChange={(recipeType) => {
-            setRecipe((prev) => ({
-              ...prev,
-              recipeType,
-            }))
-          }}
-        />
-        <PreparationTimePicker
-          t={t}
-          value={recipe.preparationTime}
-          onChange={(preparationTime) => {
-            const totalMinutes =
-              preparationTime.getHours() * 60 + preparationTime.getMinutes()
-            setRecipe((prev) => ({
-              ...prev,
-              preparationTime: totalMinutes,
-            }))
-          }}
-        />
-        {stepList.map((step, index) => (
-          <StepsTextField
-            key={step.key}
-            t={t}
-            index={index}
-            length={stepList.length}
-            deleteStep={() => {
-              setStepList((prev) =>
-                prev.filter((prevStep) => prevStep.key !== step.key),
-              )
-            }}
-            value={step.value}
-            setValue={(value) => {
-              setStepList((prev) =>
-                prev.map((prevStep) =>
-                  prevStep.key === step.key
-                    ? { key: step.key, value }
-                    : prevStep,
-                ),
-              )
-            }}
-          />
-        ))}
-        {/* Add step button */}
-        <Button
-          fullWidth
-          variant="contained"
-          onClick={() => {
-            setStepList((prev) => [...prev, { key: v4(), value: '' }])
+        <Box
+          sx={{
+            width: '100%',
+            mt: 3,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1,
           }}
         >
-          {t('add_step')}
-        </Button>
-
+          <CuisineAutocomplete
+            t={t}
+            defaultCuisine={recipe.cuisineName}
+            onChange={(cuisine) =>
+              setRecipe((prev) => ({
+                ...prev,
+                cuisineName: cuisine?.name ?? '',
+              }))
+            }
+          />
+          <MealTypeSelect
+            t={t}
+            value={recipe.mealType}
+            onChange={(mealType) =>
+              setRecipe((prev) => ({ ...prev, mealType }))
+            }
+          />
+          <YKTextField
+            value={recipe.persons}
+            onChange={(e) => {
+              setRecipe((prev) => ({
+                ...prev,
+                persons: Number.parseInt(e.target.value),
+              }))
+            }}
+            type="number"
+            placeholder={t('persons')}
+          />
+          <RecipeTypeSelect
+            t={t}
+            value={recipe.recipeType}
+            onChange={(recipeType) => {
+              setRecipe((prev) => ({
+                ...prev,
+                recipeType,
+              }))
+            }}
+          />
+          <PreparationTimePicker
+            t={t}
+            value={recipe.preparationTime}
+            onChange={(preparationTime) => {
+              const totalMinutes =
+                preparationTime.getHours() * 60 + preparationTime.getMinutes()
+              setRecipe((prev) => ({
+                ...prev,
+                preparationTime: totalMinutes,
+              }))
+            }}
+          />
+        </Box>
+        <Box
+          sx={{
+            mt: 3,
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            gap: 1,
+          }}
+        >
+          {stepList.map((step, index) => (
+            <StepsTextField
+              key={step.key}
+              t={t}
+              index={index}
+              length={stepList.length}
+              deleteStep={() => {
+                setStepList((prev) =>
+                  prev.filter((prevStep) => prevStep.key !== step.key),
+                )
+              }}
+              value={step.value}
+              setValue={(value) => {
+                setStepList((prev) =>
+                  prev.map((prevStep) =>
+                    prevStep.key === step.key
+                      ? { key: step.key, value }
+                      : prevStep,
+                  ),
+                )
+              }}
+            />
+          ))}
+          {/* Add step button */}
+          <Button
+            sx={{
+              mt: 1,
+            }}
+            fullWidth
+            onClick={() => {
+              setStepList((prev) => [...prev, { key: v4(), value: '' }])
+            }}
+          >
+            {t('add_step')}
+          </Button>
+        </Box>
         <Button
           sx={{
             mt: 2,

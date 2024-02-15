@@ -18,9 +18,9 @@ const SkeletonRecipeBox: FC<SkeletonRecipeBoxProps> = ({ name, rating }) => {
   return (
     <Box
       sx={{
-        display: 'block',
-        width: '100%',
-        minWidth: '250px',
+        display: 'inline-block',
+        width: '225px',
+        ml: 2,
         height: '300px',
         borderRadius: 4,
         backgroundColor: (theme) => theme.palette.background.paper,

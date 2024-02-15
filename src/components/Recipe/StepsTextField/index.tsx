@@ -324,6 +324,8 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
           backgroundColor: (theme) => theme.palette.primary.main,
           textAlign: 'center',
           lineHeight: '30px',
+          color: (theme) =>
+            theme.palette.getContrastText(theme.palette.primary.main),
         }}
       >
         {`#${index + 1}`}

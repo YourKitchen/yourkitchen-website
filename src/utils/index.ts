@@ -4,6 +4,7 @@ export const toTitleCase = () => {}
 
 export const getIngredientId = (name: string): string => {
   return name
+    .trim()
     .toLowerCase()
     .replaceAll(/ ?\(.*/g, '')
     .replaceAll(/[^\w\d\s]/g, '')
@@ -36,4 +37,8 @@ export const getGetIngredientsFromStep = (
   }
 
   return ingredients
+}
+
+export const avg = (list: number[]) => {
+  return list.reduce((prev, cur) => prev + cur, 0) / list.length
 }

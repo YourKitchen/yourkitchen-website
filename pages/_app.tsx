@@ -1,3 +1,4 @@
+import AnalyticsWrapper from '#components/AnalyticsWrapper'
 import { Footer } from '#components/Footer'
 import { Header } from '#components/Header'
 import createEmotionCache from '#misc/createEmotionCache'
@@ -30,7 +31,7 @@ const MyApp: FC<MyAppProps> = (props) => {
 
   useEffect(() => {
     try {
-      initGA('aab4595a-ab94-4c99-b444-bfb5abc5adb1')
+      initGA('731cf069-65d8-4fc2-9a6e-82ca3fbc87ae')
     } catch (err: any) {
       console.error('Failed to start green-analytics: ', err)
     }
@@ -65,6 +66,7 @@ const MyApp: FC<MyAppProps> = (props) => {
           },
         ]}
         titleTemplate="%s | YourKitchen"
+        defaultTitle="YourKitchen"
       />
       <ThemeProvider theme={selectedTheme}>
         <SessionProvider session={pageProps.session}>
@@ -77,14 +79,13 @@ const MyApp: FC<MyAppProps> = (props) => {
                 if (typeof args === 'string') {
                   const response = await api.get(`/database/${args}`)
                   return response.data
-                } else {
-                  const { url, ...rest } = args
-
-                  const response = await api.get(`/database/${url}`, {
-                    params: rest,
-                  })
-                  return response.data
                 }
+                const { url, ...rest } = args
+
+                const response = await api.get(`/database/${url}`, {
+                  params: rest,
+                })
+                return response.data
               },
               errorRetryCount: 1, // only retry once, then throw error
               onErrorRetry: (error, key: string) => {
@@ -104,7 +105,9 @@ const MyApp: FC<MyAppProps> = (props) => {
           >
             <Header />
             <Box sx={{ minHeight: 'calc(100vh - 72.5px)' }}>
-              <Component {...pageProps} />
+              <AnalyticsWrapper>
+                <Component {...pageProps} />
+              </AnalyticsWrapper>
             </Box>
             <Footer />
             <Toaster

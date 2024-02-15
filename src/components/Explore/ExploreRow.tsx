@@ -19,12 +19,13 @@ const ExploreRow: FC<ExploreRowProps> = ({ recipes, loading }) => {
     <Box
       sx={{
         width: { sm: '100%', md: '100%' },
-        display: 'flex',
+        display: 'block',
+        whiteSpace: 'nowrap',
         alignItems: 'center',
         gap: 2,
         overflowX: 'auto',
         minHeight: '350px',
-        marginBottom: 6,
+        position: 'relative',
       }}
     >
       {loading

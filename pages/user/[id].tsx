@@ -6,16 +6,30 @@ import { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
 import { authOptions } from '#pages/api/auth/[...nextauth]'
 import { PublicRecipe } from '#pages/recipes'
-import { Box, Button, Grid, Tab, Tabs, Typography } from '@mui/material'
-import { FeedItem, Rating, User } from '@prisma/client'
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  List,
+  ListItem,
+  Tab,
+  Tabs,
+  Typography,
+} from '@mui/material'
+import { FeedItem, Follows, Rating, User } from '@prisma/client'
 import { DateTime } from 'luxon'
-import { GetServerSideProps } from 'next'
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { Session, getServerSession } from 'next-auth'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { NextSeo, ProfilePageJsonLd } from 'next-seo'
 import Image from 'next/image'
-import { FC, useState } from 'react'
+import { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import { toast } from 'sonner'
 
 type PublicUser = Pick<User, 'id' | 'image' | 'name' | 'created'>
 
@@ -30,18 +44,40 @@ interface UserPageProps {
   }
 }
 
-const UserPage: FC<UserPageProps> = ({ ownUser, user }) => {
+const UserPage: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
+  ownUser,
+  user,
+}) => {
   const { t } = useTranslation('common')
 
   const [tab, setTab] = useState(0)
   const [followDialogOpen, setFollowDialogOpen] = useState<
     null | 'followers' | 'following'
   >(null)
+  const [following, setFollowing] = useState(
+    user.followers.some((follower) => follower),
+  )
 
   const followClick = (type: 'followers' | 'following') => {
     setFollowDialogOpen(type)
   }
 
+  const updateFollowState = async () => {
+    try {
+      setFollowing((prev) => !prev)
+      const response = await api.put<YKResponse<boolean>>(
+        `database/user/${user.id}/follow`,
+      )
+
+      console.log(response.data.data)
+
+      setFollowing(response.data.data)
+    } catch (err) {
+      // Reset the following state
+      setFollowing((prev) => !prev)
+      toast.error(err.message ?? err)
+    }
+  }
   return (
     <Box
       sx={{
@@ -71,6 +107,35 @@ const UserPage: FC<UserPageProps> = ({ ownUser, user }) => {
         title={user.name ?? 'User'}
         description={t('user_default_description')}
       />
+      <Dialog
+        open={followDialogOpen !== null}
+        onClose={() => setFollowDialogOpen(null)}
+      >
+        <DialogTitle>{t(followDialogOpen as string)}</DialogTitle>
+        <DialogContent>
+          {/* Show list of selected type of follow */}
+          <List>
+            {user[followDialogOpen as 'followers' | 'following']?.map(
+              (followUser) => (
+                <Link href={`/user/${followUser.id}`} key={followUser.id}>
+                  <ListItem>
+                    <Image
+                      alt={`${followUser.name}'s profile picture`}
+                      width={30}
+                      height={30}
+                      src={followUser.image ?? Logo}
+                    />
+                    {followUser.name}
+                  </ListItem>
+                </Link>
+              ),
+            )}
+          </List>
+        </DialogContent>
+        <DialogActions onClick={() => setFollowDialogOpen(null)}>
+          {t('okay')}
+        </DialogActions>
+      </Dialog>
       <Image
         alt={`${user.name}'s profile picture`}
         width={256}
@@ -93,6 +158,14 @@ const UserPage: FC<UserPageProps> = ({ ownUser, user }) => {
           )}`}
         />
       </Box>
+      <Button
+        variant="contained"
+        sx={{ my: 1 }}
+        color={following ? 'secondary' : 'primary'}
+        onClick={updateFollowState}
+      >
+        {following ? t('following') : t('follow')}
+      </Button>
       <Box sx={{ display: 'flex' }}>
         <Button onClick={() => followClick('followers')}>
           <Box sx={{ textAlign: 'center' }}>
@@ -113,51 +186,63 @@ const UserPage: FC<UserPageProps> = ({ ownUser, user }) => {
         <Tab value={0} label={t('recipes')} />
         <Tab value={1} label={t('feed')} />
       </Tabs>
-      <TabPanel value={tab} index={0}>
-        <Grid
-          sx={{
-            width: { sm: '70%', md: '60%', lg: '50%' },
-          }}
-          columns={3}
-          justifyContent={'flex-start'}
-        >
-          {user.recipes.map((recipe) => (
-            <Link
-              href={`/recipe/${recipe.id}`}
-              sx={{
-                display: 'block',
-                width: '300px',
-                height: '300px',
-                backgroundColor: (theme) => theme.palette.background.default,
-                backgroundImage: `url(${recipe.image?.[0].link})`,
-                backgroundSize: 'cover',
-                borderRadius: 2,
-                transition: '0.25s',
-                position: 'relative',
-                fontSize: '25px',
+      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+        <TabPanel value={tab} index={0}>
+          <Grid
+            sx={{
+              width: { sm: '300px', md: '930px' },
+              display: 'flex',
+              gap: '10px',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between',
+            }}
+            columns={3}
+          >
+            {user.recipes.map((recipe) => (
+              <Link
+                href={`/recipe/${recipe.id}`}
+                sx={{
+                  display: 'block',
+                  width: '300px',
+                  height: '300px',
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === 'light' ? '#fff' : '#000',
+                  color: (theme) => theme.palette.text.primary,
+                  backgroundImage: `url(${recipe.image?.[0].link})`,
+                  backgroundSize: 'cover',
+                  borderRadius: 2,
+                  transition: '0.25s',
+                  position: 'relative',
+                  fontSize: '25px',
 
-                '&:hover': {
-                  boxShadow: 'inset 0 0 0 2000px rgba(0,0,0, 0.3)',
-                },
-                '&:hover:after': {
-                  color: 'white',
-                  textAlign: 'center',
-                  position: 'absolute',
-                  top: '100px',
-                  right: '5px',
-                  left: '5px',
-                  content: `"${recipe.name}"`,
-                },
-              }}
-            />
-          ))}
-        </Grid>
-      </TabPanel>
+                  '&:hover': {
+                    boxShadow: 'inset 0 0 0 2000px rgba(0,0,0, 0.3)',
+                  },
+                  '&:hover:after': {
+                    color: 'white',
+                    textAlign: 'center',
+                    position: 'absolute',
+                    top: '100px',
+                    right: '5px',
+                    left: '5px',
+                    content: `"${recipe.name}"`,
+                  },
+                }}
+              />
+            ))}
+          </Grid>
+        </TabPanel>
+        <TabPanel value={tab} index={0}>
+          {/* TODO: Implement the feed view for the user. */}
+        </TabPanel>
+      </Box>
     </Box>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps<UserPageProps> = async (
+  context,
+) => {
   try {
     const userResponse = await api.get<YKResponse<User>>(
       `database/user/${context.params?.id}`,
@@ -177,6 +262,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return {
       props: {
+        // Parse/stringify to make sure all dates are strings and remove all undefined values
         ownUser: session ? JSON.parse(JSON.stringify(session.user)) : null,
         user: JSON.parse(JSON.stringify(userResponse.data.data)),
         ...(context.locale

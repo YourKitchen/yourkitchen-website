@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "mealType": {
+      "type": "string",
+      "enum": ["BREAKFAST", "LUNCH", "DINNER"]
+    },
+    "recipeType": {
+      "type": "string",
+      "enum": ["DESSERT", "MAIN", "SIDE", "STARTER", "SNACK"]
+    },
+    "preparationTime": {
+      "type": "number"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": ["EASY", "INTERMEDIATE", "EXPERT"]
+    },
+    "cuisineName": {
+      "type": "string"
+    },
+    "ingredients": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "unit": {
+            "type": "string",
+            "enum": [
+              "TEASPOON",
+              "TABLESPOON",
+              "FLUID_OUNCE",
+              "CUP",
+              "PINT",
+              "QUART",
+              "GALLON",
+              "MILLILITER",
+              "LITER",
+              "GRAM",
+              "KILOGRAM",
+              "OUNCE",
+              "POUND",
+              "PINCH",
+              "DASH",
+              "DROP",
+              "SLICE",
+              "PIECE",
+              "CLOVE",
+              "BULB",
+              "STICK",
+              "CUBIC_INCH",
+              "CUBIC_FOOT",
+              "PACKAGE"
+            ]
+          },
+          "amount": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "allergenType": {
+            "type": ["string", "null"],
+            "enum": [
+              "NUT",
+              "PEANUTS",
+              "LACTOSE",
+              "EGGS",
+              "FISH",
+              "SHELLFISH",
+              "SOY",
+              "WHEAT",
+              "GLUTEN",
+              "SESAME",
+              "MUSTARD",
+              "SULFITES",
+              "CELERY",
+              "LUPIN",
+              "MOLLUSKUS",
+              null
+            ]
+          }
+        },
+        "required": ["unit", "amount", "name", "allergenType"]
+      }
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "name",
+    "mealType",
+    "preparationTime",
+    "difficulty",
+    "cuisineName",
+    "ingredients",
+    "steps"
+  ]
+}

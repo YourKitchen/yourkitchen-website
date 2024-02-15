@@ -27,12 +27,38 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
     select: {
       id: true,
       feeditems: true,
-      followers: true,
-      following: true,
+      followers: {
+        include: {
+          following: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+              created: true,
+            },
+          },
+        },
+      },
+      following: {
+        include: {
+          follower: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+              created: true,
+            },
+          },
+        },
+      },
       image: true,
       name: true,
       ratings: true,
-      recipes: true,
+      recipes: {
+        include: {
+          image: true,
+        },
+      },
       created: true,
     },
   })
@@ -44,7 +70,11 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.json({
     ok: true,
     message: 'Succesfully got user',
-    data: user,
+    data: {
+      ...user,
+      followers: user.followers.map((follower) => follower.following),
+      following: user.following.map((follower) => follower.follower),
+    },
   })
 }
 

@@ -4,5 +4,6 @@
   "recipes": "Recetas",
   "settings": "Configuración",
   "logout": "Cerrar sesión",
-  "get_started": "Empezar"
+  "get_started": "Empezar",
+  "meal_plan": "Meal Plan"
 }

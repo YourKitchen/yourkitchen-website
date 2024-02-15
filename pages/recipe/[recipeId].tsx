@@ -14,11 +14,16 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material'
-import { AllergenType, Ingredient, RecipeIngredient } from '@prisma/client'
+import {
+  AllergenType,
+  Ingredient,
+  RecipeIngredient,
+  Unit,
+} from '@prisma/client'
 import { DateTime } from 'luxon'
 import { GetServerSideProps } from 'next'
 import { Session, getServerSession } from 'next-auth'
-import { useTranslation } from 'next-i18next'
+import { TFunction, useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { NextSeo, RecipeJsonLd } from 'next-seo'
 import Image from 'next/image'
@@ -35,6 +40,40 @@ interface RecipePageProps {
   user?: Session['user']
 }
 
+interface IngredientItemProps {
+  t: TFunction
+  recipeIngredient: RecipeIngredient & { ingredient: Ingredient }
+  progress: number | undefined
+  hovered: boolean
+}
+
+const IngredientItem: FC<IngredientItemProps> = ({
+  t,
+  recipeIngredient,
+  progress,
+  hovered,
+}) => {
+  const amountString = useMemo((): string => {
+    if (progress) {
+      return `${progress}/${recipeIngredient.amount}`
+    }
+    return recipeIngredient.amount.toString()
+  }, [recipeIngredient.amount, progress])
+
+  return (
+    <ListItem
+      sx={{
+        textDecoration:
+          progress === recipeIngredient.amount ? 'line-through' : undefined,
+        fontWeight: hovered ? 'bold' : undefined,
+      }}
+      key={recipeIngredient.ingredientId}
+    >{`${amountString} ${t(recipeIngredient.unit.toLowerCase())} ${
+      recipeIngredient.ingredient.name
+    }`}</ListItem>
+  )
+}
+
 /**
  * Visual representation of a recipe
  */
@@ -42,12 +81,9 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
   // Translations
   const { t } = useTranslation('common')
 
-  // Router
-  const router = useRouter()
-
-  // States
   const [completedStep, setCompletedStep] = useState(-1)
   const [allergenesOpen, setAllergenesOpen] = useState(false)
+  const [hoveredStep, setHoveredStep] = useState(-1)
 
   // Memos
   const image = useMemo(() => {
@@ -89,7 +125,65 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
     return allergenes.filter((allergen) => userAllergenes.includes(allergen))
   }, [allergenes, user])
 
-  console.log(router.pathname)
+  const getIngredientsFromStep = (
+    step: string | undefined,
+  ): Omit<RecipeIngredient, 'recipeId'>[] => {
+    const ingredients: Omit<RecipeIngredient, 'recipeId'>[] = []
+
+    if (!step) {
+      return ingredients
+    }
+
+    const stepSplit = step.split('!')
+
+    if (stepSplit.length < 2) {
+      // No ingredients, because there is no split
+      return ingredients
+    }
+
+    // We start at 1, because every odd number is an ingredient if formatted correctly. (Has been validated before uplaoded)
+    for (let i = 1; i < stepSplit.length; i += 2) {
+      const item = stepSplit[i]
+
+      const colonSplit = item.split(':')
+
+      if (colonSplit.length !== 3) {
+        console.error(`Invalid split: ${item}`)
+        continue
+      }
+
+      const [amount, unit, id] = colonSplit
+
+      ingredients.push({
+        amount: Number.parseFloat(amount),
+        unit: unit as Unit,
+        ingredientId: id,
+      })
+    }
+
+    return ingredients
+  }
+
+  const ingredientsProgress = useMemo(() => {
+    // Get what amount of the ingredients have been used.
+    // This allows for easier readability of what's back.
+    const progressMap: { [ingredientId: string]: number } = {}
+
+    for (let i = 0; i <= completedStep; i++) {
+      const step = recipe.steps[i]
+
+      const ingredients = getIngredientsFromStep(step)
+
+      for (const ingredient of ingredients) {
+        if (!progressMap[ingredient.ingredientId]) {
+          progressMap[ingredient.ingredientId] = 0
+        }
+        progressMap[ingredient.ingredientId] += ingredient.amount
+      }
+    }
+
+    return progressMap
+  }, [completedStep, getIngredientsFromStep, recipe.steps])
 
   return (
     <Box
@@ -146,7 +240,9 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
               width: '250px',
               height: '250px',
               aspectRatio: 1,
+              mb: 2,
               cursor: 'default',
+              borderRadius: 6,
               backgroundImage: image ? `url(${image.link})` : undefined,
             }}
             href={(image ? image.photoRefUrl : null) ?? ''}
@@ -158,13 +254,13 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
             href={`/user/${recipe.ownerId}`}
             sx={{
               backgroundColor: (theme) => theme.palette.background.paper,
-              borderRadius: 2,
               height: '50px',
               width: '170px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               gap: 1,
+              borderRadius: 8,
               p: 1,
               my: 2,
             }}
@@ -175,6 +271,9 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
                 src={recipe.owner.image}
                 width={40}
                 height={40}
+                style={{
+                  borderRadius: 4,
+                }}
               />
             )}
             <Typography>{recipe.owner.name}</Typography>
@@ -267,13 +366,24 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
               {t('ingredients')}
             </Typography>
             <List>
-              {recipe.ingredients?.map((ingredient) => (
-                <ListItem key={ingredient.ingredientId}>{`${
-                  ingredient.amount
-                } ${t(ingredient.unit.toLowerCase())} ${
-                  ingredient.ingredient.name
-                }`}</ListItem>
-              ))}
+              {recipe.ingredients?.map((ingredient) => {
+                const currentlyHoveredStep = recipe.steps[hoveredStep]
+                const hoveredIngredient =
+                  getIngredientsFromStep(currentlyHoveredStep)
+                const isHovered = hoveredIngredient.some(
+                  (hIngredient) =>
+                    hIngredient.ingredientId === ingredient.ingredient.id,
+                )
+
+                return (
+                  <IngredientItem
+                    t={t}
+                    hovered={isHovered}
+                    recipeIngredient={ingredient}
+                    progress={ingredientsProgress[ingredient.ingredient.id]}
+                  />
+                )
+              })}
             </List>
           </Box>
           <Box sx={{ flex: { sm: 1.0, md: 0.6 } }}>
@@ -285,11 +395,12 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
                     cursor: 'pointer',
                     textDecoration:
                       completedStep >= index ? 'line-through' : undefined,
-                    '&:hover': {
-                      textDecoration: 'line-through',
-                    },
                   }}
                   key={`step-${index}`}
+                  onMouseOver={() => setHoveredStep(index)}
+                  onMouseLeave={() =>
+                    setHoveredStep((prev) => (prev === index ? -1 : prev))
+                  }
                   onClick={() => {
                     setCompletedStep((prev) => (prev === index ? -1 : index))
                   }}
@@ -307,6 +418,7 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
+    console.log(`database/recipe/${context.params?.recipeId}`)
     const recipe = await api.get<YKResponse<['recipe']>>(
       `database/recipe/${context.params?.recipeId}`,
     )
@@ -339,6 +451,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     }
   } catch (err) {
+    console.error(err)
     return {
       notFound: true,
     }

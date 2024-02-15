@@ -39,8 +39,8 @@
       "#network/*": [
         "./src/network/*"
       ],
-      "#lib/*": [
-        "./src/lib/*"
+      "#utils/*": [
+        "./src/utils/*"
       ],
       "#misc/*": [
         "./src/misc/*"
