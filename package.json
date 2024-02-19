@@ -38,7 +38,7 @@
     "fuzzball": "^2.1.2",
     "green-analytics-js": "^1.1.14",
     "html-recipe-parser": "https://github.com/MakakWasTaken/html-recipe-parser.git",
-    "i18next": "^23.8.2",
+    "i18next": "^23.9.0",
     "luxon": "^3.4.4",
     "next": "^14.1.0",
     "next-auth": "^4.24.5",
