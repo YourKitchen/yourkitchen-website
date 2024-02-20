@@ -177,7 +177,7 @@ __metadata:
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
-  
+
 "@biomejs/cli-linux-x64-musl@npm:1.5.2":
   version: 1.5.2
   resolution: "@biomejs/cli-linux-x64-musl@npm:1.5.2"
