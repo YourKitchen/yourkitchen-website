@@ -9,8 +9,8 @@ export const middleware = async (req: NextRequest) => {
   if (
     req.nextUrl.pathname.startsWith('/_next') ||
     req.nextUrl.pathname.includes('/api/') ||
-    (PUBLIC_FILE.test(req.nextUrl.pathname) &&
-      !req.nextUrl.pathname.startsWith('/app/file')) // File names can include dots
+    req.nextUrl.pathname.includes('/.well-known') ||
+    PUBLIC_FILE.test(req.nextUrl.pathname) // File names can include dots
   ) {
     return
   }
