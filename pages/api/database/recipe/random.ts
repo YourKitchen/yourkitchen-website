@@ -10,6 +10,8 @@ import { OpenAI } from 'openai'
 import { ValidationError, validateContent } from 'src/utils/validator'
 import { v4 } from 'uuid'
 
+export const maxDuration = 60
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // VALIDATE CRON SECRET
   if (req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) {
