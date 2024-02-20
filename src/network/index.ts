@@ -2,8 +2,8 @@ import axios, { AxiosError } from 'axios'
 
 const baseURLMap = {
   development: 'http://localhost:3000',
-  production: 'https://koerselsliste.foersombioenergi.dk',
-  test: 'https://test-koerselsliste.foersombioenergi.dk',
+  production: 'https://yourkitchen.io',
+  test: 'https://dev.yourkitchen.io',
 }
 
 const env = process.env.NEXT_PUBLIC_ENV as 'development' | 'production' | 'test'
