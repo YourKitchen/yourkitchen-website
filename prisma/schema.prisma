@@ -282,7 +282,6 @@ model MealPlan {
   updated DateTime @updatedAt
   created DateTime @default(now())
 }
-
 model FridgeIngredient {
   fridge   Fridge @relation(fields: [fridgeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   fridgeId String
