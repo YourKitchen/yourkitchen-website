@@ -668,14 +668,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gradio/client@npm:^0.12.0":
-  version: 0.12.0
-  resolution: "@gradio/client@npm:0.12.0"
+"@gradio/client@npm:^0.15.0":
+  version: 0.15.0
+  resolution: "@gradio/client@npm:0.15.0"
   dependencies:
     bufferutil: "npm:^4.0.7"
     semiver: "npm:^1.1.0"
     ws: "npm:^8.13.0"
-  checksum: 10c0/ef415a0511a08c59ef6e82e014741ceb971bf64bdc9ea1a20c18550a759913ed2b8023a2a95c5d67af119aa787b2467cfdbd960b9fdafd08e99e59155af0e897
+  checksum: 10c0/846a5726b437a2bb220e4c1b0780cdb9b9c86b1814141f6c6ad861fa8f91d1c21fbd845deafc0b863e173635eaf8e5fdb54b496c80e864d3e9b493a926a541b0
   languageName: node
   linkType: hard
 
@@ -7334,7 +7334,7 @@ __metadata:
     "@commitlint/config-conventional": "npm:^18.6.0"
     "@emotion/react": "npm:^11.11.3"
     "@emotion/styled": "npm:^11.11.0"
-    "@gradio/client": "npm:^0.12.0"
+    "@gradio/client": "npm:^0.15.0"
     "@mui/icons-material": "npm:^5.15.10"
     "@mui/material": "npm:5.15.10"
     "@mui/x-date-pickers": "npm:^6.19.4"
