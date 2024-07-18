@@ -1,6 +1,6 @@
 import { signOut } from 'next-auth/react'
 import { useRouter as useNavigation } from 'next/navigation'
-import React, { FC, useEffect } from 'react'
+import React, { type FC, useEffect } from 'react'
 import { toast } from 'sonner'
 
 const SignoutPage: FC = () => {

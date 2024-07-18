@@ -10,12 +10,12 @@ import {
   Select,
   TextField,
 } from '@mui/material'
-import { AllergenType, Ingredient } from '@prisma/client'
-import { TFunction } from 'next-i18next'
-import React, { FC, useState } from 'react'
+import type { AllergenType, Ingredient } from '@prisma/client'
+import type { TFunction } from 'next-i18next'
+import React, { type FC, useState } from 'react'
 import { toast } from 'sonner'
 import { allAllergenes } from '#models/allergenes'
-import { YKResponse } from '#models/ykResponse'
+import type { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
 
 interface CreateIngredientDialogProps {

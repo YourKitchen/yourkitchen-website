@@ -1,5 +1,5 @@
 import acceptLanguage from 'accept-language'
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 acceptLanguage.languages(['en', 'da'])
 

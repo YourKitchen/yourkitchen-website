@@ -2,8 +2,8 @@ import prisma from '#pages/api/_base'
 import { authOptions } from '#pages/api/auth/[...nextauth]'
 import { updateMealplan } from '#utils/meaplanHelper'
 import { DateTime } from 'luxon'
-import { NextApiRequest, NextApiResponse } from 'next'
-import { Session, getServerSession } from 'next-auth'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { type Session, getServerSession } from 'next-auth'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, authOptions)

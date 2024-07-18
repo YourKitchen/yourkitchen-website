@@ -2,10 +2,10 @@ import Logo from '#assets/Logo-512x512.png'
 import TabPanel from '#components/Account/TabPanel'
 import Link from '#components/Link'
 import YKChip from '#components/Recipe/YKChip'
-import { YKResponse } from '#models/ykResponse'
+import type { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
 import { authOptions } from '#pages/api/auth/[...nextauth]'
-import { PublicRecipe } from '#pages/recipes'
+import type { PublicRecipe } from '#pages/recipes'
 import {
   Box,
   Button,
@@ -20,15 +20,15 @@ import {
   Tabs,
   Typography,
 } from '@mui/material'
-import { FeedItem, Follows, Rating, User } from '@prisma/client'
+import { type FeedItem, Follows, type Rating, type User } from '@prisma/client'
 import { DateTime } from 'luxon'
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
-import { Session, getServerSession } from 'next-auth'
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
+import { type Session, getServerSession } from 'next-auth'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { NextSeo, ProfilePageJsonLd } from 'next-seo'
 import Image from 'next/image'
-import { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
 type PublicUser = Pick<User, 'id' | 'image' | 'name' | 'created'>
@@ -200,6 +200,7 @@ const UserPage: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
           >
             {user.recipes.map((recipe) => (
               <Link
+                key={recipe.id}
                 href={`/recipe/${recipe.id}`}
                 sx={{
                   display: 'block',

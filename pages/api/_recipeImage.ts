@@ -1,7 +1,7 @@
 import {
-  ErrorResponse,
-  Photo,
-  PhotosWithTotalResults,
+  type ErrorResponse,
+  type Photo,
+  type PhotosWithTotalResults,
   createClient,
 } from 'pexels'
 

@@ -12,12 +12,12 @@ import {
   Rating as MuiRating,
   TextField,
 } from '@mui/material'
-import { Rating, Recipe } from '@prisma/client'
+import type { Rating, Recipe } from '@prisma/client'
 import { useSession } from 'next-auth/react'
-import { TFunction } from 'next-i18next'
+import type { TFunction } from 'next-i18next'
 import { useRouter as useNavigation } from 'next/navigation'
 import { useRouter } from 'next/router'
-import { FC, useEffect, useState } from 'react'
+import { type FC, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 

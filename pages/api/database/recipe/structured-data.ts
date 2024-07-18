@@ -1,16 +1,16 @@
 import {
-  MealType,
-  Recipe,
-  RecipeImage,
+  type MealType,
+  type Recipe,
+  type RecipeImage,
   RecipeIngredient,
-  RecipeType,
+  type RecipeType,
 } from '@prisma/client'
 import axios from 'axios'
 import { parseHTML } from 'html-recipe-parser'
 import { IRecipe } from 'html-recipe-parser/dist/interfaces'
 import { DateTime } from 'luxon'
-import { NextApiRequest, NextApiResponse } from 'next'
-import { Session, getServerSession } from 'next-auth'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { type Session, getServerSession } from 'next-auth'
 import { RecipeJsonLdProps } from 'next-seo'
 import { NextRequest, NextResponse } from 'next/server'
 import { v4 } from 'uuid'

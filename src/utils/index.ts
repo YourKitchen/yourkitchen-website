@@ -1,4 +1,4 @@
-import { RecipeIngredient, Unit } from '@prisma/client'
+import type { RecipeIngredient, Unit } from '@prisma/client'
 
 export const toTitleCase = () => {}
 

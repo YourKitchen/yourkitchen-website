@@ -20,7 +20,8 @@ import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import { useRouter as useNavigation } from 'next/navigation'
 import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import type React from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from '../Link'
 
 interface Page {

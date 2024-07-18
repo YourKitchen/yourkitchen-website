@@ -2,11 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "target": "es2022",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -21,30 +17,14 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "#assets/*": [
-        "./src/assets/*"
-      ],
-      "#components/*": [
-        "./src/components/*"
-      ],
-      "#pages/*": [
-        "./pages/*"
-      ],
-      "#models/*": [
-        "./src/models/*"
-      ],
-      "#contexts/*": [
-        "./src/contexts/*"
-      ],
-      "#network/*": [
-        "./src/network/*"
-      ],
-      "#utils/*": [
-        "./src/utils/*"
-      ],
-      "#misc/*": [
-        "./src/misc/*"
-      ]
+      "#assets/*": ["./src/assets/*"],
+      "#components/*": ["./src/components/*"],
+      "#pages/*": ["./pages/*"],
+      "#models/*": ["./src/models/*"],
+      "#contexts/*": ["./src/contexts/*"],
+      "#network/*": ["./src/network/*"],
+      "#utils/*": ["./src/utils/*"],
+      "#misc/*": ["./src/misc/*"]
     }
   },
   "include": [
@@ -53,7 +33,5 @@
     "**/*.tsx",
     "scripts/translate-site.mts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

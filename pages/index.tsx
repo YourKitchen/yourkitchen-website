@@ -1,15 +1,15 @@
 import { Box, Link, Typography } from '@mui/material'
-import { GetStaticProps } from 'next'
+import type { GetStaticProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Image from 'next/image'
-import { FC } from 'react'
+import type { FC } from 'react'
 import useSWR from 'swr'
 import AppStoreBadge from '#assets/AppStoreBadge.svg'
 import logo from '#assets/Logo-512x512.png'
 import ExploreRow from '#components/Explore/ExploreRow'
-import { YKResponse } from '#models/ykResponse'
-import { PublicRecipe } from './recipes'
+import type { YKResponse } from '#models/ykResponse'
+import type { PublicRecipe } from './recipes'
 
 const HomePage: FC = () => {
   const { t } = useTranslation('common')

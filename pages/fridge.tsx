@@ -1,10 +1,10 @@
 import CreateIngredientDialog from '#components/Recipe/StepsTextField/CreateIngredientDialog'
-import { YKResponse } from '#models/ykResponse'
+import type { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
 import { validUnits } from '#utils/validator'
 import {
   Autocomplete,
-  AutocompleteRenderInputParams,
+  type AutocompleteRenderInputParams,
   Box,
   Button,
   Dialog,
@@ -21,9 +21,14 @@ import {
   Typography,
   debounce,
 } from '@mui/material'
-import { Fridge, FridgeIngredient, Ingredient, Unit } from '@prisma/client'
+import {
+  type Fridge,
+  type FridgeIngredient,
+  type Ingredient,
+  Unit,
+} from '@prisma/client'
 import { useSession } from 'next-auth/react'
-import React, { FC, useMemo, useState } from 'react'
+import React, { type FC, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import useSWR from 'swr'
@@ -262,6 +267,7 @@ const FridgePage: FC = () => {
           const ingredient = fridgeIngredient.ingredient
           return (
             <Box
+              key={fridgeIngredient.ingredientId}
               sx={{
                 width: 100,
                 height: 100,
@@ -290,6 +296,7 @@ const FridgePage: FC = () => {
           const ingredient = fridgeIngredient.ingredient
           return (
             <Box
+              key={fridgeIngredient.ingredientId}
               sx={{
                 display: 'flex',
                 flexDirection: 'column',

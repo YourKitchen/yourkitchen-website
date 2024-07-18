@@ -1,7 +1,7 @@
 import { Box, Link, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
-import { FC, ReactElement } from 'react'
+import type { FC, ReactElement } from 'react'
 // src/components/Footer.tsx
 import yourkitchenLogo from '#assets/Logo-192x192.png'
 import LanguageSelect from './LanguageSelect'

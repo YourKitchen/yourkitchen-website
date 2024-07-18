@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
-import React, { FC } from 'react'
-import { PublicRecipe } from '#pages/recipes'
+import React, { type FC } from 'react'
+import type { PublicRecipe } from '#pages/recipes'
 import RecipeBox from './RecipeBox'
 import SkeletonRecipeBox from './SkeletonRecipeBox'
 

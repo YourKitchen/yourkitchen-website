@@ -1,4 +1,4 @@
-import {
+import type {
   MealPlanRecipe,
   Recipe,
   RecipeImage,

@@ -1,6 +1,6 @@
 import {
   Autocomplete,
-  AutocompleteRenderInputParams,
+  type AutocompleteRenderInputParams,
   Button,
   Dialog,
   DialogActions,
@@ -9,14 +9,14 @@ import {
   TextField,
   debounce,
 } from '@mui/material'
-import { Ingredient } from '@prisma/client'
+import type { Ingredient } from '@prisma/client'
 import { t } from 'i18next'
 import { useSession } from 'next-auth/react'
-import { TFunction } from 'next-i18next'
-import React, { FC, useMemo, useState } from 'react'
+import type { TFunction } from 'next-i18next'
+import React, { type FC, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
-import { YKResponse } from '#models/ykResponse'
+import type { YKResponse } from '#models/ykResponse'
 
 interface FullSearchDialogProps {
   t: TFunction

@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from './_base'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

@@ -1,4 +1,4 @@
-import { GetStaticProps } from 'next'
+import type { GetStaticProps } from 'next'
 import { useSession } from 'next-auth/react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import React from 'react'

@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '#pages/api/_base'
 
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {

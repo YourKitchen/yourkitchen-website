@@ -9,8 +9,8 @@ import {
   Typography,
 } from '@mui/material'
 import { AllergenType } from '@prisma/client'
-import { TFunction } from 'next-i18next'
-import { FC, useEffect, useMemo, useState } from 'react'
+import type { TFunction } from 'next-i18next'
+import { type FC, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { allAllergenes } from '#models/allergenes'
 import AccountBox from './AccountBox'

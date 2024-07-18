@@ -1,7 +1,7 @@
-import { GetStaticProps } from 'next'
+import type { GetStaticProps } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { NextSeo } from 'next-seo'
-import { FC } from 'react'
+import type { FC } from 'react'
 
 /**
  * About page for YourKitchen, describing the project.

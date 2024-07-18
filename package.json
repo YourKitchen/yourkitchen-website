@@ -11,7 +11,7 @@
     "postbuild": "next-sitemap",
     "postinstall": "prisma generate",
     "start": "node build/standalone/server.js",
-    "lint": "biome format --write --no-errors-on-unmatched . && biome lint --apply --no-errors-on-unmatched .",
+    "lint": "biome format --write --no-errors-on-unmatched . && biome lint --write --no-errors-on-unmatched .",
     "prisma:update": "prisma format && prisma generate && prisma db push",
     "analyze": "cross-env ANALYZE=true next build",
     "prepare": "husky install",
@@ -20,7 +20,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "biome format --write --no-errors-on-unmatched",
-    "*.{js,jsx,ts,tsx|json}": "biome lint --apply --no-errors-on-unmatched"
+    "*.{js,jsx,ts,tsx|json}": "biome lint --write --no-errors-on-unmatched"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.4.1",

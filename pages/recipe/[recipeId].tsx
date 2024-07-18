@@ -1,10 +1,10 @@
 import Link from '#components/Link'
 import RecipeRating from '#components/Recipe/RecipeRating'
 import YKChip from '#components/Recipe/YKChip'
-import { YKResponse } from '#models/ykResponse'
+import type { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
 import { authOptions } from '#pages/api/auth/[...nextauth]'
-import { PublicRecipe } from '#pages/recipes'
+import type { PublicRecipe } from '#pages/recipes'
 import { ExpandLess, ExpandMore } from '@mui/icons-material'
 import {
   Box,
@@ -14,21 +14,21 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material'
-import {
+import type {
   AllergenType,
   Ingredient,
   RecipeIngredient,
   Unit,
 } from '@prisma/client'
 import { DateTime } from 'luxon'
-import { GetServerSideProps } from 'next'
-import { Session, getServerSession } from 'next-auth'
-import { TFunction, useTranslation } from 'next-i18next'
+import type { GetServerSideProps } from 'next'
+import { type Session, getServerSession } from 'next-auth'
+import { type TFunction, useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { NextSeo, RecipeJsonLd } from 'next-seo'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { FC, useMemo, useState } from 'react'
+import { type FC, useCallback, useMemo, useState } from 'react'
 
 const SITE_URL = process.env.SITE_URL ?? 'https://yourkitchen.io'
 
@@ -125,44 +125,45 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
     return allergenes.filter((allergen) => userAllergenes.includes(allergen))
   }, [allergenes, user])
 
-  const getIngredientsFromStep = (
-    step: string | undefined,
-  ): Omit<RecipeIngredient, 'recipeId'>[] => {
-    const ingredients: Omit<RecipeIngredient, 'recipeId'>[] = []
+  const getIngredientsFromStep = useCallback(
+    (step: string | undefined): Omit<RecipeIngredient, 'recipeId'>[] => {
+      const ingredients: Omit<RecipeIngredient, 'recipeId'>[] = []
 
-    if (!step) {
-      return ingredients
-    }
-
-    const stepSplit = step.split('!')
-
-    if (stepSplit.length < 2) {
-      // No ingredients, because there is no split
-      return ingredients
-    }
-
-    // We start at 1, because every odd number is an ingredient if formatted correctly. (Has been validated before uplaoded)
-    for (let i = 1; i < stepSplit.length; i += 2) {
-      const item = stepSplit[i]
-
-      const colonSplit = item.split(':')
-
-      if (colonSplit.length !== 3) {
-        console.error(`Invalid split: ${item}`)
-        continue
+      if (!step) {
+        return ingredients
       }
 
-      const [amount, unit, id] = colonSplit
+      const stepSplit = step.split('!')
 
-      ingredients.push({
-        amount: Number.parseFloat(amount),
-        unit: unit as Unit,
-        ingredientId: id,
-      })
-    }
+      if (stepSplit.length < 2) {
+        // No ingredients, because there is no split
+        return ingredients
+      }
 
-    return ingredients
-  }
+      // We start at 1, because every odd number is an ingredient if formatted correctly. (Has been validated before uplaoded)
+      for (let i = 1; i < stepSplit.length; i += 2) {
+        const item = stepSplit[i]
+
+        const colonSplit = item.split(':')
+
+        if (colonSplit.length !== 3) {
+          console.error(`Invalid split: ${item}`)
+          continue
+        }
+
+        const [amount, unit, id] = colonSplit
+
+        ingredients.push({
+          amount: Number.parseFloat(amount),
+          unit: unit as Unit,
+          ingredientId: id,
+        })
+      }
+
+      return ingredients
+    },
+    [],
+  )
 
   const ingredientsProgress = useMemo(() => {
     // Get what amount of the ingredients have been used.
@@ -377,6 +378,7 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
 
                 return (
                   <IngredientItem
+                    key={ingredient.ingredientId}
                     t={t}
                     hovered={isHovered}
                     recipeIngredient={ingredient}

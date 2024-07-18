@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '#pages/api/_base'
 

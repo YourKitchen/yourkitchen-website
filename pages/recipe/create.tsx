@@ -5,7 +5,7 @@ import MealTypeSelect from '#components/Recipe/MealTypeSelect'
 import PreparationTimePicker from '#components/Recipe/PreparationTimePicker'
 import RecipeTypeSelect from '#components/Recipe/RecipeTypeSelect'
 import StepsTextField from '#components/Recipe/StepsTextField'
-import { YKResponse } from '#models/ykResponse'
+import type { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
 import {
   Box,
@@ -19,15 +19,15 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { Recipe, RecipeImage, RecipeIngredient } from '@prisma/client'
+import type { Recipe, RecipeImage, RecipeIngredient } from '@prisma/client'
 import axios from 'axios'
-import { GetStaticProps } from 'next'
+import type { GetStaticProps } from 'next'
 import { useSession } from 'next-auth/react'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { NextSeo } from 'next-seo'
 import { redirect } from 'next/navigation'
-import { FC, useState } from 'react'
+import { type FC, useState } from 'react'
 import { toast } from 'sonner'
 import { getGetIngredientsFromStep } from 'src/utils'
 import { validateContent } from 'src/utils/validator'

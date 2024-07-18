@@ -1,5 +1,5 @@
-import { Meal } from '#models/meal'
-import { YKResponse } from '#models/ykResponse'
+import type { Meal } from '#models/meal'
+import type { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
 import { avg } from '#utils/index'
 import {
@@ -17,20 +17,27 @@ import {
   debounce,
 } from '@mui/material'
 import {
-  MealType,
-  Recipe,
+  type MealType,
+  type Recipe,
   RecipeImage,
   Rating as PrismaRating,
-  MealPlan,
+  type MealPlan,
 } from '@prisma/client'
 import { t } from 'i18next'
-import { DateTime } from 'luxon'
-import React, { Dispatch, FC, SetStateAction, useMemo, useState } from 'react'
+import type { DateTime } from 'luxon'
+import React, {
+  type Dispatch,
+  type FC,
+  type SetStateAction,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react'
 import { toast } from 'sonner'
-import useSWR, { KeyedMutator } from 'swr'
+import useSWR, { type KeyedMutator } from 'swr'
 import Image from 'next/image'
-import { TFunction } from 'next-i18next'
-import { PublicRecipe } from '#pages/recipes'
+import type { TFunction } from 'next-i18next'
+import type { PublicRecipe } from '#pages/recipes'
 
 interface MealPickerProps {
   editMealPosition:
@@ -142,42 +149,45 @@ const MealPicker: FC<MealPickerProps> = ({
   const { data: popularRecipes, isLoading: popularLoading } =
     useSWR<YKResponse<PublicRecipe[]>>('recipe/popular')
 
-  const updateMeal = (newRecipe: Recipe) => {
-    // Check that we have an update position
-    if (!editMealPosition) {
-      toast.error('No meal position defined')
-      return
-    }
+  const updateMeal = useCallback(
+    (newRecipe: Recipe) => {
+      // Check that we have an update position
+      if (!editMealPosition) {
+        toast.error('No meal position defined')
+        return
+      }
 
-    // Update the meal plan
-    toast.promise(
-      api.put<YKResponse<MealPlan & { recipes: Meal }>>(
-        'database/mealplan/own',
+      // Update the meal plan
+      toast.promise(
+        api.put<YKResponse<MealPlan & { recipes: Meal }>>(
+          'database/mealplan/own',
+          {
+            recipe: {
+              date: editMealPosition.date.toJSDate(),
+              mealType: editMealPosition.meal,
+              recipeId: newRecipe.id,
+              recipeType: newRecipe.recipeType,
+            },
+          },
+        ),
         {
-          recipe: {
-            date: editMealPosition.date.toJSDate(),
-            mealType: editMealPosition.meal,
-            recipeId: newRecipe.id,
-            recipeType: newRecipe.recipeType,
+          loading: `${t('updating')} ${t('meal_plan')}`,
+          error: (err) => err.message ?? err,
+          success: (response) => {
+            const data = response.data.data
+            // Update local meal plan.
+
+            updateMealPlan(data)
+
+            return `${t('succesfully')} ${t('updated')} ${t('meal_plan')}`
           },
         },
-      ),
-      {
-        loading: `${t('updating')} ${t('meal_plan')}`,
-        error: (err) => err.message ?? err,
-        success: (response) => {
-          const data = response.data.data
-          // Update local meal plan.
+      )
 
-          updateMealPlan(data)
-
-          return `${t('succesfully')} ${t('updated')} ${t('meal_plan')}`
-        },
-      },
-    )
-
-    setEditMealPosition(undefined)
-  }
+      setEditMealPosition(undefined)
+    },
+    [editMealPosition, t, setEditMealPosition, updateMealPlan],
+  )
 
   const RecipeRows = useMemo(() => {
     if (searchRecipesLoading || popularLoading) {
@@ -187,12 +197,12 @@ const MealPicker: FC<MealPickerProps> = ({
     // If value length is less than 2, show the popular recipes instead
     if (value.length < 2) {
       return popularRecipes?.data.map((recipe) => (
-        <RecipeRow recipe={recipe} updateMeal={updateMeal} />
+        <RecipeRow key={recipe.id} recipe={recipe} updateMeal={updateMeal} />
       ))
     }
 
     return searchRecipes?.data.map((recipe) => (
-      <RecipeRow recipe={recipe} updateMeal={updateMeal} />
+      <RecipeRow key={recipe.id} recipe={recipe} updateMeal={updateMeal} />
     ))
   }, [
     value,

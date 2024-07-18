@@ -1,12 +1,12 @@
 import { Facebook, Google } from '@mui/icons-material'
 import { Box, Button, TextField, Typography } from '@mui/material'
-import { GetStaticProps } from 'next'
+import type { GetStaticProps } from 'next'
 import { signIn, useSession } from 'next-auth/react'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { NextSeo } from 'next-seo'
 import { useRouter as useNavigation, useSearchParams } from 'next/navigation'
-import { FC, useEffect, useState } from 'react'
+import { type FC, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 export const SigninPage: FC = () => {
