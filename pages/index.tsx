@@ -73,17 +73,17 @@ const HomePage: FC = () => {
           </Link>
         </Box>
       </Box>
-      <Box sx={{ width: '90%', display: 'inline-block', margin: 2 }}>
+      <Box sx={{ width: '100%', display: 'inline-block' }}>
         <Box sx={{ paddingInline: 2 }}>
           <Typography sx={{ my: 2 }} variant="h4">
             {t('popular_recipes')}
           </Typography>
           <Typography sx={{ my: 2 }}>{t('explore_description')}</Typography>
-          <ExploreRow
-            loading={popularLoading}
-            recipes={popularRecipes?.data ?? []}
-          />
         </Box>
+        <ExploreRow
+          loading={popularLoading}
+          recipes={popularRecipes?.data ?? []}
+        />
       </Box>
     </Box>
   )
