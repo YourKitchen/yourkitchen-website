@@ -1,8 +1,8 @@
-import { client } from '@gradio/client'
-import { existsSync } from 'fs'
-import { mkdir, readFile, readdir, writeFile } from 'fs/promises'
-import { createRequire } from 'module'
-import { dirname, resolve, sep } from 'path'
+import { Client } from '@gradio/client'
+import { existsSync } from 'node:fs'
+import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
+import { createRequire } from 'node:module'
+import { dirname, resolve, sep } from 'node:path'
 const require = createRequire(import.meta.url)
 global.EventSource = require('eventsource')
 
@@ -28,7 +28,7 @@ const writeToFile = async (destinationPath: string, content: string) => {
 }
 
 const localizeTranslationFiles = async () => {
-  const app = await client(
+  const app = await Client.connect(
     'https://gundeep-open-translate.hf.space/--replicas/7xrk4/',
     {
       hf_token: process.env.HF_TOKEN as `hf_${string}`,

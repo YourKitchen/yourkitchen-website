@@ -1,6 +1,6 @@
 import ExploreRow from '#components/Explore/ExploreRow'
 import SearchResults from '#components/Explore/Search/SearchResults'
-import { YKResponse } from '#models/ykResponse'
+import type { YKResponse } from '#models/ykResponse'
 import {
   Box,
   MenuItem,
@@ -10,14 +10,14 @@ import {
   debounce,
 } from '@mui/material'
 import {
-  Cuisine,
+  type Cuisine,
   MealType,
-  Rating,
-  Recipe,
-  RecipeImage,
-  User,
+  type Rating,
+  type Recipe,
+  type RecipeImage,
+  type User,
 } from '@prisma/client'
-import { GetStaticProps } from 'next'
+import type { GetStaticProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { SiteLinksSearchBoxJsonLd } from 'next-seo'

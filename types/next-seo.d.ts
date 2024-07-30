@@ -1,5 +1,5 @@
-import { BreadCrumbJsonLdProps } from 'next-seo'
-import { JsonLdProps } from 'next-seo/lib/jsonld/jsonld'
+import type { BreadCrumbJsonLdProps } from 'next-seo'
+import type { JsonLdProps } from 'next-seo/lib/jsonld/jsonld'
 
 declare module 'next-seo' {
   type Part = any

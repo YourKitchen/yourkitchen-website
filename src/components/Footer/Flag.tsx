@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material'
 import Image from 'next/image'
-import { FC } from 'react'
+import type { FC } from 'react'
 
 export interface FlagProps {
   isoCountry: string

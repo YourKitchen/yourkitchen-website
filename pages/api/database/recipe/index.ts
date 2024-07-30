@@ -1,5 +1,10 @@
-import { MealType, Prisma, Recipe, RecipeImage } from '@prisma/client'
-import { NextApiRequest, NextApiResponse } from 'next'
+import {
+  type MealType,
+  Prisma,
+  type Recipe,
+  type RecipeImage,
+} from '@prisma/client'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
 import { ApiError } from 'next/dist/server/api-utils'
 import { authOptions } from '#pages/api/auth/[...nextauth]'

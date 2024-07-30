@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
-import React, { FC } from 'react'
-import { PublicRecipe } from '#pages/recipes'
+import React, { type FC } from 'react'
+import type { PublicRecipe } from '#pages/recipes'
 import RecipeBox from './RecipeBox'
 import SkeletonRecipeBox from './SkeletonRecipeBox'
 
@@ -16,29 +16,32 @@ const skeletonData = new Array(20).fill({
 
 const ExploreRow: FC<ExploreRowProps> = ({ recipes, loading }) => {
   return (
-    <Box
-      sx={{
-        width: { sm: '100%', md: '100%' },
-        display: 'block',
-        whiteSpace: 'nowrap',
-        alignItems: 'center',
-        gap: 2,
-        overflowX: 'auto',
-        minHeight: '350px',
-        position: 'relative',
-      }}
-    >
-      {loading
-        ? skeletonData.map((data, index) => (
-            <SkeletonRecipeBox
-              key={`skeleton-${index}`}
-              name={data.name}
-              rating={data.rating}
-            />
-          ))
-        : recipes.map((recipe) => (
-            <RecipeBox key={recipe.id} recipe={recipe} />
-          ))}
+    <Box>
+      <Box
+        sx={{
+          paddingInline: '16px',
+          width: '100%',
+          display: 'block',
+          whiteSpace: 'nowrap',
+          alignItems: 'center',
+          gap: 2,
+          overflowX: 'scroll',
+          minHeight: '350px',
+          position: 'relative',
+        }}
+      >
+        {loading
+          ? skeletonData.map((data, index) => (
+              <SkeletonRecipeBox
+                key={`skeleton-${index}`}
+                name={data.name}
+                rating={data.rating}
+              />
+            ))
+          : recipes.map((recipe) => (
+              <RecipeBox key={recipe.id} recipe={recipe} />
+            ))}
+      </Box>
     </Box>
   )
 }

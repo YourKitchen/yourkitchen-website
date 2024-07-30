@@ -41,12 +41,15 @@ const apiHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
   pageExtensions: ['ts', 'tsx'],
-  transpilePackages: ['@mui/system', '@mui/material', '@mui/icons-material'],
+  transpilePackages: [
+    '@mui/system',
+    '@mui/material',
+    '@mui/icons-material',
+    '@mui/x-charts',
+  ],
   modularizeImports: {
-    '@mui/material/?(((\\w*)?/?)*)': {
-      transform: '@mui/material/{{ matches.[1] }}/{{member}}',
-    },
     '@mui/icons-material/?(((\\w*)?/?)*)': {
       transform: '@mui/icons-material/{{ matches.[1] }}/{{member}}',
     },

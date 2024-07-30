@@ -1,5 +1,5 @@
 import { allUnits } from '#models/units'
-import { YKResponse } from '#models/ykResponse'
+import type { YKResponse } from '#models/ykResponse'
 import { ArrowForward, Delete, Search } from '@mui/icons-material'
 import {
   Box,
@@ -14,9 +14,10 @@ import {
 } from '@mui/material'
 import Chip from '@mui/material/Chip'
 import TextField from '@mui/material/TextField'
-import { Ingredient, RecipeIngredient, Unit } from '@prisma/client'
-import { TFunction } from 'next-i18next'
-import React, { FC, useMemo, useRef, useState } from 'react'
+import type { Ingredient, RecipeIngredient, Unit } from '@prisma/client'
+import type { TFunction } from 'next-i18next'
+import type React from 'react'
+import { type FC, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { getIngredientId } from 'src/utils'
 import useSWR from 'swr'

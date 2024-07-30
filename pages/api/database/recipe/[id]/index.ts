@@ -1,7 +1,7 @@
 import prisma from '#pages/api/_base'
 import { authOptions } from '#pages/api/auth/[...nextauth]'
-import { Recipe, RecipeImage } from '@prisma/client'
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { Recipe, RecipeImage } from '@prisma/client'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

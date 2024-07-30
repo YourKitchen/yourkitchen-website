@@ -2,7 +2,7 @@ import { Circle, HorizontalRule, ThumbDown, ThumbUp } from '@mui/icons-material'
 import { Box, Chip, Skeleton, Typography } from '@mui/material'
 import { Recipe, RecipeImage } from '@prisma/client'
 import Image from 'next/image'
-import React, { FC, useMemo } from 'react'
+import React, { type FC, useMemo } from 'react'
 import Link from '#components/Link'
 import { PublicRecipe } from '#pages/recipes'
 

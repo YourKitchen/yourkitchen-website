@@ -1,9 +1,9 @@
 import { Box, Button, Typography, Rating } from '@mui/material'
-import { TFunction } from 'i18next'
+import type { TFunction } from 'i18next'
 import { Edit } from '@mui/icons-material'
-import { FC } from 'react'
+import type { FC } from 'react'
 import { YKResponse } from '#models/ykResponse'
-import { Meal } from '#models/meal'
+import type { Meal } from '#models/meal'
 import { Recipe, RecipeImage, Rating as PrismaRating } from '@prisma/client'
 import useSWR from 'swr'
 import Image from 'next/image'
@@ -44,6 +44,7 @@ export const MealCell: FC<MealCellProps> = ({ t, meal, editMealRecipe }) => {
       )}
       {meal.map((mealRecipe) => (
         <Box
+          key={mealRecipe.id}
           sx={{
             display: 'flex',
             gap: '4px',

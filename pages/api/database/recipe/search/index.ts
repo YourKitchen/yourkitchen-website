@@ -1,5 +1,5 @@
-import { Cuisine, MealType } from '@prisma/client'
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { Cuisine, MealType } from '@prisma/client'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '#pages/api/_base'
 
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {

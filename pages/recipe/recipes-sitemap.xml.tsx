@@ -1,6 +1,6 @@
 import prisma from '#pages/api/_base'
-import { Recipe, RecipeImage } from '@prisma/client'
-import { GetServerSideProps } from 'next'
+import type { Recipe, RecipeImage } from '@prisma/client'
+import type { GetServerSideProps } from 'next'
 
 const RecipesSitemap = () => {}
 

@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from '@mui/material'
-import { FC, PropsWithChildren } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 
 interface AccountBoxInterface {
   label: string

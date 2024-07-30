@@ -1,13 +1,13 @@
 import prisma from '#pages/api/_base'
 import {
-  MealPlan,
-  MealPlanRecipe,
+  type MealPlan,
+  type MealPlanRecipe,
   MealType,
-  Rating,
-  Recipe,
-  RecipeImage,
+  type Rating,
+  type Recipe,
+  type RecipeImage,
   RecipeType,
-  User,
+  type User,
 } from '@prisma/client'
 import { DateTime } from 'luxon'
 import { v4 } from 'uuid'

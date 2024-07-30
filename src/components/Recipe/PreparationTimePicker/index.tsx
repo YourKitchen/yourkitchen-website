@@ -2,8 +2,8 @@ import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers'
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
 import { t } from 'i18next'
 import { DateTime } from 'luxon'
-import { TFunction } from 'next-i18next'
-import React, { FC, useMemo } from 'react'
+import type { TFunction } from 'next-i18next'
+import React, { type FC, useMemo } from 'react'
 
 interface PreparationTimePickerProps {
   t: TFunction

@@ -1,5 +1,5 @@
 import { red } from '@mui/material/colors'
-import { ThemeOptions, createTheme } from '@mui/material/styles'
+import { type ThemeOptions, createTheme } from '@mui/material/styles'
 import { Cabin } from 'next/font/google'
 
 export const roboto = Cabin({

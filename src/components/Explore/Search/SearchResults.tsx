@@ -11,18 +11,18 @@ import {
   Slider,
   debounce,
 } from '@mui/material'
-import { Cuisine, MealType } from '@prisma/client'
+import { type Cuisine, MealType } from '@prisma/client'
 import { useTranslation } from 'next-i18next'
 import React, {
-  FC,
-  MouseEvent,
-  PropsWithChildren,
+  type FC,
+  type MouseEvent,
+  type PropsWithChildren,
   useMemo,
   useState,
 } from 'react'
 import useSWR from 'swr'
-import { YKResponse } from '#models/ykResponse'
-import { PublicRecipe } from '#pages/recipes'
+import type { YKResponse } from '#models/ykResponse'
+import type { PublicRecipe } from '#pages/recipes'
 import RecipeBox from '../RecipeBox'
 import GridSkeletonRecipeBox from './GridSkeletonBox'
 
@@ -89,6 +89,7 @@ const FilterPopper: FC<PropsWithChildren<FilterPopperProps>> = ({
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
               {values.map((value) => (
                 <MenuItem
+                  key={value.value}
                   onClick={() => {
                     handleClose()
                     onValueSelected?.(value.value)
@@ -202,6 +203,7 @@ const SearchResults: FC<SearchResultsProps> = ({ value, cuisines }) => {
         <Grid sx={{ margin: 0 }} container spacing={8}>
           {skeletonData.map((data, index) => (
             <Grid
+              key={`skeleton-${index}`}
               xs={12}
               sm={6}
               md={4}
@@ -224,6 +226,7 @@ const SearchResults: FC<SearchResultsProps> = ({ value, cuisines }) => {
         <Grid sx={{ margin: 0 }} container spacing={8}>
           {searchRecipes?.data.map((recipe) => (
             <Grid
+              key={recipe.id}
               xs={12}
               sm={6}
               md={4}

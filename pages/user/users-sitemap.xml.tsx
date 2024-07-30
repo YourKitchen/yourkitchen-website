@@ -1,6 +1,6 @@
 import prisma from '#pages/api/_base'
-import { User } from '@prisma/client'
-import { GetServerSideProps } from 'next'
+import type { User } from '@prisma/client'
+import type { GetServerSideProps } from 'next'
 
 const UsersSitemap = () => {}
 

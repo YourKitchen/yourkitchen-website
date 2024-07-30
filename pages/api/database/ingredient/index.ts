@@ -1,5 +1,5 @@
-import { Ingredient, Recipe } from '@prisma/client'
-import { NextApiRequest, NextApiResponse } from 'next'
+import { type Ingredient, Recipe } from '@prisma/client'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
 import { ApiError } from 'next/dist/server/api-utils'
 import { getIngredientId } from 'src/utils'

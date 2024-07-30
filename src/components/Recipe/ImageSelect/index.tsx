@@ -1,4 +1,4 @@
-import { YKResponse } from '#models/ykResponse'
+import type { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
 import { CheckCircle, Delete } from '@mui/icons-material'
 import {
@@ -16,12 +16,12 @@ import {
   Typography,
   debounce,
 } from '@mui/material'
-import { RecipeImage } from '@prisma/client'
+import type { RecipeImage } from '@prisma/client'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
-import { TFunction } from 'next-i18next'
-import { Photo } from 'pexels'
-import { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import type { TFunction } from 'next-i18next'
+import type { Photo } from 'pexels'
+import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 import { v4 } from 'uuid'

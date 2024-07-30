@@ -1,4 +1,4 @@
-import { AllergenType, Recipe, RecipeType, Unit } from '@prisma/client'
+import type { AllergenType, Recipe, RecipeType, Unit } from '@prisma/client'
 import { getIngredientId } from '.'
 import { extract, token_set_ratio } from 'fuzzball'
 

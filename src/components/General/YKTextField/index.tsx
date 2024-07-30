@@ -2,9 +2,9 @@ import {
   FormControl,
   InputLabel,
   TextField,
-  TextFieldProps,
+  type TextFieldProps,
 } from '@mui/material'
-import React, { FC } from 'react'
+import React, { type FC } from 'react'
 
 const YKTextField: FC<TextFieldProps> = (props) => {
   return (

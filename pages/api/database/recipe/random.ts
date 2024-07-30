@@ -2,10 +2,9 @@ import { api } from '#network/index'
 import prisma from '#pages/api/_base'
 import { getRecipeImage } from '#pages/api/_recipeImage'
 import randomSchema from '#utils/random_schema.json'
-import { RecipeImage } from '@prisma/client'
+import type { RecipeImage } from '@prisma/client'
 import { put } from '@vercel/blob'
-import { DateTime } from 'luxon'
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { OpenAI } from 'openai'
 import { ValidationError, validateContent } from 'src/utils/validator'
 import { v4 } from 'uuid'
@@ -91,7 +90,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
           content: 'Generate a recipe using the above provided instructions.',
         },
       ],
-      model: 'gpt-3.5-turbo-1106',
+      model: 'gpt-4o-mini',
       response_format: { type: 'json_object' },
     })
     const response = completion.choices[0].message.content

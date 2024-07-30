@@ -1,6 +1,6 @@
 import { setPerson } from 'green-analytics-js'
 import { useSession } from 'next-auth/react'
-import { FC, PropsWithChildren, useEffect } from 'react'
+import { type FC, type PropsWithChildren, useEffect } from 'react'
 
 const AnalyticsWrapper: FC<PropsWithChildren> = ({ children }) => {
   const { data: session, status } = useSession()
