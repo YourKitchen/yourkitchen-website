@@ -62,11 +62,33 @@ const getAndStoreImage = async (
 
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    const ingredientsCount = await prisma.ingredient.count()
+
+    const randomNumbers = [
+      Math.floor(Math.random() * (ingredientsCount - 1)),
+      Math.floor(Math.random() * (ingredientsCount - 1)),
+      Math.floor(Math.random() * (ingredientsCount - 1)),
+    ]
+
+    const randomIngredients = await Promise.all(
+      randomNumbers.map((ingredientIndex) =>
+        prisma.ingredient.findMany({
+          take: 1,
+          skip: ingredientIndex,
+        }),
+      ),
+    )
+
+    const flatRandomIngredients = randomIngredients.flat(1)
+
     const completion = await openai.chat.completions.create({
       messages: [
         {
           role: 'system',
-          content: `You are a chef writing a cookbook. The structure of the response should follow the following json schema as closely as possible:
+          content: `You are a chef writing a cookbook. 
+          You should use one of the following three ingredients: ${flatRandomIngredients.map((ingredient) => ingredient.name)}
+          
+          The structure of the response should follow the following json schema as closely as possible:
           ${randomSchema}
 
           If the recipe does not follow this format exactly it is invalid.
