@@ -1,6 +1,13 @@
-import type { AllergenType, Recipe, RecipeType, Unit } from '@prisma/client'
-import { getIngredientId } from '.'
+import type {
+  AllergenType,
+  Recipe,
+  RecipeIngredient,
+  RecipeType,
+  Unit,
+} from '@prisma/client'
 import { extract, token_set_ratio } from 'fuzzball'
+import { v4 } from 'uuid'
+import { getIngredientId } from '.'
 
 export class ValidationError extends Error {
   object: any
@@ -309,6 +316,36 @@ const validateStep = (
   return { content: newSplit.join('!'), numberOfIngredients: numIngredients }
 }
 
+const getGetIngredientsFromStep = (
+  step: string,
+  recipeId: string,
+): (Omit<RecipeIngredient, 'ingredientId'> & { name: string })[] => {
+  const splits = step.split('!')
+
+  const ingredients: (Omit<RecipeIngredient, 'ingredientId'> & {
+    name: string
+  })[] = []
+
+  // Every odd number should be an ingredient when using modulo
+  for (let i = 0; i < splits.length; i++) {
+    if (i % 2 === 1) {
+      // Step
+      const ingredientSplit = splits[i].split(':')
+      if (ingredientSplit.length !== 3) {
+        throw new Error(`'${splits[i]}' is not a valid ingredient`)
+      }
+      ingredients.push({
+        amount: Number(ingredientSplit[0]),
+        unit: ingredientSplit[1] as Unit,
+        name: ingredientSplit[2],
+        recipeId,
+      })
+    }
+  }
+
+  return ingredients
+}
+
 export const validateContent = (
   content: any,
 ): Pick<
@@ -338,6 +375,7 @@ export const validateContent = (
           allergenType: AllergenType | null
         }[]
       },
+      | 'id'
       | 'name'
       | 'mealType'
       | 'preparationTime'
@@ -348,6 +386,8 @@ export const validateContent = (
       | 'recipeType'
     >
   > = {}
+
+  recipe.id = v4()
 
   // Name
   if (content.name && typeof content.name === 'string') {
@@ -400,7 +440,7 @@ export const validateContent = (
 
     recipe.ingredients = ingredients
 
-    // Steps (Steps requires ingredients)
+    // Steps
     if (content.steps && Array.isArray(content.steps)) {
       let numIngredients = 0
       recipe.steps = content.steps.map((step: string) => {
@@ -420,7 +460,51 @@ export const validateContent = (
       throw new ValidationError('"steps" is not an array.', content.steps)
     }
   } else {
-    throw new ValidationError('"ingredients" is not an array.', content)
+    // First we attempt to read the ingredients from the steps.
+
+    // Steps
+    if (content.steps && Array.isArray(content.steps)) {
+      const ingredients = content.steps.flatMap((step: string) =>
+        getGetIngredientsFromStep(step, recipe.id ?? "Can't happen"),
+      ) as ReturnType<typeof getGetIngredientsFromStep>
+
+      if (ingredients.length > 0) {
+        // The GPT model has a tendency to remention the ingredients multiple times
+        // Therefore we will go through the recipe and remove exact replicas.
+        // If the amount differs we will concatinate them.
+        const formattedIngredients: typeof ingredients = []
+        for (const ingredient of ingredients) {
+          const prevIndex = formattedIngredients.findIndex(
+            (ing) => ing.name === ingredient.name,
+          )
+          if (prevIndex === -1) {
+            formattedIngredients.push(ingredient)
+          } else {
+            const prevIngredient = formattedIngredients[prevIndex]
+
+            if (
+              prevIngredient.amount === ingredient.amount &&
+              prevIngredient.unit === ingredient.unit
+            ) {
+              // Same unit and amount, so likely a duplicate (Skip adding it)
+              continue
+            }
+            formattedIngredients[prevIndex].amount += ingredient.amount
+          }
+        }
+
+        // Add the ingredients to the content and revalidate the entire recipe
+        content.ingredients = formattedIngredients
+
+        return validateContent(content)
+      }
+
+      throw new Error('Unable to get any ingredients from the step array')
+    }
+    throw new ValidationError(
+      'Unable to get ingredients from the steps provided, are you sure it is in the correct format. Revalidate the discussed format and give it another attempt.',
+      content,
+    )
   }
 
   if (typeof content.persons === 'string') {
