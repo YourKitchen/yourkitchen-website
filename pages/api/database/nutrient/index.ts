@@ -78,7 +78,6 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       if (response.numpods === 0) {
-        console.log(response)
         console.warn(
           `Unable to find nutrient information for ${ingredient.name}`,
         )
