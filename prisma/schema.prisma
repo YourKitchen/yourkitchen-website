@@ -200,6 +200,7 @@ model Ingredient {
   fridges       FridgeIngredient[]
   recipes       RecipeIngredient[]
   allergenTypes AllergenType[]     @default([])
+  nutrients     Nutrient[]
 }
 
 // Done
@@ -282,6 +283,7 @@ model MealPlan {
   updated DateTime @updatedAt
   created DateTime @default(now())
 }
+
 model FridgeIngredient {
   fridge   Fridge @relation(fields: [fridgeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   fridgeId String
@@ -301,4 +303,18 @@ model Fridge {
   ownerId String @unique
 
   ingredients FridgeIngredient[]
+}
+
+model Nutrient {
+  ingredientId String
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+
+  nutrientId String
+
+  name       String
+  amount     Int
+  unit       String
+  percentage Float
+
+  @@id([ingredientId, nutrientId])
 }

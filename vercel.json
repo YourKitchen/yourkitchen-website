@@ -8,6 +8,10 @@
     {
       "path": "/api/database/recipe/random",
       "schedule": "0 0 * * 5"
+    },
+    {
+      "path": "/api/database/nutrient",
+      "schedule": "0 0 * * *"
     }
   ]
 }
