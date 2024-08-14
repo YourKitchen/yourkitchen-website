@@ -87,9 +87,15 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       const text = response.pods[0].subpods[0].plaintext
       const splittext = text.split('\n')
 
+      let caloriesLine: string | undefined
+
       const regexResult = splittext.map((subtext) => {
         const text = subtext.trim()
         const regex = /([\w\s]+) (\d+) ?([\w\%]+) \| [\w ]*(\d+)%/gi
+        if (caloriesLine?.includes('calories')) {
+          // Calories line needs special parsing
+          caloriesLine = text
+        }
         return regex.exec(text)
       })
 
@@ -112,6 +118,29 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
           unit,
           percentage,
         })
+      }
+
+      if (caloriesLine) {
+        const regex = /calories (\d+)/g.exec(caloriesLine)
+
+        if (regex) {
+          // Get the value
+          const calories = regex[1]
+
+          const parsedCalories = Number(calories)
+          const percentage = parsedCalories / 2000.0 // The reference diet is 2000 calories per day
+
+          nutrients.push({
+            ingredientId: ingredient.id,
+
+            nutrientId: 'calories',
+
+            name: 'calories',
+            amount: parsedCalories,
+            unit: 'kcal',
+            percentage,
+          })
+        }
       }
     }
 
