@@ -312,8 +312,8 @@ model Nutrient {
   nutrientId String
 
   name       String
-  amount     Int
-  unit       String
+  amount     Int?
+  unit       String?
   percentage Float
 
   @@id([ingredientId, nutrientId])

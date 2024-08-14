@@ -87,50 +87,66 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       const text = response.pods[0].subpods[0].plaintext
       const splittext = text.split('\n')
 
-      let caloriesLine: string | undefined
-
-      const regexResult = splittext.map((subtext) => {
+      const ingredientNutrients = splittext.flatMap((subtext) => {
         const text = subtext.trim()
-        const regex = /([\w\s]+) (\d+) ?([\w\%]+) \| [\w ]*(\d+)%/gi
-        if (caloriesLine?.includes('calories')) {
-          // Calories line needs special parsing
-          caloriesLine = text
+        const regex1 = /([\w\s]+) (\d+) ?([\w\%]+) \| (\d+)%/gi
+        const result1 = regex1.exec(text)
+
+        if (result1) {
+          const name = result1[1].trim()
+          const amount = Number.parseFloat(result1[2])
+          const unit = result1[3]
+          const percentage = Number.parseInt(result1[4]) / 100.0
+          return {
+            ingredientId: ingredient.id,
+
+            nutrientId: getIngredientId(name),
+
+            name,
+            amount,
+            unit,
+            percentage,
+          }
         }
-        return regex.exec(text)
-      })
 
-      for (const nutrient of regexResult) {
-        if (!nutrient) {
-          continue
+        // Attempt the second regex
+        const regex2 = /([\w\s ]+) (\d+)%/gi
+        const subtexts = text.split('|') // Split by |, because it might contain two types of vitamins.
+        const results: Nutrient[] = []
+        for (const subtext of subtexts) {
+          const result2 = regex2.exec(subtext.trim())
+
+          if (result2) {
+            const name = result2[1].trim()
+            const percentage = Number.parseInt(result2[2]) / 100.0
+
+            results.push({
+              ingredientId: ingredient.id,
+
+              nutrientId: getIngredientId(name),
+
+              name,
+              amount: null,
+              unit: null,
+              percentage,
+            })
+          }
         }
-        const name = nutrient[1].trim()
-        const amount = Number.parseFloat(nutrient[2])
-        const unit = nutrient[3]
-        const percentage = Number.parseInt(nutrient[4]) / 100.0
+        if (results.length > 0) {
+          return results
+        }
 
-        nutrients.push({
-          ingredientId: ingredient.id,
+        // Last attempt is the calories line
+        const regex3 = /calories (\d+)/g
+        const result3 = regex3.exec(text)
 
-          nutrientId: getIngredientId(name),
-
-          name,
-          amount,
-          unit,
-          percentage,
-        })
-      }
-
-      if (caloriesLine) {
-        const regex = /calories (\d+)/g.exec(caloriesLine)
-
-        if (regex) {
-          // Get the value
-          const calories = regex[1]
+        if (result3) {
+          const calories = result3[1]
 
           const parsedCalories = Number(calories)
           const percentage = parsedCalories / 2000.0 // The reference diet is 2000 calories per day
 
-          nutrients.push({
+          return {
             ingredientId: ingredient.id,
 
             nutrientId: 'calories',
@@ -139,9 +155,15 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
             amount: parsedCalories,
             unit: 'kcal',
             percentage,
-          })
+          }
         }
-      }
+
+        return null
+      })
+
+      nutrients.push(
+        ...ingredientNutrients.filter((nutrient) => nutrient !== null),
+      )
     }
 
     // Upload the results
