@@ -110,15 +110,22 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         // Attempt the second regex
-        const regex2 = /([\w\s ]+) (\d+)%/gi
         const subtexts = text.split('|') // Split by |, because it might contain two types of vitamins.
         const results: Nutrient[] = []
+
         for (const subtext of subtexts) {
+          const regex2 = /([\w\s ]+) (\d+)%/gi
           const result2 = regex2.exec(subtext.trim())
 
           if (result2) {
             const name = result2[1].trim()
             const percentage = Number.parseInt(result2[2]) / 100.0
+            if (name.length === 1) {
+              // Invalid, usually because the parsing failed
+              throw new Error(
+                `The parsing of "${subtext}" failed, name was "${name}", percentage: "${percentage}"`,
+              )
+            }
 
             results.push({
               ingredientId: ingredient.id,
