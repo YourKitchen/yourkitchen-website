@@ -1,6 +1,6 @@
+import prisma from '#pages/api/_base'
 import type { Cuisine, MealType } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '#pages/api/_base'
 
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
@@ -34,7 +34,7 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
     orderBy: {
       _relevance: {
         fields: 'name',
-        search: searchTerm,
+        search: searchTerm.split(' ').join(' & '),
         sort: 'desc',
       },
     },
