@@ -55,7 +55,7 @@ const IngredientItem: FC<IngredientItemProps> = ({
 }) => {
   const amountString = useMemo((): string => {
     if (progress) {
-      return `${progress}/${recipeIngredient.amount}`
+      return `${Math.min(progress, recipeIngredient.amount)}/${recipeIngredient.amount}`
     }
     return recipeIngredient.amount.toString()
   }, [recipeIngredient.amount, progress])
@@ -64,7 +64,9 @@ const IngredientItem: FC<IngredientItemProps> = ({
     <ListItem
       sx={{
         textDecoration:
-          progress === recipeIngredient.amount ? 'line-through' : undefined,
+          progress && progress >= recipeIngredient.amount
+            ? 'line-through'
+            : undefined,
         fontWeight: hovered ? 'bold' : undefined,
       }}
       key={recipeIngredient.ingredientId}
