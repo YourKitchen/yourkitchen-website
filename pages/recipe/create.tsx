@@ -7,6 +7,7 @@ import RecipeTypeSelect from '#components/Recipe/RecipeTypeSelect'
 import StepsTextField from '#components/Recipe/StepsTextField'
 import type { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
+import { AutoAwesome } from '@mui/icons-material'
 import {
   Box,
   Button,
@@ -16,10 +17,17 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  IconButton,
   TextField,
   Typography,
 } from '@mui/material'
-import type { Recipe, RecipeImage, RecipeIngredient } from '@prisma/client'
+import type {
+  AllergenType,
+  Recipe,
+  RecipeImage,
+  RecipeIngredient,
+  Unit,
+} from '@prisma/client'
 import axios from 'axios'
 import type { GetStaticProps } from 'next'
 import { useSession } from 'next-auth/react'
@@ -185,6 +193,56 @@ const CreateRecipePage: FC = () => {
     )
   }
 
+  const handleGenerateRecipe = () => {
+    toast.promise(
+      async () => {
+        return api.get<
+          YKResponse<
+            Pick<
+              Recipe & {
+                ingredients: {
+                  id: string
+                  name: string
+                  unit: Unit
+                  amount: number
+                  allergenType: AllergenType | null
+                }[]
+              },
+              | 'name'
+              | 'mealType'
+              | 'preparationTime'
+              | 'cuisineName'
+              | 'ingredients'
+              | 'steps'
+            >
+          >
+        >('database/recipe/random', {
+          params: {
+            name: recipe.name,
+            returnType: 'get',
+          },
+        })
+      },
+      {
+        loading: t('generating_recipe'),
+        error: (err) => err.message ?? err,
+        success: (response) => {
+          const data = response.data.data
+
+          setRecipe((prev) => ({ ...prev, ...data, ingredients: [] }))
+          setStepList(
+            data.steps.map((step) => ({
+              key: v4(),
+              value: step,
+            })),
+          )
+
+          return t('succesfully_generated_recipe')
+        },
+      },
+    )
+  }
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       <NextSeo
@@ -250,6 +308,14 @@ const CreateRecipePage: FC = () => {
             }))
           }}
           placeholder={t('name')}
+          InputProps={{
+            endAdornment:
+              recipe.name.length > 0 ? (
+                <IconButton onClick={handleGenerateRecipe}>
+                  <AutoAwesome />
+                </IconButton>
+              ) : null,
+          }}
         />
         <YKTextField
           value={recipe.description}

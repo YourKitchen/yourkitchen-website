@@ -99,13 +99,14 @@ const FridgePage: FC = () => {
           color="primary"
           fullWidth
           onClick={() => {
-            if (
-              session?.user.role !== 'ADMIN' &&
-              (session?.user.score ?? 0) < 5
-            ) {
-              toast.error(`${t('need_score_of')} 5`)
-              return
-            }
+            // TODO: Enable this when a reasonable amount of ingredients have been created
+            // if (
+            //   !session ||
+            //   (session.user.role !== 'ADMIN' && session.user.score < 5)
+            // ) {
+            //   toast.error(`${t('need_score_of')} 5`)
+            //   return
+            // }
             setCreateIngredientValue(value)
           }}
         >

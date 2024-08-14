@@ -1,9 +1,8 @@
-import { type Ingredient, Recipe } from '@prisma/client'
+import { authOptions } from '#pages/api/auth/[...nextauth]'
+import type { Ingredient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
-import { ApiError } from 'next/dist/server/api-utils'
 import { getIngredientId } from 'src/utils'
-import { authOptions } from '#pages/api/auth/[...nextauth]'
 import prisma from '../../_base'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -26,12 +25,13 @@ const handlePOST = async (req: NextApiRequest, res: NextApiResponse) => {
       .json({ ok: false, message: 'You need to be authenticated to do this' })
     return
   }
-  if (session.user.role !== 'ADMIN' && session.user.score < 5) {
-    res
-      .status(401)
-      .json({ ok: false, message: 'You need a score of at least 5' })
-    return
-  }
+  // TODO: Enable this when a suitable amount of ingredients have been generated
+  // if (session.user.role !== 'ADMIN' && session.user.score < 5) {
+  //   res
+  //     .status(401)
+  //     .json({ ok: false, message: 'You need a score of at least 5' })
+  //   return
+  // }
 
   const { name, allergenTypes } = req.body as Ingredient
 

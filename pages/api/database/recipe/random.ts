@@ -1,10 +1,12 @@
 import { api } from '#network/index'
 import prisma from '#pages/api/_base'
 import { getRecipeImage } from '#pages/api/_recipeImage'
+import { authOptions } from '#pages/api/auth/[...nextauth]'
 import randomSchema from '#utils/random_schema.json'
-import type { RecipeImage } from '@prisma/client'
+import type { Ingredient, RecipeImage } from '@prisma/client'
 import { put } from '@vercel/blob'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { getServerSession } from 'next-auth'
 import { OpenAI } from 'openai'
 import type { ChatCompletionMessageParam } from 'openai/resources'
 import { ValidationError, validateContent } from 'src/utils/validator'
@@ -13,9 +15,23 @@ import { v4 } from 'uuid'
 export const maxDuration = 60
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  // VALIDATE CRON SECRET
-  if (req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) {
+  const session = await getServerSession(req, res, authOptions)
+
+  // VALIDATE CRON SECRET or Session
+  if (
+    req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}` &&
+    !session
+  ) {
     return res.status(401).end('Unauthorized')
+  }
+
+  if (session && session.user.score < 100) {
+    // TODO: Implement premium as an exception to this
+    // For now just to prevent overusage of the add
+    return res.json({
+      ok: false,
+      message: 'You need a score of at least 100',
+    })
   }
 
   if (req.method === 'GET') {
@@ -63,30 +79,43 @@ const getAndStoreImage = async (
 
 const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const ingredientsCount = await prisma.ingredient.count()
+    const returnType = req.query.returnType ?? ('insert' as 'insert' | 'get')
+    const name = req.query.name as string | undefined
 
-    const randomNumbers = [
-      Math.floor(Math.random() * (ingredientsCount - 1)),
-      Math.floor(Math.random() * (ingredientsCount - 1)),
-      Math.floor(Math.random() * (ingredientsCount - 1)),
-    ]
+    if (returnType === 'get' && !name) {
+      return res.status(400).json({
+        ok: false,
+        message: 'You need to supply a name when trying to generate a recipe.',
+      })
+    }
 
-    const randomIngredients = await Promise.all(
-      randomNumbers.map((ingredientIndex) =>
-        prisma.ingredient.findMany({
-          take: 1,
-          skip: ingredientIndex,
-        }),
-      ),
-    )
+    let randomIngredients: Ingredient[] = []
 
-    const flatRandomIngredients = randomIngredients.flat(1)
+    if (!name) {
+      const ingredientsCount = await prisma.ingredient.count()
+
+      const randomNumbers = [
+        Math.floor(Math.random() * (ingredientsCount - 1)),
+        Math.floor(Math.random() * (ingredientsCount - 1)),
+        Math.floor(Math.random() * (ingredientsCount - 1)),
+      ]
+
+      const tmpRandomIngredients = await Promise.all(
+        randomNumbers.flatMap((ingredientIndex) =>
+          prisma.ingredient.findMany({
+            take: 1,
+            skip: ingredientIndex,
+          }),
+        ),
+      )
+
+      randomIngredients = tmpRandomIngredients.flat(1)
+    }
 
     const conversations: ChatCompletionMessageParam[] = [
       {
         role: 'system',
         content: `You are a chef writing a cookbook. 
-      You should use one of the following three ingredients: ${flatRandomIngredients.map((ingredient) => ingredient.name)}
       
       The structure of the response should follow the following json schema as closely as possible:
       ${randomSchema}
@@ -130,7 +159,11 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const response = await sendMessageToGPT(
-      'Generate a recipe using the provided instructions.',
+      `Generate a recipe using the provided instructions. ${
+        !name
+          ? `The recipe should include the following three ingredients: ${randomIngredients.map((ingredient) => ingredient.name)}`
+          : `The name of the recipe you should generate is "${name}". Try to find similar recipes an base it on these.`
+      }`,
     )
 
     if (response !== null) {
@@ -170,66 +203,80 @@ const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
 
       const recipe = await validateRecipe(parsedContent)
 
-      const recipeId = v4()
+      if (returnType === 'insert') {
+        const recipeId = v4()
 
-      const [recipeImage] = await Promise.all([
-        getAndStoreImage(recipe.name, recipeId),
-        // Upsert all the ingredients.
-        prisma.ingredient.createMany({
-          data: recipe.ingredients.map((ingredient) => ({
-            id: ingredient.id,
-            name: ingredient.name,
-            allergenTypes: ingredient.allergenType
-              ? [ingredient.allergenType]
-              : [],
-          })),
-          skipDuplicates: true,
-        }),
-        // Upsert cuisine if it does not exist
-        prisma.cuisine.createMany({
+        const [recipeImage] = await Promise.all([
+          getAndStoreImage(recipe.name, recipeId),
+          // Upsert all the ingredients.
+          prisma.ingredient.createMany({
+            data: recipe.ingredients.map((ingredient) => ({
+              id: ingredient.id,
+              name: ingredient.name,
+              allergenTypes: ingredient.allergenType
+                ? [ingredient.allergenType]
+                : [],
+            })),
+            skipDuplicates: true,
+          }),
+          // Upsert cuisine if it does not exist
+          prisma.cuisine.createMany({
+            data: {
+              name: recipe.cuisineName,
+            },
+            skipDuplicates: true,
+          }),
+        ])
+
+        // Add the recipe to the db.
+        const createResponse = await prisma.recipe.create({
           data: {
-            name: recipe.cuisineName,
+            id: recipeId,
+            name: recipe.name,
+            mealType: recipe.mealType,
+            preparationTime: recipe.preparationTime,
+            recipeType: 'MAIN',
+            ingredients: {
+              // There is a difference between the ingredients generated here, and above.
+              // The ones generated above is of type Ingredient, the ones geneated here is RecipeIngredients, which contains amount & unit.
+              // RecipeIngredients have to be created individually for each recipe.
+              createMany: {
+                data: recipe.ingredients.map((ingredient) => ({
+                  ingredientId: ingredient.id,
+                  amount: ingredient.amount,
+                  unit: ingredient.unit,
+                })),
+              },
+            },
+            steps: recipe.steps,
+            ownerId: 'f42520b2-c709-4f5e-adfc-c09cd06231a9', // YourKitchen Bot
+            cuisineName: recipe.cuisineName,
+            image: {
+              createMany: {
+                data: [recipeImage],
+                skipDuplicates: true,
+              },
+            },
           },
-          skipDuplicates: true,
-        }),
-      ])
+        })
 
-      // Add the recipe to the db.
-      const createResponse = await prisma.recipe.create({
-        data: {
-          id: recipeId,
-          name: recipe.name,
-          mealType: recipe.mealType,
-          preparationTime: recipe.preparationTime,
-          recipeType: 'MAIN',
-          ingredients: {
-            // There is a difference between the ingredients generated here, and above.
-            // The ones generated above is of type Ingredient, the ones geneated here is RecipeIngredients, which contains amount & unit.
-            // RecipeIngredients have to be created individually for each recipe.
-            createMany: {
-              data: recipe.ingredients.map((ingredient) => ({
-                ingredientId: ingredient.id,
-                amount: ingredient.amount,
-                unit: ingredient.unit,
-              })),
-            },
-          },
-          steps: recipe.steps,
-          ownerId: 'f42520b2-c709-4f5e-adfc-c09cd06231a9', // YourKitchen Bot
-          cuisineName: recipe.cuisineName,
-          image: {
-            createMany: {
-              data: [recipeImage],
-              skipDuplicates: true,
-            },
-          },
-        },
+        // TODO: Send newsletter to user.
+        // Use the createResponse to send the newsletter.
+
+        return res.json({ ok: true, message: 'Recipe added.' })
+      }
+      if (returnType === 'get') {
+        return res.json({
+          ok: true,
+          message: 'Recipe generated.',
+          data: recipe,
+        })
+      }
+
+      return res.json({
+        ok: false,
+        message: `"returnType" not valid: ${returnType}`,
       })
-
-      // TODO: Send newsletter to user.
-      // Use the createResponse to send the newsletter.
-
-      return res.json({ ok: true, message: 'Recipe added.' })
     }
   } catch (err) {
     return res.status(500).json({
