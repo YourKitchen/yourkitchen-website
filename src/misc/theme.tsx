@@ -55,7 +55,6 @@ const defaultThemeOptions: CssVarsThemeOptions = {
       },
     },
   },
-
   components: {
     MuiLink: {
       defaultProps: {
@@ -75,14 +74,16 @@ const defaultThemeOptions: CssVarsThemeOptions = {
     },
     MuiCssBaseline: {
       styleOverrides: {
-        background: 'radial-gradient(circle at top, #fde2c6 , #fdfdfd)',
-        minHeight: '100vh',
-        backgroundRepeat: 'no-repeat',
-        color: '#000',
+        body: {
+          background: 'radial-gradient(circle at top, #fde2c6 , #fdfdfd)',
+          minHeight: '100vh',
+          backgroundRepeat: 'no-repeat',
+          color: '#000',
 
-        '[data-mui-color-scheme="dark"] &': {
-          color: '#fff',
-          background: 'radial-gradient(circle at top, #221102 , #070a1f)',
+          '[data-mui-color-scheme="dark"] &': {
+            color: '#fff',
+            background: 'radial-gradient(circle at top, #221102 , #070a1f)',
+          },
         },
       },
     },
