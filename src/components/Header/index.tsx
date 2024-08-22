@@ -1,4 +1,3 @@
-import Logo from '#assets/Logo-192x192.png'
 import {
   Add,
   Menu as MenuIcon,
@@ -9,12 +8,12 @@ import {
   Box,
   Button,
   IconButton,
+  Link,
   Menu,
   MenuItem,
   Toolbar,
   Typography,
 } from '@mui/material'
-import useTheme from '@mui/system/useTheme'
 import { useSession } from 'next-auth/react'
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
@@ -22,7 +21,7 @@ import { useRouter as useNavigation } from 'next/navigation'
 import { useRouter } from 'next/router'
 import type React from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import Link from '../Link'
+import Logo from '#assets/Logo-192x192.png'
 
 interface Page {
   label: string
@@ -32,7 +31,6 @@ interface Page {
 
 export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { data: session, status } = useSession()
-  const theme = useTheme()
   const { t } = useTranslation('header')
 
   const router = useRouter()
@@ -40,41 +38,50 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [scrollY, setScrollY] = useState(0)
 
   const pages: Page[] = useMemo(
-    () => [
-      {
-        label: t('home'),
-        href: '/',
-      },
-      {
-        label: t('about'),
-        href: '/about',
-      },
-      {
-        label: t('recipes'),
-        href: '/recipes',
-      },
-      {
-        label: t('meal_plan'),
-        href: '/meal-plan',
-        authState: 'authenticated',
-      },
-    ],
-    [t],
+    () =>
+      [
+        {
+          label: t('home'),
+          href: '/',
+        },
+        {
+          label: t('about'),
+          href: '/about',
+        },
+        {
+          label: t('recipes'),
+          href: '/recipes',
+        },
+        {
+          label: t('meal_plan'),
+          href: '/meal-plan',
+          authState: 'authenticated',
+        },
+      ].filter(
+        (page) => page.authState === undefined || page.authState === status,
+      ) as Page[],
+    [t, status],
   )
 
-  const settings: Page[] = [
-    { label: t('settings'), href: '/settings', authState: 'authenticated' },
-    {
-      label: t('logout'),
-      href: '/auth/signout',
-      authState: 'authenticated',
-    },
-    {
-      label: t('get_started'),
-      href: '/auth/signin',
-      authState: 'unauthenticated',
-    },
-  ]
+  const settings: Page[] = useMemo(
+    () =>
+      [
+        { label: t('settings'), href: '/settings', authState: 'authenticated' },
+        {
+          label: t('logout'),
+          href: '/auth/signout',
+          authState: 'authenticated',
+        },
+        {
+          label: t('get_started'),
+          href: '/auth/signin',
+          authState: 'unauthenticated',
+        },
+      ].filter(
+        (page) => page.authState === undefined || page.authState === status,
+      ) as Page[],
+    [t, status],
+  )
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null)
@@ -120,14 +127,6 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
     setMobileMoreAnchorEl(event.currentTarget)
   }
 
-  const onPageClick = (page: Page) => {
-    if (page.authState === 'authenticated' && status === 'unauthenticated') {
-      navigation.push(`/auth/signin?callbackUrl=${page.href}`)
-    } else {
-      navigation.push(page.href)
-    }
-  }
-
   const mobileMenuId = 'primary-menu-mobile'
   const renderMobileMenu = (
     <Menu
@@ -145,31 +144,25 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      {settings.map(
-        (page) =>
-          (page.authState === undefined || page.authState === status) && (
-            <MenuItem key={page.label} onClick={() => onPageClick(page)}>
-              {page.label}
-            </MenuItem>
-          ),
-      )}
+      {settings.map((page) => (
+        <MenuItem LinkComponent={Link} key={page.label} href={page.href}>
+          {page.label}
+        </MenuItem>
+      ))}
     </Menu>
   )
-
-  const selectedBackgroundColor = useMemo(() => {
-    return theme.palette.mode === 'light'
-      ? 'rgba(255, 255, 255, 0.8)'
-      : 'rgba(0,0,0, 0.8)'
-  }, [theme.palette.mode])
 
   return (
     <AppBar
       position="sticky"
       sx={{
         backdropFilter: 'blur(7px)',
-        backgroundColor: scrollY < 30 ? 'transparent' : selectedBackgroundColor,
+        backgroundColor:
+          scrollY < 30
+            ? 'transparent'
+            : 'var(--mui-palette-background-default)',
         backgroundImage: 'none',
-        color: theme.palette.text.primary,
+        color: 'var(--mui-palette-text-primary)',
         transition: '0.3s ease-in-out',
         boxShadow: 'none',
       }}
@@ -231,7 +224,7 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page.label} onClick={() => onPageClick(page)}>
+                <MenuItem LinkComponent={Link} key={page.label} href="">
                   <Typography textAlign="center">{page.label}</Typography>
                 </MenuItem>
               ))}
@@ -248,7 +241,6 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
               flexGrow: 1,
               fontWeight: 700,
               letterSpacing: '.1rem',
-              color: 'inherit',
               textDecoration: 'none',
             }}
           >
@@ -256,15 +248,15 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button
+              <Link
                 key={page.label}
-                onClick={() => onPageClick(page)}
+                href={page.href}
                 sx={{
                   mx: 1,
                   textAlign: 'center',
                   display: 'block',
                   position: 'relative',
-                  color: (theme) => theme.palette.text.primary,
+                  color: 'var(--mui-palette-text-primary)',
                   '&:hover': {
                     backgroundColor: 'transparent',
                     '&:after': {
@@ -280,13 +272,13 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
                     content: '""',
                     height: '4px',
                     borderRadius: '2px',
-                    backgroundColor: (theme) => theme.palette.primary.main,
+                    backgroundColor: 'var(--mui-palette-primary-main)',
                     width: router.pathname === page.href ? '100%' : '0%',
                   },
                 }}
               >
                 {page.label}
-              </Button>
+              </Link>
             ))}
           </Box>
           {/* DIVIDER */}
@@ -331,31 +323,24 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {settings.map(
-                    (page) =>
-                      (page.authState === undefined ||
-                        page.authState === status) && (
-                        <MenuItem
-                          key={page.label}
-                          onClick={() => onPageClick(page)}
-                        >
-                          <Typography textAlign="center">
-                            {page.label}
-                          </Typography>
-                        </MenuItem>
-                      ),
-                  )}
+                  {settings.map((page) => (
+                    <MenuItem
+                      key={page.label}
+                      LinkComponent={Link}
+                      href={page.href}
+                    >
+                      <Typography textAlign="center">{page.label}</Typography>
+                    </MenuItem>
+                  ))}
                 </Menu>
               </>
             ) : (
               <>
-                <Button
-                  variant="contained"
-                  onClick={() => onPageClick(settings[0])}
-                  sx={{ display: 'block' }}
-                >
-                  {settings[0].label}
-                </Button>
+                {settings.length > 0 ? (
+                  <Link href={settings[0].href} sx={{ display: 'block' }}>
+                    {settings[0].label}
+                  </Link>
+                ) : null}
               </>
             )}
           </Box>

@@ -27,7 +27,7 @@ const AccountBox: FC<PropsWithChildren<AccountBoxInterface>> = ({
           padding: { sm: '1rem', md: '2rem' },
           margin: 1,
           borderRadius: 16,
-          border: (theme) => `1px solid ${theme.palette.divider}`,
+          border: '1px solid var(--mui-palette-divider)',
         }}
       >
         <Box sx={{ display: 'flex', mb: 2 }}>

@@ -91,7 +91,7 @@ export const WeekPicker: FC<{
       )} #${value?.toFormat('W')}`}</Button>
       <Popper
         sx={{
-          backgroundColor: (theme) => theme.palette.background.paper,
+          backgroundColor: 'var(--mui-palette-background-paper)',
           borderRadius: 2,
           padding: 1,
         }}

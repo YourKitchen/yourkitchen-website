@@ -1,30 +1,28 @@
-import type { Meal } from '#models/meal'
-import type { YKResponse } from '#models/ykResponse'
-import { api } from '#network/index'
-import { avg } from '#utils/index'
 import {
+  Box,
+  Button,
+  CircularProgress,
   Dialog,
-  DialogTitle,
+  DialogActions,
   DialogContent,
   DialogContentText,
-  TextField,
-  Box,
-  CircularProgress,
-  Button,
-  Typography,
+  DialogTitle,
   Rating,
-  DialogActions,
+  TextField,
+  Typography,
   debounce,
 } from '@mui/material'
 import {
+  type MealPlan,
   type MealType,
+  Rating as PrismaRating,
   type Recipe,
   RecipeImage,
-  Rating as PrismaRating,
-  type MealPlan,
 } from '@prisma/client'
 import { t } from 'i18next'
 import type { DateTime } from 'luxon'
+import type { TFunction } from 'next-i18next'
+import Image from 'next/image'
 import React, {
   type Dispatch,
   type FC,
@@ -35,9 +33,11 @@ import React, {
 } from 'react'
 import { toast } from 'sonner'
 import useSWR, { type KeyedMutator } from 'swr'
-import Image from 'next/image'
-import type { TFunction } from 'next-i18next'
+import type { Meal } from '#models/meal'
+import type { YKResponse } from '#models/ykResponse'
+import { api } from '#network/index'
 import type { PublicRecipe } from '#pages/recipes'
+import { avg } from '#utils/index'
 
 interface MealPickerProps {
   editMealPosition:
@@ -78,7 +78,7 @@ const RecipeRow: FC<{
         borderRadius: '8px',
         width: '100%',
         justifyContent: 'start',
-        backgroundColor: (theme) => theme.palette.background.default,
+        backgroundColor: 'var(--mui-palette-background-default)',
       }}
       onClick={() => {
         updateMeal(recipe)
@@ -103,7 +103,7 @@ const RecipeRow: FC<{
             height: '50px',
             borderRadius: '8px',
             marginRight: '12px',
-            backgroundColor: (theme) => theme.palette.primary.main,
+            backgroundColor: 'var(--mui-palette-primary-main)',
           }}
         />
       )}
@@ -114,7 +114,7 @@ const RecipeRow: FC<{
           flexDirection: 'column',
         }}
       >
-        <Typography color={(theme) => theme.palette.text.primary}>
+        <Typography color={'var(--mui-palette-text-primary)'}>
           {recipe.name}
         </Typography>
         <Rating

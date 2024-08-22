@@ -1,5 +1,3 @@
-import { allUnits } from '#models/units'
-import type { YKResponse } from '#models/ykResponse'
 import { ArrowForward, Delete, Search } from '@mui/icons-material'
 import {
   Box,
@@ -21,6 +19,8 @@ import { type FC, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { getIngredientId } from 'src/utils'
 import useSWR from 'swr'
+import { allUnits } from '#models/units'
+import type { YKResponse } from '#models/ykResponse'
 import CreateIngredientDialog from './CreateIngredientDialog'
 import FullSearchDialog from './FullSearchDialog'
 
@@ -322,7 +322,7 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
           borderRadius: '100%',
           width: '30px',
           height: '30px',
-          backgroundColor: (theme) => theme.palette.primary.main,
+          backgroundColor: 'var(--mui-palette-primary-main)',
           textAlign: 'center',
           lineHeight: '30px',
           color: (theme) =>
