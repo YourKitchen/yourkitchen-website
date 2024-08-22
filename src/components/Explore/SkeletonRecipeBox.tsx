@@ -3,7 +3,6 @@ import { Box, Chip, Skeleton, Typography } from '@mui/material'
 import { Recipe, RecipeImage } from '@prisma/client'
 import Image from 'next/image'
 import React, { type FC, useMemo } from 'react'
-import Link from '#components/Link'
 import { PublicRecipe } from '#pages/recipes'
 
 interface SkeletonRecipeBoxProps {
@@ -23,7 +22,7 @@ const SkeletonRecipeBox: FC<SkeletonRecipeBoxProps> = ({ name, rating }) => {
         ml: 2,
         height: '300px',
         borderRadius: 4,
-        backgroundColor: (theme) => theme.palette.background.paper,
+        backgroundColor: 'var(--mui-palette-background-paper)',
         padding: 2,
       }}
     >

@@ -82,7 +82,7 @@ const FilterPopper: FC<PropsWithChildren<FilterPopperProps>> = ({
         <Box
           sx={{
             borderRadius: 2,
-            backgroundColor: (theme) => theme.palette.background.paper,
+            backgroundColor: 'var(--mui-palette-background-paper)',
           }}
         >
           {values ? (
@@ -95,13 +95,13 @@ const FilterPopper: FC<PropsWithChildren<FilterPopperProps>> = ({
                     onValueSelected?.(value.value)
                   }}
                   sx={{
-                    backgroundColor: (theme) =>
+                    backgroundColor:
                       value.value === selectedValue
-                        ? theme.palette.primary.main
+                        ? 'var(--mui-palette-primary-main)'
                         : undefined,
-                    color: (theme) =>
+                    color:
                       value.value === selectedValue
-                        ? theme.palette.primary.contrastText
+                        ? 'var(--mui-palette-primary-contrastText)'
                         : undefined,
                   }}
                 >

@@ -1,14 +1,8 @@
-import Link from '#components/Link'
-import RecipeRating from '#components/Recipe/RecipeRating'
-import YKChip from '#components/Recipe/YKChip'
-import type { YKResponse } from '#models/ykResponse'
-import { api } from '#network/index'
-import { authOptions } from '#pages/api/auth/[...nextauth]'
-import type { PublicRecipe } from '#pages/recipes'
 import { ExpandLess, ExpandMore } from '@mui/icons-material'
 import {
   Box,
   Collapse,
+  Link,
   List,
   ListItem,
   ListItemText,
@@ -29,6 +23,12 @@ import { NextSeo, RecipeJsonLd } from 'next-seo'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { type FC, useCallback, useMemo, useState } from 'react'
+import RecipeRating from '#components/Recipe/RecipeRating'
+import YKChip from '#components/Recipe/YKChip'
+import type { YKResponse } from '#models/ykResponse'
+import { api } from '#network/index'
+import { authOptions } from '#pages/api/auth/[...nextauth]'
+import type { PublicRecipe } from '#pages/recipes'
 
 const SITE_URL = process.env.SITE_URL ?? 'https://yourkitchen.io'
 
@@ -254,7 +254,7 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
           <Link
             href={`/user/${recipe.ownerId}`}
             sx={{
-              backgroundColor: (theme) => theme.palette.background.paper,
+              backgroundColor: 'var(--mui-palette-background-paper)',
               height: '50px',
               width: '170px',
               display: 'flex',
@@ -330,7 +330,7 @@ const RecipePage: FC<RecipePageProps> = ({ recipe, user }) => {
               color: (theme) =>
                 errorAllergenes.length > 0
                   ? theme.palette.error[theme.palette.mode]
-                  : theme.palette.text.primary,
+                  : 'var(--mui-palette-text-primary)',
             }}
           >
             <Box

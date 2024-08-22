@@ -1,11 +1,3 @@
-import Logo from '#assets/Logo-512x512.png'
-import TabPanel from '#components/Account/TabPanel'
-import Link from '#components/Link'
-import YKChip from '#components/Recipe/YKChip'
-import type { YKResponse } from '#models/ykResponse'
-import { api } from '#network/index'
-import { authOptions } from '#pages/api/auth/[...nextauth]'
-import type { PublicRecipe } from '#pages/recipes'
 import {
   Box,
   Button,
@@ -14,6 +6,7 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
+  Link,
   List,
   ListItem,
   Tab,
@@ -30,6 +23,13 @@ import { NextSeo, ProfilePageJsonLd } from 'next-seo'
 import Image from 'next/image'
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
+import Logo from '#assets/Logo-512x512.png'
+import TabPanel from '#components/Account/TabPanel'
+import YKChip from '#components/Recipe/YKChip'
+import type { YKResponse } from '#models/ykResponse'
+import { api } from '#network/index'
+import { authOptions } from '#pages/api/auth/[...nextauth]'
+import type { PublicRecipe } from '#pages/recipes'
 
 type PublicUser = Pick<User, 'id' | 'image' | 'name' | 'created'>
 
@@ -206,9 +206,8 @@ const UserPage: FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
                   display: 'block',
                   width: '300px',
                   height: '300px',
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'light' ? '#fff' : '#000',
-                  color: (theme) => theme.palette.text.primary,
+                  backgroundColor: 'var(--mui-palette-background-default)',
+                  color: 'var(--mui-palette-text-primary)',
                   backgroundImage: `url(${recipe.image?.[0].link})`,
                   backgroundSize: 'cover',
                   borderRadius: 2,

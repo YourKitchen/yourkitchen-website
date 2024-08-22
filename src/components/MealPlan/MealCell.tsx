@@ -1,13 +1,12 @@
-import { Box, Button, Typography, Rating } from '@mui/material'
-import type { TFunction } from 'i18next'
 import { Edit } from '@mui/icons-material'
-import type { FC } from 'react'
-import { YKResponse } from '#models/ykResponse'
-import type { Meal } from '#models/meal'
-import { Recipe, RecipeImage, Rating as PrismaRating } from '@prisma/client'
-import useSWR from 'swr'
+import { Box, Button, Link, Rating, Typography } from '@mui/material'
+import { Rating as PrismaRating, Recipe, RecipeImage } from '@prisma/client'
+import type { TFunction } from 'i18next'
 import Image from 'next/image'
-import Link from '#components/Link'
+import type { FC } from 'react'
+import useSWR from 'swr'
+import type { Meal } from '#models/meal'
+import { YKResponse } from '#models/ykResponse'
 import { avg } from '#utils/index'
 
 interface MealCellProps {
@@ -27,12 +26,12 @@ export const MealCell: FC<MealCellProps> = ({ t, meal, editMealRecipe }) => {
         overflow: 'hidden',
       }}
     >
-      {meal.length === 0 && (
+      {meal.length === 0 ? (
         <Button
           sx={{
             width: '100%',
             '&:hover': {
-              backgroundColor: (theme) => theme.palette.background.paper,
+              backgroundColor: 'var(--mui-palette-background-paper)',
             },
           }}
           onClick={() => {
@@ -41,7 +40,7 @@ export const MealCell: FC<MealCellProps> = ({ t, meal, editMealRecipe }) => {
         >
           {t('add_recipe')}
         </Button>
-      )}
+      ) : null}
       {meal.map((mealRecipe) => (
         <Box
           key={mealRecipe.id}
@@ -63,7 +62,7 @@ export const MealCell: FC<MealCellProps> = ({ t, meal, editMealRecipe }) => {
               textDecoration: 'none',
               width: '100%',
               '&:hover': {
-                backgroundColor: (theme) => theme.palette.background.paper,
+                backgroundColor: 'var(--mui-palette-background-paper)',
               },
             }}
           >
@@ -89,7 +88,7 @@ export const MealCell: FC<MealCellProps> = ({ t, meal, editMealRecipe }) => {
                   display: 'flex',
                   justifyContent: 'space-between',
                   flexDirection: 'column',
-                  color: (theme) => theme.palette.text.primary,
+                  color: 'var(--mui-palette-text-primary)',
                 }}
               >
                 <Typography>{mealRecipe.recipe.name}</Typography>

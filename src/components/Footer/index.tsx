@@ -46,7 +46,7 @@ export const Footer: FC = (): ReactElement => {
           <Box sx={{ ml: 2, display: 'flex', flexDirection: 'column' }}>
             <Typography
               sx={{
-                color: (theme) => theme.palette.primary.main,
+                color: 'var(--mui-palette-primary-main)',
                 fontSize: '25px',
               }}
             >

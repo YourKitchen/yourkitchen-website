@@ -1,9 +1,8 @@
 import { Circle, HorizontalRule, ThumbDown, ThumbUp } from '@mui/icons-material'
-import { Box, Chip, Typography } from '@mui/material'
+import { Box, Chip, Link, Typography } from '@mui/material'
 import { Recipe, RecipeImage } from '@prisma/client'
 import Image from 'next/image'
 import React, { type FC, useMemo } from 'react'
-import Link from '#components/Link'
 import type { PublicRecipe } from '#pages/recipes'
 
 interface RecipeBoxProps {
@@ -51,16 +50,17 @@ const RecipeBox: FC<RecipeBoxProps> = ({ recipe }) => {
         mr: 2,
         height: '300px',
         borderRadius: 4,
-        backgroundColor: (theme) => theme.palette.background.paper,
+        backgroundColor: 'var(--mui-palette-background-paper)',
         backgroundImage: `url(${image?.link})`,
         textDecoration: 'none',
         position: 'relative',
         overflow: 'hidden',
-        boxShadow: (theme) =>
-          theme.palette.mode === 'light'
-            ? 'rgba(0, 0, 0, 0.1) 0px 4px 12px;'
-            : undefined,
-        color: (theme) => theme.palette.text.primary,
+        boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 12px;',
+        color: 'var(--mui-palette-text-primary)',
+
+        '[data-mui-color-scheme="dark"] &': {
+          boxShadow: 'none',
+        },
       }}
       href={`/recipe/${recipe.id}`}
     >
@@ -77,10 +77,13 @@ const RecipeBox: FC<RecipeBoxProps> = ({ recipe }) => {
           alignItems: 'end',
           padding: 2,
           gap: 2,
-          background: (theme) =>
-            theme.palette.mode === 'dark'
-              ? 'linear-gradient(0deg, rgba(0,0,0,0.25), transparent)'
-              : 'linear-gradient(0deg, rgba(255,255,255,0.75), transparent)',
+
+          background:
+            'linear-gradient(0deg, rgba(255,255,255,0.75), transparent)',
+
+          '[data-mui-color-scheme="dark"] &': {
+            background: 'linear-gradient(0deg, rgba(0,0,0,0.25), transparent)',
+          },
         }}
       >
         <Box>

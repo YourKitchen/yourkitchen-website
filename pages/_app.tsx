@@ -1,11 +1,6 @@
-import AnalyticsWrapper from '#components/AnalyticsWrapper'
-import { Footer } from '#components/Footer'
-import { Header } from '#components/Header'
-import createEmotionCache from '#misc/createEmotionCache'
-import theme, { darkTheme } from '#misc/theme'
-import { api } from '#network/index'
 import { CacheProvider, type EmotionCache } from '@emotion/react'
-import { Box, useMediaQuery } from '@mui/material'
+import { Box, Experimental_CssVarsProvider, useMediaQuery } from '@mui/material'
+import { AppCacheProvider } from '@mui/material-nextjs/v14-pagesRouter'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 import { initGA } from 'green-analytics-js'
@@ -17,17 +12,19 @@ import type { AppProps } from 'next/app'
 import { type FC, useEffect, useMemo } from 'react'
 import { Toaster, toast } from 'sonner'
 import { SWRConfig } from 'swr'
+import AnalyticsWrapper from '#components/AnalyticsWrapper'
+import { Footer } from '#components/Footer'
+import { Header } from '#components/Header'
+import theme from '#misc/theme'
+import { api } from '#network/index'
 
 // Client-side cache, shared for the whole session of the user in the browser.
-const clientSideEmotionCache = createEmotionCache()
-
 export interface MyAppProps extends AppProps {
-  emotionCache?: EmotionCache
   session?: Session
 }
 
 const MyApp: FC<MyAppProps> = (props) => {
-  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
+  const { Component, pageProps } = props
 
   useEffect(() => {
     try {
@@ -39,15 +36,9 @@ const MyApp: FC<MyAppProps> = (props) => {
 
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
-  const selectedTheme = useMemo(
-    () => (prefersDarkMode ? darkTheme : theme),
-    [prefersDarkMode],
-  )
-
   return (
-    <CacheProvider value={emotionCache}>
+    <AppCacheProvider {...props}>
       <NextSeo
-        themeColor={selectedTheme.palette.primary.main}
         additionalMetaTags={[
           {
             name: 'viewport',
@@ -68,10 +59,10 @@ const MyApp: FC<MyAppProps> = (props) => {
         titleTemplate="%s | YourKitchen"
         defaultTitle="YourKitchen"
       />
-      <ThemeProvider theme={selectedTheme}>
+      <Experimental_CssVarsProvider theme={theme} defaultMode="system">
         <SessionProvider session={pageProps.session}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
+          <CssBaseline enableColorScheme />
 
           <SWRConfig
             value={{
@@ -117,8 +108,8 @@ const MyApp: FC<MyAppProps> = (props) => {
             />
           </SWRConfig>
         </SessionProvider>
-      </ThemeProvider>
-    </CacheProvider>
+      </Experimental_CssVarsProvider>
+    </AppCacheProvider>
   )
 }
 

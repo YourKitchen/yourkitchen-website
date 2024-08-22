@@ -98,7 +98,7 @@ export const SigninPage: FC = () => {
           sx={{
             width: { sm: '100%', md: '350px' },
             height: { sm: '100%', md: '400px' },
-            backgroundColor: (theme) => theme.palette.background.paper,
+            backgroundColor: 'var(--mui-palette-background-paper)',
             borderRadius: 2,
             textAlign: 'center',
             padding: 2,
@@ -148,8 +148,8 @@ export const SigninPage: FC = () => {
             }}
             sx={{
               height: '50px',
-              color: (theme) => theme.palette.text.primary,
-              backgroundColor: (theme) => theme.palette.background.default,
+              color: 'var(--mui-palette-text-primary)',
+              backgroundColor: 'var(--mui-palette-background-default)',
               p: 1,
               textDecoration: 'none',
               justifyContent: 'left',
@@ -168,8 +168,8 @@ export const SigninPage: FC = () => {
             }}
             sx={{
               height: '50px',
-              color: (theme) => theme.palette.text.primary,
-              backgroundColor: (theme) => theme.palette.background.default,
+              color: 'var(--mui-palette-text-primary)',
+              backgroundColor: 'var(--mui-palette-background-default)',
               mt: 1,
               p: 1,
               textDecoration: 'none',
