@@ -1,5 +1,4 @@
-import { YKResponse } from '#models/ykResponse'
-import { api } from '#network/index'
+'use client'
 import { Comment } from '@mui/icons-material'
 import {
   Box,
@@ -20,6 +19,7 @@ import { useRouter } from 'next/router'
 import { type FC, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
+import { api } from '#network/index'
 
 interface RecipeRatingProps {
   t: TFunction

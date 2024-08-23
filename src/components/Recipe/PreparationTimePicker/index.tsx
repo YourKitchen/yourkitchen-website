@@ -1,3 +1,4 @@
+'use client'
 import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers'
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
 import { t } from 'i18next'

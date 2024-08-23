@@ -1,3 +1,4 @@
+'use client'
 import { Button, type ButtonProps, Popper } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import {

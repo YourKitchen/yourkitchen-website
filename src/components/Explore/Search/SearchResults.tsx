@@ -1,3 +1,4 @@
+'use client'
 import { ArrowDownward } from '@mui/icons-material'
 import {
   Badge,
@@ -21,8 +22,8 @@ import React, {
   useState,
 } from 'react'
 import useSWR from 'swr'
+import type { PublicRecipe } from '#models/publicRecipe'
 import type { YKResponse } from '#models/ykResponse'
-import type { PublicRecipe } from '#pages/recipes'
 import RecipeBox from '../RecipeBox'
 import GridSkeletonRecipeBox from './GridSkeletonBox'
 

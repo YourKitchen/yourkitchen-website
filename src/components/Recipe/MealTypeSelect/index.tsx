@@ -1,3 +1,4 @@
+'use client'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { MealType } from '@prisma/client'
 import { t } from 'i18next'

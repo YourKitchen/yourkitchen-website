@@ -41,12 +41,11 @@
     "accept-language": "^3.0.20",
     "axios": "^1.7.4",
     "fuzzball": "^2.1.2",
-    "green-analytics-js": "^1.1.14",
     "html-recipe-parser": "https://github.com/MakakWasTaken/html-recipe-parser.git#commit=bcc6efc8156f8e1f3f9ce2c2079d0c137d21fdcd",
     "i18next": "^23.14.0",
     "luxon": "^3.5.0",
     "next": "^14.2.6",
-    "next-auth": "^4.24.7",
+    "next-auth": "^5.0.0-beta.20",
     "next-i18next": "^15.3.1",
     "next-seo": "^6.5.0",
     "next-sitemap": "^4.2.3",
@@ -77,5 +76,5 @@
     "prisma": "^5.18.0",
     "typescript": "^5.5.4"
   },
-  "packageManager": "yarn@4.3.1"
+  "packageManager": "yarn@4.4.0"
 }

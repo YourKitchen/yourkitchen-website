@@ -1,3 +1,4 @@
+'use client'
 import { ArrowForward, Delete, Search } from '@mui/icons-material'
 import {
   Box,

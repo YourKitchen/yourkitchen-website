@@ -22,74 +22,67 @@ import { useRouter } from 'next/router'
 import type React from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Logo from '#assets/Logo-192x192.png'
+import { auth } from '#misc/auth'
+import MobileHeader from './MobileHeader'
+import UserMenu from './UserMenu'
 
-interface Page {
+export interface Page {
   label: string
   href: string
   authState?: 'authenticated' | 'unauthenticated'
 }
 
-export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { data: session, status } = useSession()
+export const Header: React.FC<React.PropsWithChildren<unknown>> = async () => {
+  const session = await auth()
+
+  // TODO: Change to next-translate for server side translations
   const { t } = useTranslation('header')
 
+  // TODO: Pass router through middleware
   const router = useRouter()
-  const navigation = useNavigation()
   const [scrollY, setScrollY] = useState(0)
 
-  const pages: Page[] = useMemo(
-    () =>
-      [
-        {
-          label: t('home'),
-          href: '/',
-        },
-        {
-          label: t('about'),
-          href: '/about',
-        },
-        {
-          label: t('recipes'),
-          href: '/recipes',
-        },
-        {
-          label: t('meal_plan'),
-          href: '/meal-plan',
-          authState: 'authenticated',
-        },
-      ].filter(
-        (page) => page.authState === undefined || page.authState === status,
-      ) as Page[],
-    [t, status],
-  )
+  const pages: Page[] = [
+    {
+      label: t('home'),
+      href: '/',
+    },
+    {
+      label: t('about'),
+      href: '/about',
+    },
+    {
+      label: t('recipes'),
+      href: '/recipes',
+    },
+    {
+      label: t('meal_plan'),
+      href: '/meal-plan',
+      authState: 'authenticated',
+    },
+  ].filter(
+    (page) =>
+      page.authState === undefined ||
+      page.authState === (session ? 'authenticated' : 'unauthenticated'),
+  ) as Page[]
 
-  const settings: Page[] = useMemo(
-    () =>
-      [
-        { label: t('settings'), href: '/settings', authState: 'authenticated' },
-        {
-          label: t('logout'),
-          href: '/auth/signout',
-          authState: 'authenticated',
-        },
-        {
-          label: t('get_started'),
-          href: '/auth/signin',
-          authState: 'unauthenticated',
-        },
-      ].filter(
-        (page) => page.authState === undefined || page.authState === status,
-      ) as Page[],
-    [t, status],
-  )
-
-  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null)
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null)
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    useState<null | HTMLElement>(null)
-
-  const isMenuOpen = Boolean(anchorElNav)
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
+  const settings: Page[] = [
+    { label: t('settings'), href: '/settings', authState: 'authenticated' },
+    {
+      label: t('logout'),
+      href: '/auth/signout',
+      authState: 'authenticated',
+    },
+    {
+      label: t('get_started'),
+      href: '/auth/signin',
+      authState: 'unauthenticated',
+    },
+  ].filter(
+    (page) =>
+      page.authState === undefined ||
+      page.authState === (session ? 'authenticated' : 'unauthenticated'),
+  ) as Page[]
 
   const onScroll = useCallback(() => {
     setScrollY(window.scrollY)
@@ -103,54 +96,6 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
       window.removeEventListener('scroll', onScroll)
     }
   }, [onScroll])
-
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget)
-  }
-  const handleToggleUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser((prev) => (prev ? null : event.currentTarget))
-  }
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null)
-  }
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null)
-  }
-
-  const handleMobileMenuClose = (): void => {
-    setMobileMoreAnchorEl(null)
-  }
-
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>): void => {
-    setMobileMoreAnchorEl(event.currentTarget)
-  }
-
-  const mobileMenuId = 'primary-menu-mobile'
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      {settings.map((page) => (
-        <MenuItem LinkComponent={Link} key={page.label} href={page.href}>
-          {page.label}
-        </MenuItem>
-      ))}
-    </Menu>
-  )
 
   return (
     <AppBar
@@ -194,42 +139,6 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
           >
             YourKitchen
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="navigation menu"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={isMenuOpen}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem LinkComponent={Link} key={page.label} href="">
-                  <Typography textAlign="center">{page.label}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
           <Typography
             variant="h5"
             noWrap
@@ -298,42 +207,7 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
               {t('create')}
             </Button>
             {session ? (
-              <>
-                <IconButton
-                  onClick={handleToggleUserMenu}
-                  sx={{
-                    width: '40px',
-                    height: '40px',
-                    p: 0,
-                    borderRadius: '20px',
-                  }}
-                >
-                  <Image
-                    referrerPolicy="no-referrer"
-                    width={40}
-                    height={40}
-                    style={{ borderRadius: '20px' }}
-                    alt={session.user.name || ''}
-                    src={session.user.image || ''}
-                  />
-                </IconButton>
-                <Menu
-                  id="user-menu"
-                  anchorEl={anchorElUser}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  {settings.map((page) => (
-                    <MenuItem
-                      key={page.label}
-                      LinkComponent={Link}
-                      href={page.href}
-                    >
-                      <Typography textAlign="center">{page.label}</Typography>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </>
+              <UserMenu user={session.user} settings={settings} />
             ) : (
               <>
                 {settings.length > 0 ? (
@@ -344,22 +218,9 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
               </>
             )}
           </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              sx={{ marginRight: '2vh' }}
-              aria-label="show more"
-              aria-haspopup="true"
-              aria-controls={mobileMenuId}
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
+          <MobileHeader pages={pages} settings={settings} />
         </Toolbar>
       </Box>
-      {renderMobileMenu}
     </AppBar>
   )
 }

@@ -1,5 +1,6 @@
 import { Box } from '@mui/material'
 import type React from 'react'
+import type { FC } from 'react'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -7,7 +8,7 @@ interface TabPanelProps {
   value: number
 }
 
-const TabPanel = (props: TabPanelProps) => {
+const TabPanel: FC<TabPanelProps> = async (props) => {
   const { children, value, index, ...other } = props
 
   return (

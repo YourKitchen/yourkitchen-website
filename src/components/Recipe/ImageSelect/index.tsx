@@ -1,5 +1,4 @@
-import type { YKResponse } from '#models/ykResponse'
-import { api } from '#network/index'
+'use client'
 import { CheckCircle, Delete } from '@mui/icons-material'
 import {
   Box,
@@ -25,6 +24,8 @@ import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 import { v4 } from 'uuid'
+import type { YKResponse } from '#models/ykResponse'
+import { api } from '#network/index'
 
 interface ImageSelectProps {
   t: TFunction

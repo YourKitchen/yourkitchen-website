@@ -1,6 +1,7 @@
+'use client'
 import { Box } from '@mui/material'
 import React, { type FC } from 'react'
-import type { PublicRecipe } from '#pages/recipes'
+import type { PublicRecipe } from '#models/publicRecipe'
 import RecipeBox from './RecipeBox'
 import SkeletonRecipeBox from './SkeletonRecipeBox'
 

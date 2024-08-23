@@ -7,7 +7,7 @@ export interface FlagProps {
   label?: string
 }
 
-const Flag: FC<FlagProps> = ({ isoCountry, label }) => {
+const Flag: FC<FlagProps> = async ({ isoCountry, label }) => {
   return (
     <Box sx={{ display: 'flex', my: 1, flexDirection: 'row' }}>
       <Image

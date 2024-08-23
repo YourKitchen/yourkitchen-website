@@ -3,7 +3,7 @@ import { Box, Chip, Link, Typography } from '@mui/material'
 import { Recipe, RecipeImage } from '@prisma/client'
 import Image from 'next/image'
 import React, { type FC, useMemo } from 'react'
-import type { PublicRecipe } from '#pages/recipes'
+import type { PublicRecipe } from '#models/publicRecipe'
 
 interface RecipeBoxProps {
   recipe: PublicRecipe
@@ -12,35 +12,25 @@ interface RecipeBoxProps {
 /**
  * Component to show recipe on Explore Page
  */
-const RecipeBox: FC<RecipeBoxProps> = ({ recipe }) => {
-  const combinedRating = useMemo(() => {
-    return recipe.ratings.reduce((prev, cur) => prev + cur.score, 0)
-  }, [recipe.ratings])
+const RecipeBox: FC<RecipeBoxProps> = async ({ recipe }) => {
+  const combinedRating = recipe.ratings.reduce(
+    (prev, cur) => prev + cur.score,
+    0,
+  )
 
-  const ratingColor = useMemo((): 'success' | 'primary' | 'error' => {
-    if (combinedRating > 0) {
-      return 'success'
-    }
-    if (combinedRating < 0) {
-      return 'error'
-    }
+  let ratingColor: 'success' | 'primary' | 'error' = 'primary'
+  let ratingIcon: JSX.Element = <Circle />
 
-    return 'primary'
-  }, [combinedRating])
+  if (combinedRating > 0) {
+    ratingColor = 'success'
+    ratingIcon = <ThumbUp />
+  }
+  if (combinedRating < 0) {
+    ratingColor = 'error'
+    ratingIcon = <ThumbDown />
+  }
 
-  const ratingIcon = useMemo((): JSX.Element | undefined => {
-    if (combinedRating > 0) {
-      return <ThumbUp />
-    }
-    if (combinedRating < 0) {
-      return <ThumbDown />
-    }
-    return <Circle />
-  }, [combinedRating])
-
-  const image = useMemo(() => {
-    return recipe.image?.[0] ?? null
-  }, [recipe.image])
+  const image = recipe.image?.[0] ?? null
 
   return (
     <Link

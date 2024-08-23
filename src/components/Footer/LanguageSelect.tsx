@@ -2,6 +2,7 @@ import { MenuItem, Select } from '@mui/material'
 import router, { useRouter } from 'next/router'
 import Flag from './Flag'
 
+// TODO: Update to next-translate
 const LanguageSelect = () => {
   const { pathname, asPath, query, locale: defaultLocale } = useRouter()
 

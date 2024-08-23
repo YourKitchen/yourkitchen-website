@@ -1,3 +1,4 @@
+'use client'
 import { CloudUpload } from '@mui/icons-material'
 import {
   Box,

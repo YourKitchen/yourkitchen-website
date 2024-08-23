@@ -24,7 +24,8 @@
       "#contexts/*": ["./src/contexts/*"],
       "#network/*": ["./src/network/*"],
       "#utils/*": ["./src/utils/*"],
-      "#misc/*": ["./src/misc/*"]
+      "#misc/*": ["./src/misc/*"],
+      "#prisma": ["./src/misc/prisma.ts"]
     }
   },
   "include": [

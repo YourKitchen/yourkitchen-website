@@ -2,11 +2,11 @@ import { Box, Link, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import type { FC, ReactElement } from 'react'
-// src/components/Footer.tsx
 import yourkitchenLogo from '#assets/Logo-192x192.png'
 import LanguageSelect from './LanguageSelect'
 
-export const Footer: FC = (): ReactElement => {
+export const Footer: FC = async () => {
+  // TODO: Change to getTranslations
   const { t } = useTranslation('footer')
 
   return (

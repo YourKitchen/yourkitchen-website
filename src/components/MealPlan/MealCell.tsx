@@ -1,3 +1,4 @@
+'use client'
 import { Edit } from '@mui/icons-material'
 import { Box, Button, Link, Rating, Typography } from '@mui/material'
 import { Rating as PrismaRating, Recipe, RecipeImage } from '@prisma/client'

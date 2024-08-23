@@ -6,7 +6,7 @@ import {
 } from '@mui/material'
 import React, { type FC } from 'react'
 
-const YKTextField: FC<TextFieldProps> = (props) => {
+const YKTextField: FC<TextFieldProps> = async (props) => {
   return (
     <FormControl fullWidth key={`textfield-${props.key}-control`}>
       <TextField label={props.placeholder} {...props} />
