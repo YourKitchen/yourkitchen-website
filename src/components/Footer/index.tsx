@@ -1,13 +1,12 @@
 import { Box, Link, Typography } from '@mui/material'
-import { useTranslation } from 'next-i18next'
+import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import type { FC, ReactElement } from 'react'
 import yourkitchenLogo from '#assets/Logo-192x192.png'
 import LanguageSelect from './LanguageSelect'
 
-export const Footer: FC = async () => {
-  // TODO: Change to getTranslations
-  const { t } = useTranslation('footer')
+const Footer: FC<{ locale: string }> = async ({ locale }) => {
+  const t = await getTranslations('footer')
 
   return (
     <Box
@@ -66,7 +65,7 @@ export const Footer: FC = async () => {
             alignItems: 'center',
           }}
         >
-          <LanguageSelect />
+          <LanguageSelect locale={locale} />
           <Link href="/cookies" variant="body2">
             {t('cookie_policy')}
           </Link>

@@ -2,7 +2,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "target": "es2022",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -17,22 +21,48 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "#assets/*": ["./src/assets/*"],
-      "#components/*": ["./src/components/*"],
-      "#pages/*": ["./pages/*"],
-      "#models/*": ["./src/models/*"],
-      "#contexts/*": ["./src/contexts/*"],
-      "#network/*": ["./src/network/*"],
-      "#utils/*": ["./src/utils/*"],
-      "#misc/*": ["./src/misc/*"],
-      "#prisma": ["./src/misc/prisma.ts"]
-    }
+      "#assets/*": [
+        "./src/assets/*"
+      ],
+      "#components/*": [
+        "./src/components/*"
+      ],
+      "#pages/*": [
+        "./pages/*"
+      ],
+      "#models/*": [
+        "./src/models/*"
+      ],
+      "#contexts/*": [
+        "./src/contexts/*"
+      ],
+      "#network/*": [
+        "./src/network/*"
+      ],
+      "#utils/*": [
+        "./src/utils/*"
+      ],
+      "#misc/*": [
+        "./src/misc/*"
+      ],
+      "#prisma": [
+        "./src/misc/prisma.ts"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "scripts/translate-site.mts"
+    "next-env.d.ts",
+    "scripts/translate-site.mts",
+    ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

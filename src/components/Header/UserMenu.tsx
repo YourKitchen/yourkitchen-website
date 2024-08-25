@@ -5,7 +5,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type React from 'react'
 import { type FC, useState } from 'react'
-import type { Page } from '.'
+
+interface Page {
+  label: string
+  href: string
+  authState?: 'authenticated' | 'unauthenticated'
+}
 
 interface UserMenuProps {
   user: Session['user']

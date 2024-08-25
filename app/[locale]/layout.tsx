@@ -1,55 +1,28 @@
-import { Box, CssBaseline } from '@mui/material'
-import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
-import React, { Component, type FC, type PropsWithChildren } from 'react'
-import { Toaster, toast } from 'sonner'
-import { SWRConfig } from 'swr'
+import { CircularProgress, CssBaseline } from '@mui/material'
+import { Box } from '@mui/system'
+import { SessionProvider } from 'next-auth/react'
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages } from 'next-intl/server'
+import React, { type FC, type PropsWithChildren, Suspense } from 'react'
 import Footer from '#components/Footer'
 import Header from '#components/Header'
-import theme from '#misc/theme'
-import { api } from '#network/index'
+import { auth } from '#misc/auth'
 
-const layout: FC<PropsWithChildren> = ({ children }) => {
+const layout: FC<PropsWithChildren & { params: { locale?: string } }> = async ({
+  children,
+  params,
+}) => {
+  const messages = await getMessages({ locale: params.locale })
+  const session = await auth()
+
   return (
-    <CssVarsProvider defaultMode="system" theme={theme}>
-      <CssBaseline />
-
-      <SWRConfig
-        value={{
-          fetcher: async (args) => {
-            if (typeof args === 'string') {
-              const response = await api.get(`/database/${args}`)
-              return response.data
-            }
-            const { url, ...rest } = args
-
-            const response = await api.get(`/database/${url}`, {
-              params: rest,
-            })
-            return response.data
-          },
-          errorRetryCount: 1, // only retry once, then throw error
-          onErrorRetry: (error, key: string) => {
-            const matches = /#url:"(\w*)"/g.exec(key)
-            let formattedKey = key
-            if (matches !== null && matches.length > 1) {
-              formattedKey = matches[1]
-            }
-            toast.error(
-              `${formattedKey} failed with error: ${
-                error?.response?.data?.message || error?.message || error
-              }`,
-            )
-          },
-          revalidateOnFocus: false,
-        }}
-      >
+    <NextIntlClientProvider locale={params.locale ?? 'en'} messages={messages}>
+      <SessionProvider session={session}>
         <Header />
         <Box sx={{ minHeight: 'calc(100vh - 72.5px)' }}>{children}</Box>
-        <Footer />
-        <Toaster richColors closeButton />
-      </SWRConfig>
-      <Toaster richColors closeButton theme={'system'} />
-    </CssVarsProvider>
+        <Footer locale={params.locale ?? 'en'} />
+      </SessionProvider>
+    </NextIntlClientProvider>
   )
 }
 

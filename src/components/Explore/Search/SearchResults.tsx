@@ -13,7 +13,7 @@ import {
   debounce,
 } from '@mui/material'
 import { type Cuisine, MealType } from '@prisma/client'
-import { useTranslation } from 'next-i18next'
+import { useTranslations } from 'next-intl'
 import React, {
   type FC,
   type MouseEvent,
@@ -121,7 +121,7 @@ const FilterPopper: FC<PropsWithChildren<FilterPopperProps>> = ({
 
 const SearchResults: FC<SearchResultsProps> = ({ value, cuisines }) => {
   // Translations
-  const { t } = useTranslation('common')
+  const t = useTranslations('common')
 
   // Filters
   const [cuisine, setCuisine] = useState<Cuisine>()

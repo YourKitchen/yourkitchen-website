@@ -3,9 +3,9 @@ import type { NextRequest } from 'next/server'
 
 const getBaseUrl = () => {
   const map = {
-    development: 'http://localhost:3000',
-    production: 'https://yourkitchen.io',
-    test: 'https://dev.yourkitchen.io',
+    development: 'http://localhost:3000/api',
+    production: 'https://yourkitchen.io/api',
+    test: 'https://dev.yourkitchen.io/api',
   }
   return map[process.env.NEXT_PUBLIC_ENV as keyof typeof map]
 }

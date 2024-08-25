@@ -12,7 +12,7 @@ interface RecipeBoxProps {
 /**
  * Component to show recipe on Explore Page
  */
-const RecipeBox: FC<RecipeBoxProps> = async ({ recipe }) => {
+const RecipeBox: FC<RecipeBoxProps> = ({ recipe }) => {
   const combinedRating = recipe.ratings.reduce(
     (prev, cur) => prev + cur.score,
     0,

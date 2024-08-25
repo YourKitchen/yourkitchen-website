@@ -1,10 +1,14 @@
-import { CssBaseline } from '@mui/material'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
-import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
-import { Toaster } from 'sonner'
-import theme from '#misc/theme'
+import type { Metadata } from 'next'
 
-export const RootLayout = ({
+export const metadata: Metadata = {
+  title: {
+    template: '%s - YourKitchen',
+    default: 'YourKitchen',
+  },
+}
+
+const RootLayout = ({
   children,
 }: {
   children: React.ReactNode

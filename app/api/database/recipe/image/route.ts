@@ -51,10 +51,3 @@ export const POST = validatePermissions(
     })
   },
 )
-
-// TODO: Check that body parser still works with app router
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}

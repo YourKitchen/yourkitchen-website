@@ -1,46 +1,34 @@
-import {
-  Add,
-  Menu as MenuIcon,
-  MoreVert as MoreIcon,
-} from '@mui/icons-material'
+import { Add } from '@mui/icons-material'
 import {
   AppBar,
   Box,
   Button,
-  IconButton,
   Link,
-  Menu,
-  MenuItem,
   Toolbar,
   Typography,
+  styled,
 } from '@mui/material'
-import { useSession } from 'next-auth/react'
-import { useTranslation } from 'next-i18next'
+import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
-import { useRouter as useNavigation } from 'next/navigation'
-import { useRouter } from 'next/router'
 import type React from 'react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import type { FC } from 'react'
 import Logo from '#assets/Logo-192x192.png'
 import { auth } from '#misc/auth'
 import MobileHeader from './MobileHeader'
 import UserMenu from './UserMenu'
 
-export interface Page {
+interface Page {
   label: string
   href: string
   authState?: 'authenticated' | 'unauthenticated'
 }
 
-export const Header: React.FC<React.PropsWithChildren<unknown>> = async () => {
+const Header: FC = async () => {
   const session = await auth()
 
-  // TODO: Change to next-translate for server side translations
-  const { t } = useTranslation('header')
+  const t = await getTranslations('header')
 
-  // TODO: Pass router through middleware
-  const router = useRouter()
-  const [scrollY, setScrollY] = useState(0)
+  // const { scrollY } = useScroll()
 
   const pages: Page[] = [
     {
@@ -66,6 +54,15 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = async () => {
       page.authState === (session ? 'authenticated' : 'unauthenticated'),
   ) as Page[]
 
+  const getLink = (page: Page) => {
+    if (page.authState === 'authenticated') {
+      if (!session) {
+        return `/auth/signin?callbackUrl=${page.href}`
+      }
+    }
+    return page.href
+  }
+
   const settings: Page[] = [
     { label: t('settings'), href: '/settings', authState: 'authenticated' },
     {
@@ -84,28 +81,16 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = async () => {
       page.authState === (session ? 'authenticated' : 'unauthenticated'),
   ) as Page[]
 
-  const onScroll = useCallback(() => {
-    setScrollY(window.scrollY)
-  }, [])
-
-  useEffect(() => {
-    //add eventlistener to window
-    window.addEventListener('scroll', onScroll, { passive: true })
-    // remove event on unmount to prevent a memory leak with the cleanup
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-    }
-  }, [onScroll])
-
   return (
     <AppBar
       position="sticky"
       sx={{
         backdropFilter: 'blur(7px)',
         backgroundColor:
-          scrollY < 30
-            ? 'transparent'
-            : 'var(--mui-palette-background-default)',
+          // scrollY.get() < 30
+          //   ? 'transparent'
+          //   :
+          'var(--mui-palette-background-default)',
         backgroundImage: 'none',
         color: 'var(--mui-palette-text-primary)',
         transition: '0.3s ease-in-out',
@@ -114,7 +99,15 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = async () => {
     >
       <Box sx={{ margin: '0 15px' }}>
         <Toolbar disableGutters>
-          <Link href="/">
+          <Link
+            sx={{
+              display: {
+                xs: 'none',
+                sm: 'flex',
+              },
+            }}
+            href="/"
+          >
             <Image
               width={40}
               height={40}
@@ -139,33 +132,18 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = async () => {
           >
             YourKitchen
           </Typography>
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontWeight: 700,
-              letterSpacing: '.1rem',
-              textDecoration: 'none',
-            }}
-          >
-            YourKitchen
-          </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Link
                 key={page.label}
-                href={page.href}
+                href={getLink(page)}
                 sx={{
                   mx: 1,
                   textAlign: 'center',
                   display: 'block',
                   position: 'relative',
                   color: 'var(--mui-palette-text-primary)',
+                  textDecoration: 'none',
                   '&:hover': {
                     backgroundColor: 'transparent',
                     '&:after': {
@@ -182,7 +160,6 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = async () => {
                     height: '4px',
                     borderRadius: '2px',
                     backgroundColor: 'var(--mui-palette-primary-main)',
-                    width: router.pathname === page.href ? '100%' : '0%',
                   },
                 }}
               >
@@ -194,14 +171,32 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = async () => {
           <Box
             sx={{
               height: '40.5px',
-              gap: '8px',
+              gap: 2,
               display: { xs: 'none', md: 'flex' },
             }}
           >
             <Button
-              sx={{ display: 'flex', gap: 1 }}
+              sx={{
+                display: 'flex',
+                gap: 1,
+                backgroundColor: 'var(--mui-palette-primary-main)',
+                color: 'var(--mui-palette-primary-contrastText)',
+                borderRadius: '13px',
+                padding: '8px 16px',
+
+                ':hover': {
+                  backgroundColor: 'var(--mui-palette-primary-main)',
+                },
+                ':active': {
+                  backgroundColor: 'var(--mui-palette-primary-dark)',
+                },
+              }}
               variant="contained"
-              href={'/recipe/create'}
+              href={getLink({
+                href: '/recipe/create',
+                label: t('create'),
+                authState: 'authenticated',
+              })}
             >
               <Add />
               {t('create')}
@@ -211,9 +206,24 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = async () => {
             ) : (
               <>
                 {settings.length > 0 ? (
-                  <Link href={settings[0].href} sx={{ display: 'block' }}>
+                  <Button
+                    href={getLink(settings[0])}
+                    sx={{
+                      display: 'block',
+                      color: 'var(--mui-palette-primary-main)',
+                      borderRadius: '13px',
+                      padding: '8px 16px',
+
+                      ':hover': {
+                        color: 'var(--mui-palette-primary-main)',
+                      },
+                      ':active': {
+                        color: 'var(--mui-palette-primary-dark)',
+                      },
+                    }}
+                  >
                     {settings[0].label}
-                  </Link>
+                  </Button>
                 ) : null}
               </>
             )}

@@ -1,3 +1,4 @@
+'use client'
 import { Menu as MenuIcon, More } from '@mui/icons-material'
 import {
   Box,
@@ -10,7 +11,12 @@ import {
 import { pages } from 'next/dist/build/templates/app-page'
 import type React from 'react'
 import { type FC, useState } from 'react'
-import type { Page } from '.'
+
+interface Page {
+  label: string
+  href: string
+  authState?: 'authenticated' | 'unauthenticated'
+}
 
 interface MobileHeaderProps {
   pages: Page[]
@@ -55,6 +61,38 @@ const MobileHeader: FC<MobileHeaderProps> = ({ settings, pages }) => {
         >
           <MenuIcon />
         </IconButton>
+        <Typography
+          variant="h5"
+          noWrap
+          component="a"
+          href="/"
+          sx={{
+            mr: 2,
+            display: { xs: 'flex', md: 'none' },
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexGrow: 1,
+            fontWeight: 700,
+            letterSpacing: '.1rem',
+            textDecoration: 'none',
+            ':visited, :active, :hover': {
+              color: 'var(--mui-palette-text-primary)',
+            },
+          }}
+        >
+          YourKitchen
+        </Typography>
+        <IconButton
+          size="large"
+          sx={{ marginRight: '2vh' }}
+          aria-label="show more"
+          aria-haspopup="true"
+          aria-controls={mobileMenuId}
+          onClick={handleMobileMenuOpen}
+          color="inherit"
+        >
+          <More />
+        </IconButton>
         <Menu
           id="menu-appbar"
           anchorEl={anchorElNav}
@@ -79,41 +117,27 @@ const MobileHeader: FC<MobileHeaderProps> = ({ settings, pages }) => {
             </MenuItem>
           ))}
         </Menu>
-      </Box>
-      <Menu
-        anchorEl={mobileMoreAnchorEl}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        id={mobileMenuId}
-        keepMounted
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={isMobileMenuOpen}
-        onClose={handleMobileMenuClose}
-      >
-        {settings.map((page) => (
-          <MenuItem LinkComponent={Link} key={page.label} href={page.href}>
-            {page.label}
-          </MenuItem>
-        ))}
-      </Menu>
-
-      <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-        <IconButton
-          size="large"
-          sx={{ marginRight: '2vh' }}
-          aria-label="show more"
-          aria-haspopup="true"
-          aria-controls={mobileMenuId}
-          onClick={handleMobileMenuOpen}
-          color="inherit"
+        <Menu
+          anchorEl={mobileMoreAnchorEl}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          id={mobileMenuId}
+          keepMounted
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={isMobileMenuOpen}
+          onClose={handleMobileMenuClose}
         >
-          <More />
-        </IconButton>
+          {settings.map((page) => (
+            <MenuItem LinkComponent={Link} key={page.label} href={page.href}>
+              {page.label}
+            </MenuItem>
+          ))}
+        </Menu>
       </Box>
     </>
   )

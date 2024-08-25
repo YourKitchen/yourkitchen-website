@@ -8,7 +8,7 @@ import {
 import { Cabin } from 'next/font/google'
 import NextLink from 'next/link'
 import type { LinkProps } from 'next/link'
-import { type FC, forwardRef } from 'react'
+import { type FC, type ForwardedRef, forwardRef } from 'react'
 
 export const roboto = Cabin({
   weight: ['400', '500', '700'],
@@ -16,9 +16,11 @@ export const roboto = Cabin({
   display: 'swap',
 })
 
-const LinkBehaviour: FC<LinkProps> = (props) => {
-  return <NextLink {...props} />
-}
+const LinkBehaviour = forwardRef(
+  (props: LinkProps, ref: ForwardedRef<HTMLAnchorElement>) => {
+    return <NextLink ref={ref} {...props} />
+  },
+)
 
 const defaultThemeOptions: CssVarsThemeOptions = {
   colorSchemes: {
@@ -64,6 +66,15 @@ const defaultThemeOptions: CssVarsThemeOptions = {
         root: {
           textDecoration: 'none',
           color: 'var(--mui-palette-text-primary)',
+          ':active': {
+            color: 'inherit',
+          },
+          ':hover': {
+            color: 'inherit',
+          },
+          ':visited': {
+            color: 'inherit',
+          },
         },
       },
     },
@@ -89,9 +100,11 @@ const defaultThemeOptions: CssVarsThemeOptions = {
     },
     MuiButton: {
       styleOverrides: {
-        root: {
-          borderRadius: '13px',
-          padding: '8px 16px',
+        root: () => {
+          return {
+            borderRadius: '13px',
+            padding: '8px 16px',
+          }
         },
       },
     },

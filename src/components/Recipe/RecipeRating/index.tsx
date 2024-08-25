@@ -13,12 +13,12 @@ import {
 } from '@mui/material'
 import type { Rating, Recipe } from '@prisma/client'
 import { useSession } from 'next-auth/react'
-import type { TFunction } from 'next-i18next'
 import { useRouter as useNavigation } from 'next/navigation'
 import { useRouter } from 'next/router'
 import { type FC, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
+import type { TFunction } from '#models/TFunction'
 import { api } from '#network/index'
 
 interface RecipeRatingProps {
