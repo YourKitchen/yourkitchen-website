@@ -81,6 +81,7 @@ const RecipeBox: FC<RecipeBoxProps> = ({ recipe }) => {
           '[data-mui-color-scheme="dark"] &': {
             background: 'linear-gradient(0deg, rgba(0,0,0,0.25), transparent)',
           },
+          textWrap: 'balance',
         }}
       >
         <Box>

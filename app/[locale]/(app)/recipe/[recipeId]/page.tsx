@@ -17,11 +17,10 @@ import type {
 } from '@prisma/client'
 import { DateTime } from 'luxon'
 import type { Session } from 'next-auth'
+import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { NextSeo, RecipeJsonLd } from 'next-seo'
 import Image from 'next/image'
-import { useParams } from 'next/navigation'
-import { useRouter } from 'next/router'
 import { type FC, useCallback, useMemo, useState } from 'react'
 import useSWR from 'swr'
 import RecipeRating from '#components/Recipe/RecipeRating'
@@ -78,16 +77,14 @@ const IngredientItem: FC<IngredientItemProps> = ({
 /**
  * Visual representation of a recipe
  */
-const RecipePage: FC = async () => {
-  const { recipeId } = useParams<{ recipeId: string }>()
-
+const RecipePage: FC<{ params: { recipeId: string } }> = ({ params }) => {
   // Translations
   const t = useTranslations('common')
   const { data: recipe } = useSWR<YKResponse<RecipePageProps['recipe']>>(
-    `recipe/${recipeId}`,
+    `recipe/${params.recipeId}`,
   )
 
-  const session = await auth()
+  const { data: session } = useSession()
   const user = session?.user
 
   const [completedStep, setCompletedStep] = useState(-1)
@@ -217,7 +214,7 @@ const RecipePage: FC = async () => {
           recipe.data.description ?? t('recipe_page_default_description')
         }
       />
-      <RecipeJsonLd
+      {/* <RecipeJsonLd
         name={recipe.data.name}
         authorName={recipe.data.owner.name ?? 'YourKitchen'} // It is required, and will often be set.
         description={
@@ -241,7 +238,7 @@ const RecipePage: FC = async () => {
           text: step,
           url: `${SITE_URL}/recipe/${recipe.data.id}#step${index}`,
         }))}
-      />
+      /> */}
       <Box
         sx={{
           width: { xs: '100%', sm: '85%', md: '70%', lg: '60%' },

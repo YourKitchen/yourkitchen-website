@@ -179,19 +179,17 @@ const Header: FC = async () => {
               sx={{
                 display: 'flex',
                 gap: 1,
-                backgroundColor: 'var(--mui-palette-primary-main)',
-                color: 'var(--mui-palette-primary-contrastText)',
                 borderRadius: '13px',
-                padding: '8px 16px',
 
+                color: 'var(--mui-palette-primary-main)',
                 ':hover': {
-                  backgroundColor: 'var(--mui-palette-primary-main)',
+                  color: 'var(--mui-palette-primary-main)',
                 },
                 ':active': {
-                  backgroundColor: 'var(--mui-palette-primary-dark)',
+                  color: 'var(--mui-palette-primary-dark)',
                 },
+                padding: '8px 16px',
               }}
-              variant="contained"
               href={getLink({
                 href: '/recipe/create',
                 label: t('create'),
@@ -210,17 +208,18 @@ const Header: FC = async () => {
                     href={getLink(settings[0])}
                     sx={{
                       display: 'block',
-                      color: 'var(--mui-palette-primary-main)',
                       borderRadius: '13px',
                       padding: '8px 16px',
-
+                      backgroundColor: 'var(--mui-palette-primary-main)',
+                      color: 'var(--mui-palette-primary-contrastText)',
                       ':hover': {
-                        color: 'var(--mui-palette-primary-main)',
+                        backgroundColor: 'var(--mui-palette-primary-main)',
                       },
                       ':active': {
-                        color: 'var(--mui-palette-primary-dark)',
+                        backgroundColor: 'var(--mui-palette-primary-dark)',
                       },
                     }}
+                    variant="contained"
                   >
                     {settings[0].label}
                   </Button>

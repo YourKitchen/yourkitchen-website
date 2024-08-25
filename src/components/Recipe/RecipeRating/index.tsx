@@ -13,8 +13,7 @@ import {
 } from '@mui/material'
 import type { Rating, Recipe } from '@prisma/client'
 import { useSession } from 'next-auth/react'
-import { useRouter as useNavigation } from 'next/navigation'
-import { useRouter } from 'next/router'
+import { usePathname, useRouter } from 'next/navigation'
 import { type FC, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
@@ -29,8 +28,8 @@ interface RecipeRatingProps {
 const RecipeRating: FC<RecipeRatingProps> = ({ t, recipe }) => {
   const { data: session } = useSession()
 
-  const router = useRouter()
-  const navigation = useNavigation()
+  const navigation = useRouter()
+  const pathname = usePathname()
 
   // Get the user's rating for this recipe if any.
   const { data: rating, mutate } = useSWR<Rating | null>(
@@ -95,7 +94,7 @@ const RecipeRating: FC<RecipeRatingProps> = ({ t, recipe }) => {
               size="large"
               onChange={(_e, newValue) => {
                 if (!session) {
-                  navigation.push(`/auth/signin?callbackUrl=${router.pathname}`)
+                  navigation.push(`/auth/signin?callbackUrl=${pathname}`)
                   return
                 }
                 setDialogValue((prev) => ({ ...prev, score: newValue }))
@@ -131,7 +130,7 @@ const RecipeRating: FC<RecipeRatingProps> = ({ t, recipe }) => {
         size="large"
         onChange={(_e, newValue) => {
           if (!session) {
-            navigation.push(`/auth/signin?callbackUrl=${router.pathname}`)
+            navigation.push(`/auth/signin?callbackUrl=${pathname}`)
             return
           }
           handleChange(newValue)
@@ -141,7 +140,7 @@ const RecipeRating: FC<RecipeRatingProps> = ({ t, recipe }) => {
       <IconButton
         onClick={() => {
           if (!session) {
-            navigation.push(`/auth/signin?callbackUrl=${router.pathname}`)
+            navigation.push(`/auth/signin?callbackUrl=${pathname}`)
             return
           }
           setCommentDialogOpen(true)
