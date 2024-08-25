@@ -1,8 +1,7 @@
 import type { Recipe, RecipeImage } from '@prisma/client'
 import type { GetServerSideProps } from 'next'
+import type { NextRequest } from 'next/server'
 import prisma from '#prisma'
-
-const RecipesSitemap = () => {}
 
 const locales = ['da', 'en', 'de', 'es']
 const SITE_URL = process.env.SITE_URL ?? 'https://yourkitchen.io'
@@ -42,7 +41,7 @@ function generateSiteMap(
  `
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ res }) => {
+export const GET = async (req: NextRequest) => {
   const recipes = await prisma.recipe.findMany({
     select: {
       id: true,
@@ -58,14 +57,5 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   // We generate the XML sitemap with the posts data
   const sitemap = generateSiteMap(recipes)
 
-  res.setHeader('Content-Type', 'text/xml')
-  // we send the XML to the browser
-  res.write(sitemap)
-  res.end()
-
-  return {
-    props: {},
-  }
+  return new Response(sitemap, { headers: { 'Content-Type': 'text/xml' } })
 }
-
-export default RecipesSitemap
