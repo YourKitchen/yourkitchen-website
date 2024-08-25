@@ -48,6 +48,13 @@ const RecipeBox: FC<RecipeBoxProps> = ({ recipe }) => {
         boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 12px;',
         color: 'var(--mui-palette-text-primary)',
 
+        transition: 'scale 0.24s',
+
+        scale: 0.9,
+        ':hover': {
+          scale: 1.0,
+        },
+
         '[data-mui-color-scheme="dark"] &': {
           boxShadow: 'none',
         },
