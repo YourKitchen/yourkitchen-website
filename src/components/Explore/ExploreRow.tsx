@@ -1,6 +1,6 @@
-import { Box } from '@mui/material'
-import React, { type FC } from 'react'
 import type { PublicRecipe } from '#models/publicRecipe'
+import { Box } from '@mui/material'
+import type { FC } from 'react'
 import RecipeBox from './RecipeBox'
 
 interface ExploreRowProps {

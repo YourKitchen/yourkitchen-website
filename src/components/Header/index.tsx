@@ -1,19 +1,10 @@
-import { Add } from '@mui/icons-material'
-import {
-  AppBar,
-  Box,
-  Button,
-  Link,
-  Toolbar,
-  Typography,
-  styled,
-} from '@mui/material'
-import { getTranslations } from 'next-intl/server'
-import Image from 'next/image'
-import type React from 'react'
-import type { FC } from 'react'
 import Logo from '#assets/Logo-192x192.png'
 import { auth } from '#misc/auth'
+import { Add } from '@mui/icons-material'
+import { AppBar, Box, Button, Link, Toolbar, Typography } from '@mui/material'
+import { getTranslations } from 'next-intl/server'
+import Image from 'next/image'
+import type { FC } from 'react'
 import MobileHeader from './MobileHeader'
 import UserMenu from './UserMenu'
 

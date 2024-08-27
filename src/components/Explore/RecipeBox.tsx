@@ -1,9 +1,7 @@
-import { Circle, HorizontalRule, ThumbDown, ThumbUp } from '@mui/icons-material'
-import { Box, Chip, Link, Typography } from '@mui/material'
-import { Recipe, RecipeImage } from '@prisma/client'
-import Image from 'next/image'
-import React, { type FC, useMemo } from 'react'
 import type { PublicRecipe } from '#models/publicRecipe'
+import { Circle, ThumbDown, ThumbUp } from '@mui/icons-material'
+import { Box, Chip, Link, Typography } from '@mui/material'
+import type { FC } from 'react'
 
 interface RecipeBoxProps {
   recipe: PublicRecipe

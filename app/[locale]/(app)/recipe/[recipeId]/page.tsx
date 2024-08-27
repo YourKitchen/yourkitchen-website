@@ -1,4 +1,8 @@
 'use client'
+import RecipeRating from '#components/Recipe/RecipeRating'
+import YKChip from '#components/Recipe/YKChip'
+import type { PublicRecipe } from '#models/publicRecipe'
+import type { YKResponse } from '#models/ykResponse'
 import { ExpandLess, ExpandMore } from '@mui/icons-material'
 import {
   Box,
@@ -19,16 +23,10 @@ import { DateTime } from 'luxon'
 import type { Session } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import { NextSeo, RecipeJsonLd } from 'next-seo'
+import { NextSeo } from 'next-seo'
 import Image from 'next/image'
 import { type FC, useCallback, useMemo, useState } from 'react'
 import useSWR from 'swr'
-import RecipeRating from '#components/Recipe/RecipeRating'
-import YKChip from '#components/Recipe/YKChip'
-import { auth } from '#misc/auth'
-import type { PublicRecipe } from '#models/publicRecipe'
-import type { YKResponse } from '#models/ykResponse'
-import { api } from '#network/index'
 
 const SITE_URL = process.env.SITE_URL ?? 'https://yourkitchen.io'
 

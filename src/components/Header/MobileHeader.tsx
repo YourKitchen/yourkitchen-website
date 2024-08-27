@@ -9,8 +9,10 @@ import {
   Typography,
 } from '@mui/material'
 import { pages } from 'next/dist/build/templates/app-page'
+import Image from 'next/image'
 import type React from 'react'
 import { type FC, useState } from 'react'
+import Logo from '#assets/Logo-192x192.png'
 
 interface Page {
   label: string
@@ -61,27 +63,23 @@ const MobileHeader: FC<MobileHeaderProps> = ({ settings, pages }) => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography
-          variant="h5"
-          noWrap
-          component="a"
-          href="/"
+        <Link
           sx={{
-            mr: 2,
-            display: { xs: 'flex', md: 'none' },
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexGrow: 1,
-            fontWeight: 700,
-            letterSpacing: '.1rem',
-            textDecoration: 'none',
-            ':visited, :active, :hover': {
-              color: 'var(--mui-palette-text-primary)',
+            display: {
+              xs: 'none',
+              sm: 'flex',
             },
           }}
+          href="/"
         >
-          YourKitchen
-        </Typography>
+          <Image
+            width={40}
+            height={40}
+            style={{ borderRadius: '20px' }}
+            src={Logo}
+            alt="YourKitchen Logo"
+          />
+        </Link>
         <IconButton
           size="large"
           sx={{ marginRight: '2vh' }}

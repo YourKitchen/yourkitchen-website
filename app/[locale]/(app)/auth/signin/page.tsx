@@ -1,8 +1,7 @@
-import { Box, Button, TextField, Typography } from '@mui/material'
-import type { Metadata } from 'next'
-import { signIn } from 'next-auth/react'
-import { getTranslations } from 'next-intl/server'
 import { auth } from '#misc/auth'
+import { Box, Typography } from '@mui/material'
+import type { Metadata } from 'next'
+import { getTranslations } from 'next-intl/server'
 import Providers from '../../../../../src/components/Auth/Providers'
 
 export const metadata: Metadata = {

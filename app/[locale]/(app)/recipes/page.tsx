@@ -1,4 +1,8 @@
 'use client'
+import ExploreRow from '#components/Explore/ExploreRow'
+import SearchResults from '#components/Explore/Search/SearchResults'
+import type { PublicRecipe } from '#models/publicRecipe'
+import type { YKResponse } from '#models/ykResponse'
 import {
   Box,
   MenuItem,
@@ -8,15 +12,9 @@ import {
   debounce,
 } from '@mui/material'
 import { type Cuisine, MealType } from '@prisma/client'
-import type { GetStaticProps } from 'next'
 import { useTranslations } from 'next-intl'
-import { SiteLinksSearchBoxJsonLd } from 'next-seo'
 import { type FC, useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
-import ExploreRow from '#components/Explore/ExploreRow'
-import SearchResults from '#components/Explore/Search/SearchResults'
-import type { PublicRecipe } from '#models/publicRecipe'
-import type { YKResponse } from '#models/ykResponse'
 
 interface RecipesPageProps {
   params: {

@@ -1,6 +1,5 @@
-import React, { type FC, useEffect } from 'react'
-import { toast } from 'sonner'
 import { signOut } from '#misc/auth'
+import type { FC } from 'react'
 
 const SignoutPage: FC = async () => {
   await signOut({

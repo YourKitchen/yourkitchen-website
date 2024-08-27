@@ -1,7 +1,6 @@
-import type { Recipe, RecipeImage } from '@prisma/client'
-import type { GetServerSideProps } from 'next'
-import type { NextRequest } from 'next/server'
 import prisma from '#prisma'
+import type { Recipe, RecipeImage } from '@prisma/client'
+import type { NextRequest } from 'next/server'
 
 const locales = ['da', 'en', 'de', 'es']
 const SITE_URL = process.env.SITE_URL ?? 'https://yourkitchen.io'

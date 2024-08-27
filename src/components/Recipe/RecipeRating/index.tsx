@@ -1,4 +1,6 @@
 'use client'
+import type { TFunction } from '#models/TFunction'
+import { api } from '#network/index'
 import { Comment } from '@mui/icons-material'
 import {
   Box,
@@ -17,8 +19,6 @@ import { usePathname, useRouter } from 'next/navigation'
 import { type FC, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
-import type { TFunction } from '#models/TFunction'
-import { api } from '#network/index'
 
 interface RecipeRatingProps {
   t: TFunction
