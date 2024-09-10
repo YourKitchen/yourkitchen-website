@@ -52,15 +52,11 @@ const RecipeBox: FC<RecipeBoxProps> = ({ recipe }) => {
         ':hover': {
           scale: 1.0,
         },
-
-        '[data-mui-color-scheme="dark"] &': {
-          boxShadow: 'none',
-        },
       }}
       href={`/recipe/${recipe.id}`}
     >
       <Box
-        sx={{
+        sx={({
           top: 0,
           left: 0,
           right: 0,
@@ -74,13 +70,10 @@ const RecipeBox: FC<RecipeBoxProps> = ({ recipe }) => {
           gap: 2,
 
           background:
-            'linear-gradient(0deg, rgba(255,255,255,0.75), transparent)',
+            'linear-gradient(0deg, var(--mui-palette-primary-contrastText), transparent)',
 
-          '[data-mui-color-scheme="dark"] &': {
-            background: 'linear-gradient(0deg, rgba(0,0,0,0.25), transparent)',
-          },
           textWrap: 'balance',
-        }}
+        })}
       >
         <Box>
           <Typography>{recipe.name}</Typography>

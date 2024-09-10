@@ -1,3 +1,4 @@
+'use server'
 import Logo from '#assets/Logo-192x192.png'
 import { auth } from '#misc/auth'
 import { Add } from '@mui/icons-material'

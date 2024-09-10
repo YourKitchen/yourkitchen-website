@@ -1,5 +1,14 @@
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
+import InitColorSchemeScript from '@mui/system/InitColorSchemeScript'
 import type { Metadata } from 'next'
+import { Baloo_2, Fraunces } from 'next/font/google'
+
+// If loading a variable font, you don't need to specify the font weight
+const baloo = Baloo_2({
+  weight: '600',
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: {
@@ -8,17 +17,16 @@ export const metadata: Metadata = {
   },
 }
 
-const RootLayout = ({
+const RootLayout = async ({
   children,
 }: {
   children: React.ReactNode
 }) => {
   return (
     <AppRouterCacheProvider>
-      <html lang="en">
-        <body
-          style={{ backgroundColor: 'var(--mui-palette-background-paper)' }}
-        >
+      <html lang="en" suppressHydrationWarning>
+        <body className={baloo.className}>
+          <InitColorSchemeScript attribute="class" />
           {children}
         </body>
       </html>

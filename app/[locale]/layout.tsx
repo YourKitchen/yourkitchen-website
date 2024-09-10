@@ -1,12 +1,13 @@
-import { CircularProgress, CssBaseline } from '@mui/material'
-import { Box } from '@mui/system'
-import { SessionProvider } from 'next-auth/react'
-import { NextIntlClientProvider } from 'next-intl'
+import { Box, ThemeProvider } from '@mui/system'
+import { SessionProvider, useSession } from 'next-auth/react'
+import { NextIntlClientProvider, useTranslations } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import React, { type FC, type PropsWithChildren, Suspense } from 'react'
 import Footer from '#components/Footer'
 import Header from '#components/Header'
 import { auth } from '#misc/auth'
+import theme from '#misc/theme'
+import { CssBaseline } from '@mui/material'
 
 const layout: FC<PropsWithChildren & { params: { locale?: string } }> = async ({
   children,

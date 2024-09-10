@@ -1,20 +1,9 @@
 import { red } from '@mui/material/colors'
-import {
-  type CssVarsThemeOptions,
-  type ThemeOptions,
-  createTheme,
-  experimental_extendTheme,
-} from '@mui/material/styles'
-import { Cabin } from 'next/font/google'
+import { createTheme } from '@mui/material/styles'
+import { Baloo_2 } from 'next/font/google'
 import NextLink from 'next/link'
 import type { LinkProps } from 'next/link'
-import { type FC, type ForwardedRef, forwardRef } from 'react'
-
-export const roboto = Cabin({
-  weight: ['400', '500', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-})
+import { type ForwardedRef, forwardRef } from 'react'
 
 const LinkBehaviour = forwardRef(
   (props: LinkProps, ref: ForwardedRef<HTMLAnchorElement>) => {
@@ -22,7 +11,15 @@ const LinkBehaviour = forwardRef(
   },
 )
 
-const defaultThemeOptions: CssVarsThemeOptions = {
+const baloo = Baloo_2({
+  weight: ['400', '600'],
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+// Create a theme instance.
+export const theme = createTheme({
+  cssVariables: true,
   colorSchemes: {
     light: {
       palette: {
@@ -84,83 +81,40 @@ const defaultThemeOptions: CssVarsThemeOptions = {
       },
     },
     MuiCssBaseline: {
-      styleOverrides: {
+      styleOverrides: (theme) => ({
         body: {
           background: 'radial-gradient(circle at top, #fde2c6 , #fdfdfd)',
           minHeight: '100vh',
           backgroundRepeat: 'no-repeat',
           color: '#000',
 
-          '[data-mui-color-scheme="dark"] &': {
+          ...theme.applyStyles('dark', {
             color: '#fff',
             background: 'radial-gradient(circle at top, #221102 , #070a1f)',
-          },
+          })
         },
-      },
+      }),
     },
     MuiButton: {
       styleOverrides: {
-        root: () => {
-          return {
+        root: {
             borderRadius: '13px',
             padding: '8px 16px',
           }
-        },
-      },
-    },
-    MuiFormControlLabel: {
-      styleOverrides: {
-        root: {
-          '[data-mui-color-scheme="dark"] &': {
-            backgroundColor: '#333 !important',
-          },
-        },
-      },
-    },
-    MuiSwitch: {
-      styleOverrides: {
-        switchBase: {
-          // Controls default (unchecked) color for the thumb
-          color: '#ccc',
-
-          '[data-mui-color-scheme="dark"] &': {
-            backgroundColor: '#000',
-            color: '#333',
-          },
-        },
-        colorPrimary: (props) => ({
-          '&.Mui-checked': {
-            // Controls checked color for the thumb
-            color: props.theme.palette.secondary.main,
-          },
-        }),
-        track: {
-          // Controls default (unchecked) color for the track
-          opacity: 0.2,
-          backgroundColor: '#fff',
-          '.Mui-checked.Mui-checked + &': {
-            // Controls checked color for the track
-            opacity: 0.7,
-            backgroundColor: '#fff',
-          },
-
-          '[data-mui-color-scheme="dark"] &': {
-            backgroundColor: '#000',
-            '.Mui-checked.Mui-checked + &': {
-              // Controls checked color for the track
-              backgroundColor: '#000',
-            },
-          },
-        },
+        
       },
     },
   },
   typography: {
-    fontFamily: roboto.style.fontFamily,
+    allVariants: {
+      ...baloo.style,
+      fontWeight: '600',
+    },
+    body1: {
+      ...baloo.style,
+      fontWeight: '400',
+    },
   },
-}
-
-// Create a theme instance.
-export const theme = experimental_extendTheme(defaultThemeOptions)
+})
 
 export default theme

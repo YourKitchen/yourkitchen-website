@@ -1,8 +1,10 @@
 'use client'
-import { Box, CircularProgress, CssBaseline } from '@mui/material'
-import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
-import { SessionProvider } from 'next-auth/react'
-import { NextIntlClientProvider } from 'next-intl'
+import {
+  Box,
+  CircularProgress,
+  CssBaseline,
+  ThemeProvider,
+} from '@mui/material'
 import React, {
   Component,
   Suspense,
@@ -21,7 +23,7 @@ const layout: FC<PropsWithChildren & { params: { locale?: string } }> = ({
   params,
 }) => {
   return (
-    <CssVarsProvider defaultMode="system" theme={theme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <SWRConfig
         value={{
@@ -57,7 +59,7 @@ const layout: FC<PropsWithChildren & { params: { locale?: string } }> = ({
         <Toaster richColors closeButton />
       </SWRConfig>
       <Toaster richColors closeButton theme={'system'} />
-    </CssVarsProvider>
+    </ThemeProvider>
   )
 }
 
