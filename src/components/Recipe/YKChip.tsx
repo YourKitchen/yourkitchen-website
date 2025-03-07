@@ -1,3 +1,4 @@
+'use client'
 import { Chip, type ChipProps } from '@mui/material'
 import React, { type FC } from 'react'
 

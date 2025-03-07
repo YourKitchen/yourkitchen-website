@@ -1,5 +1,4 @@
-import type { YKResponse } from '#models/ykResponse'
-import { api } from '#network/index'
+'use client'
 import {
   Autocomplete,
   type AutocompleteRenderInputParams,
@@ -13,10 +12,12 @@ import {
 import { debounce } from '@mui/material/utils'
 import type { Cuisine } from '@prisma/client'
 import { useSession } from 'next-auth/react'
-import type { TFunction } from 'next-i18next'
 import { type FC, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
+import type { TFunction } from '#models/TFunction'
+import type { YKResponse } from '#models/ykResponse'
+import { api } from '#network/index'
 
 interface CuisineAutocompleteProps {
   t: TFunction

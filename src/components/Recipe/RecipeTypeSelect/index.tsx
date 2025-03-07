@@ -1,8 +1,8 @@
+'use client'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { RecipeType } from '@prisma/client'
-import { t } from 'i18next'
-import type { TFunction } from 'next-i18next'
 import React, { type FC } from 'react'
+import type { TFunction } from '#models/TFunction'
 
 interface RecipeTypeSelectProps {
   t: TFunction

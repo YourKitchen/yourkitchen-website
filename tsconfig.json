@@ -24,14 +24,21 @@
       "#contexts/*": ["./src/contexts/*"],
       "#network/*": ["./src/network/*"],
       "#utils/*": ["./src/utils/*"],
-      "#misc/*": ["./src/misc/*"]
-    }
+      "#misc/*": ["./src/misc/*"],
+      "#prisma": ["./src/misc/prisma.ts"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "scripts/translate-site.mts"
+    "next-env.d.ts",
+    "scripts/translate-site.mts",
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

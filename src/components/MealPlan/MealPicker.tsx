@@ -1,3 +1,4 @@
+'use client'
 import {
   Box,
   Button,
@@ -19,9 +20,7 @@ import {
   type Recipe,
   RecipeImage,
 } from '@prisma/client'
-import { t } from 'i18next'
 import type { DateTime } from 'luxon'
-import type { TFunction } from 'next-i18next'
 import Image from 'next/image'
 import React, {
   type Dispatch,
@@ -33,10 +32,11 @@ import React, {
 } from 'react'
 import { toast } from 'sonner'
 import useSWR, { type KeyedMutator } from 'swr'
+import type { TFunction } from '#models/TFunction'
 import type { Meal } from '#models/meal'
+import type { PublicRecipe } from '#models/publicRecipe'
 import type { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
-import type { PublicRecipe } from '#pages/recipes'
 import { avg } from '#utils/index'
 
 interface MealPickerProps {

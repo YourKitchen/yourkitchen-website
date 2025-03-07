@@ -1,4 +1,3 @@
-import prisma from '#pages/api/_base'
 import {
   type MealPlan,
   type MealPlanRecipe,
@@ -11,6 +10,7 @@ import {
 } from '@prisma/client'
 import { DateTime } from 'luxon'
 import { v4 } from 'uuid'
+import prisma from '#prisma'
 
 export const getRandomRecipes = async (
   {

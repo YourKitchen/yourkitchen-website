@@ -1,27 +1,13 @@
-import {
-  Add,
-  Menu as MenuIcon,
-  MoreVert as MoreIcon,
-} from '@mui/icons-material'
-import {
-  AppBar,
-  Box,
-  Button,
-  IconButton,
-  Link,
-  Menu,
-  MenuItem,
-  Toolbar,
-  Typography,
-} from '@mui/material'
-import { useSession } from 'next-auth/react'
-import { useTranslation } from 'next-i18next'
-import Image from 'next/image'
-import { useRouter as useNavigation } from 'next/navigation'
-import { useRouter } from 'next/router'
-import type React from 'react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+'use server'
 import Logo from '#assets/Logo-192x192.png'
+import { auth } from '#misc/auth'
+import { Add } from '@mui/icons-material'
+import { AppBar, Box, Button, Link, Toolbar, Typography } from '@mui/material'
+import { getTranslations } from 'next-intl/server'
+import Image from 'next/image'
+import type { FC } from 'react'
+import MobileHeader from './MobileHeader'
+import UserMenu from './UserMenu'
 
 interface Page {
   label: string
@@ -29,128 +15,63 @@ interface Page {
   authState?: 'authenticated' | 'unauthenticated'
 }
 
-export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { data: session, status } = useSession()
-  const { t } = useTranslation('header')
+const Header: FC = async () => {
+  const session = await auth()
 
-  const router = useRouter()
-  const navigation = useNavigation()
-  const [scrollY, setScrollY] = useState(0)
+  const t = await getTranslations('header')
 
-  const pages: Page[] = useMemo(
-    () =>
-      [
-        {
-          label: t('home'),
-          href: '/',
-        },
-        {
-          label: t('about'),
-          href: '/about',
-        },
-        {
-          label: t('recipes'),
-          href: '/recipes',
-        },
-        {
-          label: t('meal_plan'),
-          href: '/meal-plan',
-          authState: 'authenticated',
-        },
-      ].filter(
-        (page) => page.authState === undefined || page.authState === status,
-      ) as Page[],
-    [t, status],
-  )
+  // const { scrollY } = useScroll()
 
-  const settings: Page[] = useMemo(
-    () =>
-      [
-        { label: t('settings'), href: '/settings', authState: 'authenticated' },
-        {
-          label: t('logout'),
-          href: '/auth/signout',
-          authState: 'authenticated',
-        },
-        {
-          label: t('get_started'),
-          href: '/auth/signin',
-          authState: 'unauthenticated',
-        },
-      ].filter(
-        (page) => page.authState === undefined || page.authState === status,
-      ) as Page[],
-    [t, status],
-  )
+  const pages: Page[] = [
+    {
+      label: t('home'),
+      href: '/',
+    },
+    {
+      label: t('about'),
+      href: '/about',
+    },
+    {
+      label: t('recipes'),
+      href: '/recipes',
+    },
+    {
+      label: t('meal_plan'),
+      href: '/meal-plan',
+      authState: 'authenticated',
+    },
+  ].filter(
+    (page) =>
+      page.authState === undefined ||
+      page.authState === (session ? 'authenticated' : 'unauthenticated'),
+  ) as Page[]
 
-  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null)
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null)
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    useState<null | HTMLElement>(null)
-
-  const isMenuOpen = Boolean(anchorElNav)
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
-
-  const onScroll = useCallback(() => {
-    setScrollY(window.scrollY)
-  }, [])
-
-  useEffect(() => {
-    //add eventlistener to window
-    window.addEventListener('scroll', onScroll, { passive: true })
-    // remove event on unmount to prevent a memory leak with the cleanup
-    return () => {
-      window.removeEventListener('scroll', onScroll)
+  const getLink = (page: Page) => {
+    if (page.authState === 'authenticated') {
+      if (!session) {
+        return `/auth/signin?callbackUrl=${page.href}`
+      }
     }
-  }, [onScroll])
-
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget)
-  }
-  const handleToggleUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser((prev) => (prev ? null : event.currentTarget))
+    return page.href
   }
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null)
-  }
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null)
-  }
-
-  const handleMobileMenuClose = (): void => {
-    setMobileMoreAnchorEl(null)
-  }
-
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>): void => {
-    setMobileMoreAnchorEl(event.currentTarget)
-  }
-
-  const mobileMenuId = 'primary-menu-mobile'
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      {settings.map((page) => (
-        <MenuItem LinkComponent={Link} key={page.label} href={page.href}>
-          {page.label}
-        </MenuItem>
-      ))}
-    </Menu>
-  )
+  const settings: Page[] = [
+    { label: t('settings'), href: '/settings', authState: 'authenticated' },
+    {
+      label: t('logout'),
+      href: '/auth/signout',
+      authState: 'authenticated',
+    },
+    {
+      label: t('get_started'),
+      href: '/auth/signin',
+      authState: 'unauthenticated',
+    },
+  ].filter(
+    (page) =>
+      page.authState === undefined ||
+      page.authState === (session ? 'authenticated' : 'unauthenticated'),
+  ) as Page[]
 
   return (
     <AppBar
@@ -158,9 +79,10 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
       sx={{
         backdropFilter: 'blur(7px)',
         backgroundColor:
-          scrollY < 30
-            ? 'transparent'
-            : 'var(--mui-palette-background-default)',
+          // scrollY.get() < 30
+          //   ? 'transparent'
+          //   :
+          'var(--mui-palette-background-default)',
         backgroundImage: 'none',
         color: 'var(--mui-palette-text-primary)',
         transition: '0.3s ease-in-out',
@@ -169,7 +91,15 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
     >
       <Box sx={{ margin: '0 15px' }}>
         <Toolbar disableGutters>
-          <Link href="/">
+          <Link
+            sx={{
+              display: {
+                xs: 'none',
+                sm: 'flex',
+              },
+            }}
+            href="/"
+          >
             <Image
               width={40}
               height={40}
@@ -194,69 +124,18 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
           >
             YourKitchen
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="navigation menu"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={isMenuOpen}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem LinkComponent={Link} key={page.label} href="">
-                  <Typography textAlign="center">{page.label}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontWeight: 700,
-              letterSpacing: '.1rem',
-              textDecoration: 'none',
-            }}
-          >
-            YourKitchen
-          </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Link
                 key={page.label}
-                href={page.href}
+                href={getLink(page)}
                 sx={{
                   mx: 1,
                   textAlign: 'center',
                   display: 'block',
                   position: 'relative',
                   color: 'var(--mui-palette-text-primary)',
+                  textDecoration: 'none',
                   '&:hover': {
                     backgroundColor: 'transparent',
                     '&:after': {
@@ -273,7 +152,6 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
                     height: '4px',
                     borderRadius: '2px',
                     backgroundColor: 'var(--mui-palette-primary-main)',
-                    width: router.pathname === page.href ? '100%' : '0%',
                   },
                 }}
               >
@@ -285,81 +163,65 @@ export const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
           <Box
             sx={{
               height: '40.5px',
-              gap: '8px',
+              gap: 2,
               display: { xs: 'none', md: 'flex' },
             }}
           >
             <Button
-              sx={{ display: 'flex', gap: 1 }}
-              variant="contained"
-              href={'/recipe/create'}
+              sx={{
+                display: 'flex',
+                gap: 1,
+                borderRadius: '13px',
+
+                color: 'var(--mui-palette-primary-main)',
+                ':hover': {
+                  color: 'var(--mui-palette-primary-main)',
+                },
+                ':active': {
+                  color: 'var(--mui-palette-primary-dark)',
+                },
+                padding: '8px 16px',
+              }}
+              href={getLink({
+                href: '/recipe/create',
+                label: t('create'),
+                authState: 'authenticated',
+              })}
             >
               <Add />
               {t('create')}
             </Button>
             {session ? (
-              <>
-                <IconButton
-                  onClick={handleToggleUserMenu}
-                  sx={{
-                    width: '40px',
-                    height: '40px',
-                    p: 0,
-                    borderRadius: '20px',
-                  }}
-                >
-                  <Image
-                    referrerPolicy="no-referrer"
-                    width={40}
-                    height={40}
-                    style={{ borderRadius: '20px' }}
-                    alt={session.user.name || ''}
-                    src={session.user.image || ''}
-                  />
-                </IconButton>
-                <Menu
-                  id="user-menu"
-                  anchorEl={anchorElUser}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  {settings.map((page) => (
-                    <MenuItem
-                      key={page.label}
-                      LinkComponent={Link}
-                      href={page.href}
-                    >
-                      <Typography textAlign="center">{page.label}</Typography>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </>
+              <UserMenu user={session.user} settings={settings} />
             ) : (
               <>
                 {settings.length > 0 ? (
-                  <Link href={settings[0].href} sx={{ display: 'block' }}>
+                  <Button
+                    href={getLink(settings[0])}
+                    sx={{
+                      display: 'block',
+                      borderRadius: '13px',
+                      padding: '8px 16px',
+                      backgroundColor: 'var(--mui-palette-primary-main)',
+                      color: 'var(--mui-palette-primary-contrastText)',
+                      ':hover': {
+                        backgroundColor: 'var(--mui-palette-primary-main)',
+                      },
+                      ':active': {
+                        backgroundColor: 'var(--mui-palette-primary-dark)',
+                      },
+                    }}
+                    variant="contained"
+                  >
                     {settings[0].label}
-                  </Link>
+                  </Button>
                 ) : null}
               </>
             )}
           </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              sx={{ marginRight: '2vh' }}
-              aria-label="show more"
-              aria-haspopup="true"
-              aria-controls={mobileMenuId}
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
+          <MobileHeader pages={pages} settings={settings} />
         </Toolbar>
       </Box>
-      {renderMobileMenu}
     </AppBar>
   )
 }

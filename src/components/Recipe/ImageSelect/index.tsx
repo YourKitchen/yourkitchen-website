@@ -1,5 +1,4 @@
-import type { YKResponse } from '#models/ykResponse'
-import { api } from '#network/index'
+'use client'
 import { CheckCircle, Delete } from '@mui/icons-material'
 import {
   Box,
@@ -19,12 +18,14 @@ import {
 import type { RecipeImage } from '@prisma/client'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
-import type { TFunction } from 'next-i18next'
 import type { Photo } from 'pexels'
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 import { v4 } from 'uuid'
+import type { TFunction } from '#models/TFunction'
+import type { YKResponse } from '#models/ykResponse'
+import { api } from '#network/index'
 
 interface ImageSelectProps {
   t: TFunction

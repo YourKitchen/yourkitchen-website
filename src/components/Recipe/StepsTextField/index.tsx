@@ -1,3 +1,4 @@
+'use client'
 import { ArrowForward, Delete, Search } from '@mui/icons-material'
 import {
   Box,
@@ -13,12 +14,12 @@ import {
 import Chip from '@mui/material/Chip'
 import TextField from '@mui/material/TextField'
 import type { Ingredient, RecipeIngredient, Unit } from '@prisma/client'
-import type { TFunction } from 'next-i18next'
 import type React from 'react'
 import { type FC, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { getIngredientId } from 'src/utils'
 import useSWR from 'swr'
+import type { TFunction } from '#models/TFunction'
 import { allUnits } from '#models/units'
 import type { YKResponse } from '#models/ykResponse'
 import CreateIngredientDialog from './CreateIngredientDialog'

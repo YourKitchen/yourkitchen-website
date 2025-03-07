@@ -1,3 +1,4 @@
+'use client'
 import { CloudUpload } from '@mui/icons-material'
 import {
   Box,
@@ -9,9 +10,9 @@ import {
   Typography,
 } from '@mui/material'
 import { AllergenType } from '@prisma/client'
-import type { TFunction } from 'next-i18next'
 import { type FC, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
+import type { TFunction } from '#models/TFunction'
 import { allAllergenes } from '#models/allergenes'
 import AccountBox from './AccountBox'
 

@@ -1,41 +1,47 @@
-import { MenuItem, Select } from '@mui/material'
-import router, { useRouter } from 'next/router'
-import Flag from './Flag'
+'use client'
+import { MenuItem, Select, type SelectChangeEvent } from '@mui/material'
+import { type Locale, localeNames, locales, usePathname, useRouter } from 'i18n'
 
-const LanguageSelect = () => {
-  const { pathname, asPath, query, locale: defaultLocale } = useRouter()
+export default function LocaleSwitcher({
+  locale,
+}: {
+  locale: Locale
+}) {
+  const pathname = usePathname()
+  const router = useRouter()
 
-  const handleChange = async (locale: string) => {
-    document.cookie = `NEXT_LOCALE=${locale}; max-age=31536000; path=/`
-
-    // TODO: Find a solution that does not require a reload
-
-    // First we change the route to the new locale.
-    await router.push({ pathname, query }, asPath, { locale })
-    // After this we reload the page to get the serverside props for the new locale.
-    router.reload()
+  // If the user chose Danish ("da"),
+  // router.replace() will prefix the pathname
+  // with this `newLocale`, effectively changing
+  // languages by navigating to `/da/pathname`.
+  const changeLocale = (event: SelectChangeEvent<unknown>) => {
+    const newLocale = event.target.value as Locale
+    router.replace(pathname, { locale: newLocale })
   }
 
   return (
     <Select
+      inputProps={{ MenuProps: { disableScrollLock: true }, name: 'locale' }}
       aria-label="Locale selector"
       variant="standard"
-      disableUnderline
+      size="small"
       sx={{
-        height: '40.5px',
-        borderRadius: '10px',
+        fontSize: 12,
+        backgroundColor: 'transparent',
+        '& .MuiSelect-select': {
+          backgroundColor: 'transparent',
+        },
       }}
-      defaultValue={defaultLocale || 'en'}
-      onChange={(e) => handleChange(e.target.value as string)}
+      disableUnderline
+      value={locale}
+      onChange={changeLocale}
+      displayEmpty
     >
-      <MenuItem key="en" value="en">
-        <Flag isoCountry="gb" />
-      </MenuItem>
-      <MenuItem key="da" value="da">
-        <Flag isoCountry="dk" />
-      </MenuItem>
+      {locales.map((loc) => (
+        <MenuItem key={loc} value={loc}>
+          {localeNames[loc]}
+        </MenuItem>
+      ))}
     </Select>
   )
 }
-
-export default LanguageSelect

@@ -3,7 +3,6 @@ import { Box, Chip, Skeleton, Typography } from '@mui/material'
 import { Recipe, RecipeImage } from '@prisma/client'
 import Image from 'next/image'
 import React, { type FC, useMemo } from 'react'
-import { PublicRecipe } from '#pages/recipes'
 
 interface GridSkeletonRecipeBoxProps {
   name: string
@@ -13,7 +12,7 @@ interface GridSkeletonRecipeBoxProps {
 /**
  * Component to show recipe on Explore Page
  */
-const GridSkeletonRecipeBox: FC<GridSkeletonRecipeBoxProps> = ({
+const GridSkeletonRecipeBox: FC<GridSkeletonRecipeBoxProps> = async ({
   name,
   rating,
 }) => {
