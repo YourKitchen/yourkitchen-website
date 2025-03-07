@@ -7,13 +7,13 @@ import { sameDate, updateMealplan } from '#utils/meaplanHelper'
 
 export const GET = validatePermissions(
   { permissions: true },
-  async (req, session) => {
+  async (req, user) => {
     const query = getQuery<{ weekDate?: string }>(req)
 
     // Get the user's meal plan.
     const currentMealPlan = await prisma.mealPlan.findUnique({
       where: {
-        ownerId: session.user.id,
+        ownerId: user.id,
       },
       include: {
         recipes: {
@@ -37,7 +37,7 @@ export const GET = validatePermissions(
     // Apply any updates
     const response = await updateMealplan(
       currentMealPlan,
-      session.user,
+      user,
       weekDate.isValid ? weekDate : undefined,
     )
 
@@ -49,7 +49,7 @@ export const PUT = validatePermissions(
   {
     permissions: true,
   },
-  async (req, session) => {
+  async (req, user) => {
     const body = await getBody<{
       recipe: Omit<MealPlanRecipe, 'mealPlanId' | 'id'>
     }>(req)
@@ -88,7 +88,7 @@ export const PUT = validatePermissions(
     // Get the user's meal plan.
     let currentMealPlan = await prisma.mealPlan.findUnique({
       where: {
-        ownerId: session.user.id,
+        ownerId: user.id,
       },
       include: {
         recipes: {
@@ -106,7 +106,7 @@ export const PUT = validatePermissions(
 
     if (!currentMealPlan) {
       // Apply any updates
-      currentMealPlan = await updateMealplan(currentMealPlan, session.user)
+      currentMealPlan = await updateMealplan(currentMealPlan, user)
     }
 
     // We now have the meal plan. So now we can update it.

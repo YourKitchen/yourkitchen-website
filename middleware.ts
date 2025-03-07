@@ -31,15 +31,7 @@ export const middleware = (
 ): NextResponse => {
   const requestWithHeaders = setRequestHeaders(request)
 
-  return authMiddleware((req) => {
-    if (!req.auth && req.nextUrl.pathname.includes('/app')) {
-      const newUrl = new URL(
-        `/auth/signin?callbackUrl=${req.nextUrl.pathname}`,
-        req.nextUrl.origin,
-      )
-      console.debug(`Redirecting to: ${newUrl}`)
-      return Response.redirect(newUrl)
-    }
+  return authMiddleware(() => {
     return i18nMiddleware(requestWithHeaders)
   })(requestWithHeaders, event) as NextResponse
 }

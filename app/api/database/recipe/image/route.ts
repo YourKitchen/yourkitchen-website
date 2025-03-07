@@ -8,7 +8,7 @@ export const POST = validatePermissions(
   {
     permissions: true,
   },
-  async (req, session) => {
+  async (req, user) => {
     const query = getQuery<{ recipeId: string; id: string }>(req)
 
     const recipeId = query.recipeId as string

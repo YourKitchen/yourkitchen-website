@@ -55,7 +55,7 @@ export const PUT = validatePermissions(
   {
     permissions: true,
   },
-  async (req, session) => {
+  async (req, user) => {
     const query = getQuery<{ id: string }>(req)
     const body = getBody<Partial<Recipe & { image: RecipeImage[] }>>(req)
 
@@ -86,7 +86,7 @@ export const PUT = validatePermissions(
     const recipe = await prisma.recipe.update({
       where: {
         id: query.id as string,
-        ownerId: session.user.id,
+        ownerId: user.id,
       },
       data: {
         cuisineName,
@@ -120,13 +120,13 @@ export const DELETE = validatePermissions(
   {
     permissions: true,
   },
-  async (req, session) => {
+  async (req, user) => {
     const query = getQuery<{ id: string }>(req)
 
     const recipe = await prisma.recipe.delete({
       where: {
         id: query.id as string,
-        ownerId: session.user.id,
+        ownerId: user.id,
       },
     })
 

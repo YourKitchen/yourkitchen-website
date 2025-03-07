@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon'
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { validatePermissions } from '#misc/utils'
 import prisma from '#prisma'
 
@@ -13,7 +12,7 @@ export const GET = validatePermissions(
       )
     },
   },
-  async (req, res) => {
+  async () => {
     // Remove meal plan recipes that are older than 2 weeks ago
     await prisma.mealPlanRecipe.deleteMany({
       where: {

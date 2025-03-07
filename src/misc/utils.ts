@@ -1,8 +1,5 @@
 import type { Session } from 'next-auth'
-import type {
-  AppRouteHandlerFn,
-  AppRouteHandlerFnContext,
-} from 'next-auth/lib/types'
+import type { AppRouteHandlerFn } from 'next-auth/lib/types'
 import type { NextRequest } from 'next/server'
 import { auth } from './auth'
 
@@ -20,12 +17,9 @@ export const toTitleCase = (str: string): string => {
     .replace(/\s+/g, ' ')
     .trim()
 }
-
 type PermissionOption =
   | boolean
-  | ((
-      session: Session['user'],
-    ) => boolean | Promise<boolean> | string | Promise<string>)
+  | ((session: Session['user']) => boolean | Promise<boolean>)
 
 type BypassFunction = (req: NextRequest) => boolean
 
@@ -34,22 +28,29 @@ type ConfigType = {
   bypass?: BypassFunction
 }
 
+export type ValidatedUser = Omit<Session['user'], 'teamId'> & { teamId: string }
+
 export const validatePermissions = <Config extends ConfigType>(
   config: Config,
   callback: (
     req: NextRequest,
-    session: 'bypass' extends keyof Config ? Session | null : Session,
-    ctx: AppRouteHandlerFnContext,
+    user: 'bypass' extends keyof Config ? ValidatedUser | null : ValidatedUser,
+    ctx: { params: Promise<any> },
   ) => Response | Promise<Response>,
-): AppRouteHandlerFn => {
+): ((
+  req: NextRequest,
+  ctx: { params: Promise<any> },
+) => Response | Promise<Response>) => {
   const func = auth(async (req, ctx) => {
+    // Temporary fix until NextAuth is updated
+    const context = ctx as any as { params: Promise<any> }
     try {
       if (config.bypass) {
         if (config.bypass(req)) {
           return await callback(
             req,
-            null as 'bypass' extends keyof Config ? null : Session,
-            ctx,
+            null as 'bypass' extends keyof Config ? null : ValidatedUser,
+            context,
           )
         }
       }
@@ -74,48 +75,17 @@ export const validatePermissions = <Config extends ConfigType>(
         if (config.permissions) {
           return await callback(
             req,
-            session as 'bypass' extends keyof Config ? null : Session,
-            ctx,
+            session.user as 'bypass' extends keyof Config
+              ? null
+              : ValidatedUser,
+            context,
           )
         }
         // End the request no matter what. (If it was set to false, it should not continue)
         return Response.json(
           {
             ok: false,
-            message: 'Permission denied',
-          },
-          {
-            status: 401,
-          },
-        )
-      }
-      if (typeof config.permissions === 'function') {
-        const result = await config.permissions(session.user)
-        if (typeof result === 'boolean') {
-          if (result) {
-            return await callback(
-              req,
-              session as 'bypass' extends keyof Config ? null : Session,
-              ctx,
-            )
-          }
-
-          // End the request no matter what. (If it was set to false, it should not continue)
-          return Response.json(
-            {
-              ok: false,
-              message: 'You need to be signed in',
-            },
-            {
-              status: 401,
-            },
-          )
-        }
-        // If the result is a string the operation failed. The string is the return message
-        return Response.json(
-          {
-            ok: false,
-            message: result,
+            message: 'You need to be signed in',
           },
           {
             status: 401,
@@ -125,12 +95,11 @@ export const validatePermissions = <Config extends ConfigType>(
 
       return await callback(
         req,
-        session as 'bypass' extends keyof Config ? null : Session,
-        ctx,
+        session.user as 'bypass' extends keyof Config ? null : ValidatedUser,
+        context,
       )
     } catch (err) {
       const message = err.message || err
-      console.error(err)
       return Response.json(
         {
           ok: false,
@@ -143,5 +112,9 @@ export const validatePermissions = <Config extends ConfigType>(
     }
   })
 
-  return func
+  // Type casting is temporary fix until next-auth is updated for NextJS v15
+  return func as any as (
+    req: NextRequest,
+    ctx?: { params: Promise<any> },
+  ) => Response | Promise<Response>
 }

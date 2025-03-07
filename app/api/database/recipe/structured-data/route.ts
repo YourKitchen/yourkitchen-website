@@ -37,7 +37,7 @@ export const GET = validatePermissions(
   {
     permissions: true,
   },
-  async (req, session) => {
+  async (req, user) => {
     const query = getQuery<{
       content?: string
     }>(req)
@@ -150,7 +150,7 @@ export const GET = validatePermissions(
           unit: 'PIECE',
         }
       }),
-      ownerId: session?.user.id,
+      ownerId: user.id,
       recipeType: parsedRecipeType as RecipeType,
 
       preparationTime: parsedRecipe.totalTime
@@ -164,7 +164,7 @@ export const GET = validatePermissions(
               photoRefUrl: parsedRecipe.imageUrl,
               photographerUrl: null,
               link: parsedRecipe.imageUrl,
-              photographer: parsedRecipe.author ?? session?.user.name ?? '',
+              photographer: parsedRecipe.author ?? user.name ?? '',
               recipeId: id,
             },
           ]

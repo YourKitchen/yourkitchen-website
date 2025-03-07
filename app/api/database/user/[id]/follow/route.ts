@@ -7,13 +7,13 @@ export const PUT = validatePermissions(
   {
     permissions: true,
   },
-  async (req, session) => {
+  async (req, user) => {
     const query = getQuery<{ id: string }>(req)
     const id = query.id as string
 
     const exists = await prisma.follows.findFirst({
       where: {
-        followerId: session.user.id,
+        followerId: user.id,
         followingId: id,
       },
     })
@@ -23,7 +23,7 @@ export const PUT = validatePermissions(
       await prisma.follows.delete({
         where: {
           followerId_followingId: {
-            followerId: session.user.id,
+            followerId: user.id,
             followingId: id,
           },
         },
@@ -37,7 +37,7 @@ export const PUT = validatePermissions(
     // Create it
     await prisma.follows.create({
       data: {
-        followerId: session.user.id,
+        followerId: user.id,
         followingId: id,
       },
     })

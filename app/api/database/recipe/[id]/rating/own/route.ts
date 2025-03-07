@@ -8,12 +8,12 @@ import prisma from '#prisma'
 
 export const GET = validatePermissions(
   { permissions: true },
-  async (req, session) => {
+  async (req, user) => {
     const query = getQuery<{ id: string }>(req)
     const rating = await prisma.rating.findFirst({
       where: {
         recipeId: query.id as string,
-        ownerId: session.user.id,
+        ownerId: user.id,
       },
     })
 
@@ -23,7 +23,7 @@ export const GET = validatePermissions(
 
 export const PUT = validatePermissions(
   { permissions: true },
-  async (req: NextRequest, session: Session) => {
+  async (req: NextRequest, user) => {
     const query = getQuery<{ id: string }>(req)
     const body = await getBody<Partial<Rating>>(req)
 
@@ -54,14 +54,14 @@ export const PUT = validatePermissions(
       where: {
         recipeId_ownerId: {
           recipeId: query.id as string,
-          ownerId: session.user.id,
+          ownerId: user.id,
         },
       },
       create: {
         score,
         message,
         recipeId: query.id as string,
-        ownerId: session.user.id,
+        ownerId: user.id,
       },
       update: {
         score,

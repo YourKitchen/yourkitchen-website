@@ -33,6 +33,7 @@ import { auth } from '#misc/auth'
 import type { PublicRecipe } from '#models/publicRecipe'
 import type { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
+import { useParams } from 'next/navigation'
 
 type PublicUser = Pick<User, 'id' | 'image' | 'name' | 'created'>
 
@@ -47,7 +48,10 @@ interface UserPageProps {
   }
 }
 
-const UserPage = async ({ params }: { params: { id: string } }) => {
+const UserPage = async () => {
+
+  const params = useParams<{ id: string }>()
+
   const { data: user } = useSWR<YKResponse<UserPageProps['user']>>(
     `user/${params.id}`,
   )

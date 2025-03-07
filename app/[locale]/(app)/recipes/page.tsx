@@ -13,20 +13,19 @@ import {
 } from '@mui/material'
 import { type Cuisine, MealType } from '@prisma/client'
 import { useTranslations } from 'next-intl'
+import { useParams } from 'next/navigation'
 import { type FC, useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
-
-interface RecipesPageProps {
-  params: {
-    search_query?: string
-  }
-}
 
 /**
  * Recipes overview featuring filters
  */
-const RecipesPage: FC<RecipesPageProps> = ({ params }) => {
+const RecipesPage: FC = () => {
   const t = useTranslations('common')
+
+  const params = useParams<{
+    search_query?: string
+  }>()
 
   const [mealType, setMealType] = useState<MealType>(MealType.DINNER)
   const [cuisineName, setCuisineName] = useState<string>('')

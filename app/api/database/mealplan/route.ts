@@ -6,7 +6,7 @@ export const GET = validatePermissions(
   {
     permissions: true,
   },
-  async (req, session) => {
+  async (req, user) => {
     // Get the user's meal plan.
     const response = await prisma.mealPlan.findMany({
       where: {
@@ -15,7 +15,7 @@ export const GET = validatePermissions(
           followers: {
             some: {
               // If we are following the owner, show their meal plan
-              followerId: session.user.id,
+              followerId: user.id,
             },
           },
         },

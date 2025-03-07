@@ -16,7 +16,7 @@ export const POST = validatePermissions(
     // },
     permissions: true,
   },
-  async (req, session) => {
+  async (req, user) => {
     const body = await getBody<Ingredient>(req)
 
     if (!body) {

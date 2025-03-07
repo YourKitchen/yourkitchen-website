@@ -7,14 +7,14 @@ import prisma from '#prisma'
 
 export const GET = validatePermissions(
   { permissions: true },
-  async (req, session) => {
+  async (req, user) => {
     // Get users own fridge
     const response = await prisma.fridge.upsert({
       where: {
-        ownerId: session.user.id,
+        ownerId: user.id,
       },
       create: {
-        ownerId: session.user.id,
+        ownerId: user.id,
       },
       update: {},
       include: {
@@ -30,10 +30,10 @@ export const PUT = validatePermissions(
   {
     permissions: true,
   },
-  async (req, session) => {
+  async (req, user) => {
     const fridge = await prisma.fridge.findFirst({
       where: {
-        ownerId: session.user.id,
+        ownerId: user.id,
       },
       include: {
         ingredients: {
@@ -94,7 +94,7 @@ export const PUT = validatePermissions(
       await prisma.fridgeIngredient.deleteMany({
         where: {
           fridge: {
-            ownerId: session.user.id,
+            ownerId: user.id,
           },
           ingredientId: {
             in: [

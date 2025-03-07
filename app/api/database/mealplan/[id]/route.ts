@@ -8,7 +8,7 @@ export const GET = validatePermissions(
   {
     permissions: true,
   },
-  async (req, session) => {
+  async (req, user) => {
     const query = getQuery<{ id: string; weekDate?: string }>(req)
     const id = query.id as string
 
@@ -33,7 +33,7 @@ export const GET = validatePermissions(
             public: true,
           },
           {
-            ownerId: session?.user.id,
+            ownerId: user.id,
           },
         ],
       },

@@ -27,7 +27,7 @@ export const POST = validatePermissions(
   {
     permissions: true, // Just make sure the user is logged in.
   },
-  async (req: NextRequest, session) => {
+  async (req: NextRequest, user) => {
     const body = await getBody<{ name: string }>(req)
     const name = body?.name
 
@@ -44,7 +44,7 @@ export const POST = validatePermissions(
     }
 
     let hasPermission = false
-    if (session.user.role !== 'ADMIN') {
+    if (user.role !== 'ADMIN') {
       hasPermission = true
     }
 
@@ -54,7 +54,7 @@ export const POST = validatePermissions(
           score: true,
         },
         where: {
-          ownerId: session.user.id,
+          ownerId: user.id,
         },
       })
 

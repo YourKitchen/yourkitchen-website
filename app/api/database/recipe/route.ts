@@ -59,7 +59,7 @@ export const POST = validatePermissions(
   {
     permissions: true,
   },
-  async (req, session) => {
+  async (req, user) => {
     const body = await getBody(req)
 
     const {
@@ -92,7 +92,7 @@ export const POST = validatePermissions(
         preparationTime,
         recipeType,
         steps,
-        ownerId: session.user.id,
+        ownerId: user.id,
         created: new Date(),
       },
     })

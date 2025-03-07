@@ -25,6 +25,7 @@ import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { NextSeo } from 'next-seo'
 import Image from 'next/image'
+import { useParams } from 'next/navigation'
 import { type FC, useCallback, useMemo, useState } from 'react'
 import useSWR from 'swr'
 
@@ -75,7 +76,10 @@ const IngredientItem: FC<IngredientItemProps> = ({
 /**
  * Visual representation of a recipe
  */
-const RecipePage: FC<{ params: { recipeId: string } }> = ({ params }) => {
+const RecipePage: FC = () => {
+
+  const params = useParams<{ recipeId: string }>()
+  
   // Translations
   const t = useTranslations('common')
   const { data: recipe } = useSWR<YKResponse<RecipePageProps['recipe']>>(
