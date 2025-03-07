@@ -1,8 +1,8 @@
 'use server'
 import Logo from '#assets/Logo-192x192.png'
 import { auth } from '#misc/auth'
-import { Add } from '@mui/icons-material'
-import { AppBar, Box, Button, Link, Toolbar, Typography } from '@mui/material'
+import { Add, AddCircleRounded } from '@mui/icons-material'
+import { AppBar, Box, Button, IconButton, Link, Toolbar, Tooltip, Typography } from '@mui/material'
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import type { FC } from 'react'
@@ -167,30 +167,27 @@ const Header: FC = async () => {
               display: { xs: 'none', md: 'flex' },
             }}
           >
-            <Button
+            <Tooltip title={t('create_recipe')}>
+            <IconButton
               sx={{
                 display: 'flex',
                 gap: 1,
                 borderRadius: '13px',
-
+                fontWeight: '700',
+                fontSize: 20,
                 color: 'var(--mui-palette-primary-main)',
-                ':hover': {
-                  color: 'var(--mui-palette-primary-main)',
-                },
-                ':active': {
-                  color: 'var(--mui-palette-primary-dark)',
-                },
-                padding: '8px 16px',
               }}
+              component="a"
               href={getLink({
                 href: '/recipe/create',
                 label: t('create'),
                 authState: 'authenticated',
               })}
             >
-              <Add />
-              {t('create')}
-            </Button>
+              <AddCircleRounded fontSize="medium" />
+            </IconButton>
+              
+              </Tooltip>
             {session ? (
               <UserMenu user={session.user} settings={settings} />
             ) : (

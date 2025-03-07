@@ -69,7 +69,8 @@
     "logout": "Log ud",
     "get_started": "Kom Igang",
     "create": "Opret",
-    "meal_plan": "Meal Plan"
+    "meal_plan": "Meal Plan",
+    "create_recipe": "Opret Opskrift"
   },
   "settings": {
     "name": "Navn",

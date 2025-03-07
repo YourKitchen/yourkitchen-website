@@ -73,7 +73,8 @@
     "logout": "Logout",
     "get_started": "Get Started",
     "create": "Create",
-    "meal_plan": "Meal Plan"
+    "meal_plan": "Meal Plan",
+    "create_Recipe": "Create Recipe"
   },
   "settings": {
     "name": "Name",

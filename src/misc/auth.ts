@@ -12,9 +12,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signOut: '/auth/signout',
     verifyRequest: '/auth/verify',
   },
-  session: {
-    strategy: 'database',
-  },
+  session: { strategy: 'jwt' },
   callbacks: {
     session: async ({ token, session, trigger, newSession }) => {
       if (trigger === 'update') {

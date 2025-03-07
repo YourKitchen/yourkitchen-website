@@ -110,7 +110,7 @@ const MobileHeader: FC<MobileHeaderProps> = ({ settings, pages }) => {
           }}
         >
           {pages.map((page) => (
-            <MenuItem LinkComponent={Link} key={page.label} href="">
+            <MenuItem LinkComponent={Link} key={page.label} href={page.href}>
               <Typography textAlign="center">{page.label}</Typography>
             </MenuItem>
           ))}

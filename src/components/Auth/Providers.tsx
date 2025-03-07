@@ -1,4 +1,3 @@
-'use server'
 import { Button } from '@mui/material'
 import Image from 'next/image'
 import React from 'react'
@@ -20,26 +19,29 @@ const Providers = async () => {
     <form
       key={`${provider.id}-form`}
       action={async () => {
-        'use server'
-        signIn(provider.id, { callbackUrl: '/' })
+        "use server"
+
+        await signIn(provider.id, { callbackUrl: '/' })
       }}
     >
       <Button
         type="submit"
         sx={{
-          fontWeight: 'normal',
+          fontWeight: '600',
+          fontSize: 17,
           marginTop: 2,
           '&:hover': {
             textDecoration: 'none',
             backgroundColor:
-              'rgba(var(--mui-palette-primary-light) / var(--mui-palette-action-hoverOpacity))',
+              'rgba(var(--mui-palette-primary-lightChannel) / var(--mui-palette-action-hoverOpacity))',
             color: 'white',
           },
+          color: 'white',
           justifyContent: 'left',
           width: '100%',
           gap: 2,
           backgroundColor:
-            'rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-hoverOpacity))',
+            'rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-focusOpacity))',
         }}
       >
         <Image
