@@ -9,11 +9,10 @@ import { auth } from '#misc/auth'
 import theme from '#misc/theme'
 import { CssBaseline } from '@mui/material'
 
-const layout: FC<PropsWithChildren & { params: Promise<{ locale?: string }> }> = async ({
-  children,
-  params,
-}) => {
-  const {locale} = await params
+const layout: FC<
+  PropsWithChildren & { params: Promise<{ locale?: string }> }
+> = async ({ children, params }) => {
+  const { locale } = await params
 
   const messages = await getMessages({ locale: locale })
   const session = await auth()

@@ -19,7 +19,7 @@ const Providers = async () => {
     <form
       key={`${provider.id}-form`}
       action={async () => {
-        "use server"
+        'use server'
 
         await signIn(provider.id, { callbackUrl: '/' })
       }}

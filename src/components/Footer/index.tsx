@@ -66,13 +66,27 @@ const Footer: FC<{ locale: string }> = async ({ locale }) => {
           }}
         >
           <LanguageSelect locale={locale} />
-          <Link href="/cookies" variant="body2">
+          <Link
+            href="/cookies"
+            sx={{
+              textDecoration: 'none',
+              color: '#ffffff',
+            }}
+            variant="body2"
+          >
             {t('cookie_policy')}
           </Link>
           {/* <Link href="/terms" variant="body2">
             {t('terms_of_service')}
           </Link> */}
-          <Link href="/privacy" variant="body2">
+          <Link
+            href="/privacy"
+            sx={{
+              textDecoration: 'none',
+              color: '#ffffff',
+            }}
+            variant="body2"
+          >
             {t('privacy_policy')}
           </Link>
         </Box>

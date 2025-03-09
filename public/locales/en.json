@@ -58,7 +58,8 @@
     "my_meal_plan": "My Meal Plan",
     "add_recipe": "Add Recipe",
     "week": "Week",
-    "meal": "Meal"
+    "meal": "Meal",
+    "close": "Close"
   },
   "footer": {
     "cookie_policy": "Cookie Policy",
@@ -74,7 +75,7 @@
     "get_started": "Get Started",
     "create": "Create",
     "meal_plan": "Meal Plan",
-    "create_Recipe": "Create Recipe"
+    "create_recipe": "Create Recipe"
   },
   "settings": {
     "name": "Name",

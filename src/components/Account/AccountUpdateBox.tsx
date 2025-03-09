@@ -132,7 +132,7 @@ const AccountUpdateBox: FC<AccountUpdateBoxProps> = <T = any>({
                   {t(
                     state[cell.field] && typeof state[cell.field] !== 'string'
                       ? 'file_selected'
-                      : cell.label ?? 'upload_file',
+                      : (cell.label ?? 'upload_file'),
                   )}
                   <input
                     accept="image/*"
