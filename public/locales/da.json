@@ -54,7 +54,8 @@
     "search_for_recipe": "Søg efter opskrift",
     "meal_plan": "Meal Plan",
     "my_meal_plan": "Min madplan",
-    "meal": "Måltid"
+    "meal": "Måltid",
+    "close": "Luk"
   },
   "footer": {
     "cookie_policy": "Cookiepolitik",
@@ -69,7 +70,8 @@
     "logout": "Log ud",
     "get_started": "Kom Igang",
     "create": "Opret",
-    "meal_plan": "Meal Plan"
+    "meal_plan": "Meal Plan",
+    "create_recipe": "Opret Opskrift"
   },
   "settings": {
     "name": "Navn",

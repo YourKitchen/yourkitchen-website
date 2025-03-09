@@ -49,7 +49,6 @@ interface UserPageProps {
 }
 
 const UserPage = async () => {
-
   const params = useParams<{ id: string }>()
 
   const { data: user } = useSWR<YKResponse<UserPageProps['user']>>(

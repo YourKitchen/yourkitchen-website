@@ -56,7 +56,7 @@ const RecipeBox: FC<RecipeBoxProps> = ({ recipe }) => {
       href={`/recipe/${recipe.id}`}
     >
       <Box
-        sx={({
+        sx={{
           top: 0,
           left: 0,
           right: 0,
@@ -73,7 +73,7 @@ const RecipeBox: FC<RecipeBoxProps> = ({ recipe }) => {
             'linear-gradient(0deg, var(--mui-palette-primary-contrastText), transparent)',
 
           textWrap: 'balance',
-        })}
+        }}
       >
         <Box>
           <Typography>{recipe.name}</Typography>

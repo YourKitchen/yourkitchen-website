@@ -3,6 +3,8 @@ import { Box, Typography } from '@mui/material'
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import Providers from '../../../../../src/components/Auth/Providers'
+import type { FC } from 'react'
+import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: 'Sign In',
@@ -10,15 +12,18 @@ export const metadata: Metadata = {
     'Sign in to access additional features of YourKitchen sucha as a personalized mealplan',
 }
 
-const SigninPage = async () => {
-  // Translation
+const SigninPage: FC<{
+  searchParams: Promise<{ callbackUrl: string }>
+}> = async ({ searchParams }) => {
+  // Translations
   const t = await getTranslations('auth')
 
-  // Verification
   const session = await auth()
 
-  if (session !== null) {
-    return Response.redirect('/')
+  const params = await searchParams
+
+  if (session) {
+    redirect(params.callbackUrl || '/')
   }
 
   // useEffect(() => {

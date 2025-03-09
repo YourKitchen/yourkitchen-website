@@ -77,9 +77,8 @@ const IngredientItem: FC<IngredientItemProps> = ({
  * Visual representation of a recipe
  */
 const RecipePage: FC = () => {
-
   const params = useParams<{ recipeId: string }>()
-  
+
   // Translations
   const t = useTranslations('common')
   const { data: recipe } = useSWR<YKResponse<RecipePageProps['recipe']>>(

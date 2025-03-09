@@ -38,6 +38,7 @@ export const MealCell: FC<MealCellProps> = ({ t, meal, editMealRecipe }) => {
           onClick={() => {
             editMealRecipe(null)
           }}
+          variant="outlined"
         >
           {t('add_recipe')}
         </Button>
@@ -54,12 +55,11 @@ export const MealCell: FC<MealCellProps> = ({ t, meal, editMealRecipe }) => {
             href={`/recipe/${mealRecipe.recipeId}`}
             key={mealRecipe.id}
             sx={{
-              flex: 1,
               borderRadius: 2,
               display: 'flex',
               minHeight: '80px',
               alignItems: 'center',
-              padding: 2,
+              paddingX: 2,
               textDecoration: 'none',
               width: '100%',
               '&:hover': {

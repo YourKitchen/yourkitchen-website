@@ -232,7 +232,7 @@ const ImageSelect: FC<ImageSelectProps> = ({
                     src={
                       image.file
                         ? URL.createObjectURL(image.file)
-                        : image.photoRefUrl ?? undefined
+                        : (image.photoRefUrl ?? undefined)
                     }
                     width={120}
                     height={120}

@@ -91,17 +91,16 @@ export const theme = createTheme({
           ...theme.applyStyles('dark', {
             color: '#fff',
             background: 'radial-gradient(circle at top, #221102 , #070a1f)',
-          })
+          }),
         },
       }),
     },
     MuiButton: {
       styleOverrides: {
         root: {
-            borderRadius: '13px',
-            padding: '8px 16px',
-          }
-        
+          borderRadius: '13px',
+          padding: '8px 16px',
+        },
       },
     },
   },
