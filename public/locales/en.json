@@ -5,6 +5,12 @@
     "send_link": "Send Link",
     "OR": "Or"
   },
+  "about": {
+    "title": "About Us",
+    "description": "Learn more about our mission, vision, and the team behind YourKitchen.",
+    "section_title": "Our Story",
+    "section_content": "YourKitchen was founded with the goal of bringing delicious and easy-to-make recipes to everyone. Our team is passionate about food and dedicated to helping you create amazing culinary experiences."
+  },
   "common": {
     "create_recipe": "Create Recipe",
     "name": "Name",

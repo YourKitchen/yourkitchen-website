@@ -5,6 +5,12 @@
     "send_link": "Send Link",
     "OR": "Eller"
   },
+  "about": {
+    "title": "Om Os",
+    "description": "Lær mere om vores mission, vision og teamet bag YourKitchen.",
+    "section_title": "Vores Historie",
+    "section_content": "YourKitchen blev grundlagt med målet om at bringe lækre og nemme opskrifter til alle. Vores team er passioneret omkring mad og dedikeret til at hjælpe dig med at skabe fantastiske kulinariske oplevelser."
+  },
   "common": {
     "create_recipe": "Opret Opskrift",
     "name": "Navn",
