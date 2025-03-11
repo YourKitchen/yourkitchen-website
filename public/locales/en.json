@@ -78,7 +78,8 @@
     "import_url": "Import URL",
     "import_recipe_description": "Import a recipe from a URL",
     "amount": "Amount",
-    "unit": "Unit"
+    "unit": "Unit",
+    "image_selected": "Image Selected"
   },
   "footer": {
     "cookie_policy": "Cookie Policy",

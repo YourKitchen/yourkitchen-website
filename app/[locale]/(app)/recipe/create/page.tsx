@@ -25,11 +25,11 @@ import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { NextSeo } from 'next-seo'
-import { redirect } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import { type FC, useState } from 'react'
 import { toast } from 'sonner'
 import { getGetIngredientsFromStep } from 'src/utils'
-import { validateContent } from 'src/utils/validator'
+import { validateContent, ValidationError } from 'src/utils/validator'
 import { v4 } from 'uuid'
 
 const defaultRecipe: Recipe & {
@@ -63,6 +63,8 @@ const CreateRecipePage: FC = () => {
   const { data: session, status } = useSession({
     required: true,
   })
+
+  const router = useRouter()
 
   // States
   const [importOpen, setImportOpen] = useState(false)
@@ -127,10 +129,20 @@ const CreateRecipePage: FC = () => {
       },
       {
         loading: `${t('creating')} ${t('recipe')}..`,
-        error: (err) => err.message ?? err,
+        error: (err) => {
+          if (err instanceof ValidationError) {
+            console.error(`This object caused the error ${err.message}`, err.object)
+          } else {
+            console.error(err)
+          }
+
+          return err.message ?? err
+        },
         success: (response) => {
           // Navigate to the newly created recipe.
-          redirect(`recipe/${response.data.data.id}`)
+          router.push(`recipe/${response.data.data.id}`)
+
+          return response.data.message
         },
       },
     )

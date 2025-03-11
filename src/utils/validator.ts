@@ -1,5 +1,6 @@
 import type {
   AllergenType,
+  Ingredient,
   Recipe,
   RecipeIngredient,
   RecipeType,
@@ -66,7 +67,10 @@ export const validUnits = [
 ]
 
 const validateIngredient = (
-  ingredient: any,
+  ingredient: RecipeIngredient &
+    Pick<Ingredient, 'name' | 'allergenTypes'> & {
+      allergenType?: AllergenType
+    },
 ): {
   id: string
   name: string
@@ -86,8 +90,16 @@ const validateIngredient = (
   if (ingredient.name && typeof ingredient.name === 'string') {
     formattedIngredient.name = ingredient.name
     formattedIngredient.id = getIngredientId(ingredient.name)
+  } else if (
+    ingredient.ingredientId &&
+    typeof ingredient.ingredientId === 'string'
+  ) {
+    formattedIngredient.id = ingredient.ingredientId
   } else {
-    throw new ValidationError('ingredient."name" was not a string', ingredient)
+    throw new ValidationError(
+      'ingredient."name" and ingredient."id" was not a string',
+      ingredient,
+    )
   }
 
   // Amount
@@ -122,6 +134,9 @@ const validateIngredient = (
   // Allergen Type
   if (ingredient.allergenType && typeof ingredient.allergenType === 'string') {
     formattedIngredient.allergenType = ingredient.allergenType
+  } else if (ingredient.allergenTypes) {
+    // Check if it is defined, as it is optional
+    formattedIngredient.allergenType = ingredient.allergenTypes[0]
   } else if (ingredient.allergenType) {
     // Check if it is defined, as it is optional
     throw new ValidationError(
@@ -201,12 +216,7 @@ function convertUnitAbbreviationToFullName(unitAbbreviation: string) {
 
 const validateStep = (
   step: string,
-  ingredients: {
-    name: string
-    unit: string
-    amount: number
-    allergenType: string | null
-  }[],
+  ingredients: ReturnType<typeof validateIngredient>[],
 ): { content: string; numberOfIngredients: number } => {
   // Validate that all ingredients are valid.
   const stepSplit = step.split('!')
@@ -228,11 +238,22 @@ const validateStep = (
         const ingredientName = (colonSplit[2] as string).toLowerCase()
 
         const ingredient = ingredients.find((ingredient) => {
-          const thisIngredientName = ingredient.name.toLowerCase()
-          return (
-            ingredientName.includes(thisIngredientName) ||
-            thisIngredientName.includes(ingredientName)
-          )
+          if (ingredient.name) {
+            const thisIngredientName = ingredient.name.toLowerCase()
+            return (
+              ingredientName.includes(thisIngredientName) ||
+              thisIngredientName.includes(ingredientName)
+            )
+          }
+          const ingredientId = ingredient.id
+          if (ingredientId) {
+            // If an ingredient id is found, look that up instead
+            return (
+              ingredientName.includes(ingredientId) ||
+              ingredientId.includes(ingredientName)
+            )
+          }
+          return false
         })
 
         if (ingredient) {
@@ -240,7 +261,7 @@ const validateStep = (
           newSplit.push(
             `${ingredient.amount.toFixed(2)}:${
               ingredient.unit
-            }:${ingredient.name.toLowerCase().replaceAll(' ', '-')}`,
+            }:${ingredient.id ?? getIngredientId(ingredient.name)}`,
           )
         } else {
           throw new ValidationError(
@@ -322,7 +343,7 @@ const getGetIngredientsFromStep = (
 ): (Omit<RecipeIngredient, 'ingredientId'> & { name: string })[] => {
   const splits = step.split('!')
 
-  const ingredients: (Omit<RecipeIngredient, 'ingredientId'> & {
+  const ingredients: (RecipeIngredient & {
     name: string
   })[] = []
 
@@ -338,6 +359,7 @@ const getGetIngredientsFromStep = (
         amount: Number(ingredientSplit[0]),
         unit: ingredientSplit[1] as Unit,
         name: ingredientSplit[2],
+        ingredientId: getIngredientId(ingredientSplit[2]),
         recipeId,
       })
     }
