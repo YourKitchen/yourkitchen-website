@@ -61,7 +61,20 @@
     "meal_plan": "Meal Plan",
     "my_meal_plan": "Min madplan",
     "meal": "Måltid",
-    "close": "Luk"
+    "close": "Luk",
+    "select_file": "Vælg Fil",
+    "or": "Eller",
+    "url": "URL",
+    "upload_image": "Upload Billede",
+    "add_new_image": "Tilføj Nyt Billede",
+    "images": "Billeder",
+    "create": "Opret",
+    "add_step": "Tilføj Trin",
+    "import_recipe": "Importér Opskrift",
+    "import_url": "Importér URL",
+    "import_recipe_description": "Importér en opskrift fra en URL",
+    "amount": "Mængde",
+    "unit": "Enhed"
   },
   "footer": {
     "cookie_policy": "Cookiepolitik",

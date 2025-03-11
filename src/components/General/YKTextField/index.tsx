@@ -1,3 +1,4 @@
+'use client'
 import {
   FormControl,
   InputLabel,
@@ -6,7 +7,7 @@ import {
 } from '@mui/material'
 import React, { type FC } from 'react'
 
-const YKTextField: FC<TextFieldProps> = async (props) => {
+const YKTextField: FC<TextFieldProps> = (props) => {
   return (
     <FormControl fullWidth key={`textfield-${props.key}-control`}>
       <TextField label={props.placeholder} {...props} />

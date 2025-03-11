@@ -53,6 +53,12 @@ const UserMenu: FC<UserMenuProps> = ({ user, settings }) => {
         anchorEl={anchorElUser}
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}
+        sx={{
+          '& .MuiPaper-root': {
+            backgroundColor: 'var(--mui-palette-background-paper)',
+            color: 'var(--mui-palette-text-primary)',
+          },
+        }}
       >
         {settings.map((page) => (
           <MenuItem key={page.label} LinkComponent={Link} href={page.href}>

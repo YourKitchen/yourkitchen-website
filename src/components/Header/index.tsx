@@ -1,4 +1,3 @@
-'use server'
 import Logo from '#assets/Logo-192x192.png'
 import { auth } from '#misc/auth'
 import { Add, AddCircleRounded } from '@mui/icons-material'
@@ -55,15 +54,6 @@ const Header: FC = async () => {
       page.authState === (session ? 'authenticated' : 'unauthenticated'),
   ) as Page[]
 
-  const getLink = (page: Page) => {
-    if (page.authState === 'authenticated') {
-      if (!session) {
-        return `/auth/signin?callbackUrl=${page.href}`
-      }
-    }
-    return page.href
-  }
-
   const settings: Page[] = [
     { label: t('settings'), href: '/settings', authState: 'authenticated' },
     {
@@ -100,6 +90,7 @@ const Header: FC = async () => {
     >
       <Box sx={{ margin: '0 15px' }}>
         <Toolbar disableGutters>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
           <Link
             sx={{
               display: {
@@ -133,11 +124,10 @@ const Header: FC = async () => {
           >
             YourKitchen
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Link
                 key={page.label}
-                href={getLink(page)}
+                href={page.href}
                 sx={{
                   mx: 1,
                   textAlign: 'center',
@@ -187,11 +177,7 @@ const Header: FC = async () => {
                   color: 'var(--mui-palette-primary-main)',
                 }}
                 component="a"
-                href={getLink({
-                  href: '/recipe/create',
-                  label: t('create'),
-                  authState: 'authenticated',
-                })}
+                href={'/recipe/create'}
               >
                 <AddCircleRounded fontSize="medium" />
               </IconButton>
@@ -202,7 +188,7 @@ const Header: FC = async () => {
               <>
                 {settings.length > 0 ? (
                   <Button
-                    href={getLink(settings[0])}
+                    href={settings[0].href}
                     sx={{
                       display: 'block',
                       borderRadius: '13px',
@@ -224,7 +210,7 @@ const Header: FC = async () => {
               </>
             )}
           </Box>
-          <MobileHeader pages={pages} settings={settings} />
+          <MobileHeader session={session} pages={pages} settings={settings} />
         </Toolbar>
       </Box>
     </AppBar>

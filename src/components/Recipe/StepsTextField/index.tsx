@@ -65,7 +65,7 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
   >(null)
   // Select Ingredient
   const [selectedIngredient, setSelectedIngredient] = useState<Partial<
-    Omit<RecipeIngredient, 'recipeId'>
+    Omit<RecipeIngredient, 'recipeId' | 'amount'> & { amount:string} // amount is string instead of number until sent to server.
   > | null>(null)
 
   // Debounced search value used to search database for ingredients
@@ -278,6 +278,10 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
     if (!selectedIngredient.ingredientId) {
       toast.error('')
     }
+    if (Number.isNaN(Number(selectedIngredient.amount))) {
+      toast.error('Amount must be a number')
+      return
+    }
 
     // Construct the ingredient string
     const ingredientString = `!${selectedIngredient.amount}:${selectedIngredient.unit}:${selectedIngredient.ingredientId}!`
@@ -301,7 +305,7 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
   const onSearchValueSelected = (value: Ingredient) => {
     // When a search value is selected, show the dialog to select unit.
     setSelectedIngredient({
-      amount: 0,
+      amount: '',
       ingredientId: getIngredientId(value.name),
       unit: 'GRAM',
     })
@@ -436,20 +440,17 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
                   flex: 1,
                   borderRadius: '20px',
                 }}
-                value={selectedIngredient.amount ?? 0.0}
-                onChange={(e) =>
+                value={selectedIngredient.amount ?? null}
+                onChange={(e) => {
                   setSelectedIngredient((prev) =>
                     prev
                       ? {
                           ...prev,
-                          amount:
-                            (!Number.isNaN(Number(e.target.value))
-                              ? Number(e.target.value)
-                              : prev?.amount) ?? undefined,
+                          amount: e.target.value,
                         }
                       : null,
                   )
-                }
+                }}
                 type="number"
               />
               <IconButton color="primary" onClick={submitSelectedIngredient}>
