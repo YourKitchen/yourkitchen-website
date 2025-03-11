@@ -23,7 +23,7 @@ import { DateTime } from 'luxon'
 import type { Session } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import { NextSeo } from 'next-seo'
+import { NextSeo, RecipeJsonLd } from 'next-seo'
 import Image from 'next/image'
 import { useParams } from 'next/navigation'
 import { type FC, useCallback, useMemo, useState } from 'react'
@@ -215,7 +215,7 @@ const RecipePage: FC = () => {
           recipe.data.description ?? t('recipe_page_default_description')
         }
       />
-      {/* <RecipeJsonLd
+      <RecipeJsonLd
         name={recipe.data.name}
         authorName={recipe.data.owner.name ?? 'YourKitchen'} // It is required, and will often be set.
         description={
@@ -239,7 +239,7 @@ const RecipePage: FC = () => {
           text: step,
           url: `${SITE_URL}/recipe/${recipe.data.id}#step${index}`,
         }))}
-      /> */}
+      />
       <Box
         sx={{
           width: { xs: '100%', sm: '85%', md: '70%', lg: '60%' },
