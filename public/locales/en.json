@@ -79,7 +79,17 @@
     "import_recipe_description": "Import a recipe from a URL",
     "amount": "Amount",
     "unit": "Unit",
-    "image_selected": "Image Selected"
+    "image_selected": "Image Selected",
+    "gram": "Gram",
+    "kilogram": "Kilogram",
+    "liter": "Liter",
+    "milliliter": "Milliliter",
+    "tablespoon": "Tablespoon",
+    "teaspoon": "Teaspoon",
+    "cup": "Cup",
+    "piece": "Piece",
+    "slice": "Slice",
+    "clove": "Clove"
   },
   "footer": {
     "cookie_policy": "Cookie Policy",
