@@ -5,6 +5,12 @@
     "send_link": "Send Link",
     "OR": "Or"
   },
+  "about": {
+    "title": "About Us",
+    "description": "Learn more about our mission, vision, and the team behind YourKitchen.",
+    "section_title": "Our Story",
+    "section_content": "YourKitchen was founded with the goal of bringing delicious and easy-to-make recipes to everyone. Our team is passionate about food and dedicated to helping you create amazing culinary experiences."
+  },
   "common": {
     "create_recipe": "Create Recipe",
     "name": "Name",
@@ -59,7 +65,20 @@
     "add_recipe": "Add Recipe",
     "week": "Week",
     "meal": "Meal",
-    "close": "Close"
+    "close": "Close",
+    "select_file": "Select File",
+    "or": "Or",
+    "url": "URL",
+    "upload_image": "Upload Image",
+    "add_new_image": "Add New Image",
+    "images": "Images",
+    "create": "Create",
+    "add_step": "Add Step",
+    "import_recipe": "Import Recipe",
+    "import_url": "Import URL",
+    "import_recipe_description": "Import a recipe from a URL",
+    "amount": "Amount",
+    "unit": "Unit"
   },
   "footer": {
     "cookie_policy": "Cookie Policy",

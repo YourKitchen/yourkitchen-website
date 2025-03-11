@@ -2,6 +2,7 @@
 import { Menu as MenuIcon, More } from '@mui/icons-material'
 import {
   Box,
+  Button,
   IconButton,
   Link,
   Menu,
@@ -13,6 +14,8 @@ import Image from 'next/image'
 import type React from 'react'
 import { type FC, useState } from 'react'
 import Logo from '#assets/Logo-192x192.png'
+import UserMenu from './UserMenu'
+import type { Session } from 'next-auth'
 
 interface Page {
   label: string
@@ -21,11 +24,12 @@ interface Page {
 }
 
 interface MobileHeaderProps {
+  session: Session | null
   pages: Page[]
   settings: Page[]
 }
 
-const MobileHeader: FC<MobileHeaderProps> = ({ settings, pages }) => {
+const MobileHeader: FC<MobileHeaderProps> = ({ session, settings, pages }) => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null)
@@ -52,7 +56,7 @@ const MobileHeader: FC<MobileHeaderProps> = ({ settings, pages }) => {
   const mobileMenuId = 'primary-menu-mobile'
   return (
     <>
-      <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+      <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }, justifyContent: 'space-between'  }}>
         <IconButton
           size="large"
           aria-label="navigation menu"
@@ -80,17 +84,6 @@ const MobileHeader: FC<MobileHeaderProps> = ({ settings, pages }) => {
             alt="YourKitchen Logo"
           />
         </Link>
-        <IconButton
-          size="large"
-          sx={{ marginRight: '2vh' }}
-          aria-label="show more"
-          aria-haspopup="true"
-          aria-controls={mobileMenuId}
-          onClick={handleMobileMenuOpen}
-          color="inherit"
-        >
-          <More />
-        </IconButton>
         <Menu
           id="menu-appbar"
           anchorEl={anchorElNav}
@@ -106,7 +99,10 @@ const MobileHeader: FC<MobileHeaderProps> = ({ settings, pages }) => {
           open={isMenuOpen}
           onClose={handleCloseNavMenu}
           sx={{
-            display: { xs: 'block', md: 'none' },
+            '& .MuiPaper-root': {
+              backgroundColor: 'var(--mui-palette-background-paper)',
+              color: 'var(--mui-palette-text-primary)',
+            },
           }}
         >
           {pages.map((page) => (
@@ -115,27 +111,34 @@ const MobileHeader: FC<MobileHeaderProps> = ({ settings, pages }) => {
             </MenuItem>
           ))}
         </Menu>
-        <Menu
-          anchorEl={mobileMoreAnchorEl}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          id={mobileMenuId}
-          keepMounted
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          open={isMobileMenuOpen}
-          onClose={handleMobileMenuClose}
-        >
-          {settings.map((page) => (
-            <MenuItem LinkComponent={Link} key={page.label} href={page.href}>
-              {page.label}
-            </MenuItem>
-          ))}
-        </Menu>
+        
+        {session ? (
+              <UserMenu user={session.user} settings={settings} />
+            ) : (
+              <>
+                {settings.length > 0 ? (
+                  <Button
+                    href={settings[0].href}
+                    sx={{
+                      display: 'block',
+                      borderRadius: '13px',
+                      padding: '8px 16px',
+                      backgroundColor: 'var(--mui-palette-primary-main)',
+                      color: 'var(--mui-palette-primary-contrastText)',
+                      ':hover': {
+                        backgroundColor: 'var(--mui-palette-primary-main)',
+                      },
+                      ':active': {
+                        backgroundColor: 'var(--mui-palette-primary-dark)',
+                      },
+                    }}
+                    variant="contained"
+                  >
+                    {settings[0].label}
+                  </Button>
+                ) : null}
+              </>
+            )}
       </Box>
     </>
   )
