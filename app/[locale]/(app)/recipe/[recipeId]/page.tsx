@@ -291,7 +291,7 @@ const RecipePage: FC = () => {
                 width={40}
                 height={40}
                 style={{
-                  borderRadius: 4,
+                  borderRadius: '50%',
                 }}
               />
             )}

@@ -89,7 +89,8 @@
     "cup": "Cup",
     "piece": "Piece",
     "slice": "Slice",
-    "clove": "Clove"
+    "clove": "Clove",
+    "dish": "Dish"
   },
   "footer": {
     "cookie_policy": "Cookie Policy",
