@@ -8,7 +8,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
   return {
     title: t('create_recipe'),
     description:
-      'This page allows the user to create a new recipe to add to their recipe collection. This recipe can also be public.'
+      'This page allows the user to create a new recipe to add to their recipe collection. This recipe can also be public.',
   }
 }
 

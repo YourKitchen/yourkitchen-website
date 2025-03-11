@@ -90,40 +90,40 @@ const Header: FC = async () => {
     >
       <Box sx={{ margin: '0 15px' }}>
         <Toolbar disableGutters>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-          <Link
-            sx={{
-              display: {
-                xs: 'none',
-                sm: 'flex',
-              },
-            }}
-            href="/"
-          >
-            <Image
-              width={40}
-              height={40}
-              style={{ borderRadius: '20px' }}
-              src={Logo}
-              alt="YourKitchen Logo"
-            />
-          </Link>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mx: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontWeight: 700,
-              letterSpacing: '.1rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            YourKitchen
-          </Typography>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+            <Link
+              sx={{
+                display: {
+                  xs: 'none',
+                  sm: 'flex',
+                },
+              }}
+              href="/"
+            >
+              <Image
+                width={40}
+                height={40}
+                style={{ borderRadius: '20px' }}
+                src={Logo}
+                alt="YourKitchen Logo"
+              />
+            </Link>
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="/"
+              sx={{
+                mx: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontWeight: 700,
+                letterSpacing: '.1rem',
+                color: 'inherit',
+                textDecoration: 'none',
+              }}
+            >
+              YourKitchen
+            </Typography>
             {pages.map((page) => (
               <Link
                 key={page.label}

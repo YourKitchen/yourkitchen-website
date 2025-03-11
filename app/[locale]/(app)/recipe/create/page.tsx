@@ -131,7 +131,10 @@ const CreateRecipePage: FC = () => {
         loading: `${t('creating')} ${t('recipe')}..`,
         error: (err) => {
           if (err instanceof ValidationError) {
-            console.error(`This object caused the error ${err.message}`, err.object)
+            console.error(
+              `This object caused the error ${err.message}`,
+              err.object,
+            )
           } else {
             console.error(err)
           }

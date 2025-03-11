@@ -56,7 +56,13 @@ const MobileHeader: FC<MobileHeaderProps> = ({ session, settings, pages }) => {
   const mobileMenuId = 'primary-menu-mobile'
   return (
     <>
-      <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }, justifyContent: 'space-between'  }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: { xs: 'flex', md: 'none' },
+          justifyContent: 'space-between',
+        }}
+      >
         <IconButton
           size="large"
           aria-label="navigation menu"
@@ -111,34 +117,34 @@ const MobileHeader: FC<MobileHeaderProps> = ({ session, settings, pages }) => {
             </MenuItem>
           ))}
         </Menu>
-        
+
         {session ? (
-              <UserMenu user={session.user} settings={settings} />
-            ) : (
-              <>
-                {settings.length > 0 ? (
-                  <Button
-                    href={settings[0].href}
-                    sx={{
-                      display: 'block',
-                      borderRadius: '13px',
-                      padding: '8px 16px',
-                      backgroundColor: 'var(--mui-palette-primary-main)',
-                      color: 'var(--mui-palette-primary-contrastText)',
-                      ':hover': {
-                        backgroundColor: 'var(--mui-palette-primary-main)',
-                      },
-                      ':active': {
-                        backgroundColor: 'var(--mui-palette-primary-dark)',
-                      },
-                    }}
-                    variant="contained"
-                  >
-                    {settings[0].label}
-                  </Button>
-                ) : null}
-              </>
-            )}
+          <UserMenu user={session.user} settings={settings} />
+        ) : (
+          <>
+            {settings.length > 0 ? (
+              <Button
+                href={settings[0].href}
+                sx={{
+                  display: 'block',
+                  borderRadius: '13px',
+                  padding: '8px 16px',
+                  backgroundColor: 'var(--mui-palette-primary-main)',
+                  color: 'var(--mui-palette-primary-contrastText)',
+                  ':hover': {
+                    backgroundColor: 'var(--mui-palette-primary-main)',
+                  },
+                  ':active': {
+                    backgroundColor: 'var(--mui-palette-primary-dark)',
+                  },
+                }}
+                variant="contained"
+              >
+                {settings[0].label}
+              </Button>
+            ) : null}
+          </>
+        )}
       </Box>
     </>
   )

@@ -65,7 +65,7 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
   >(null)
   // Select Ingredient
   const [selectedIngredient, setSelectedIngredient] = useState<Partial<
-    Omit<RecipeIngredient, 'recipeId' | 'amount'> & { amount:string} // amount is string instead of number until sent to server.
+    Omit<RecipeIngredient, 'recipeId' | 'amount'> & { amount: string } // amount is string instead of number until sent to server.
   > | null>(null)
 
   // Debounced search value used to search database for ingredients
