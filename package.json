@@ -45,7 +45,7 @@
     "fuzzball": "^2.1.3",
     "html-recipe-parser": "https://github.com/MakakWasTaken/html-recipe-parser.git#commit=bcc6efc8156f8e1f3f9ce2c2079d0c137d21fdcd",
     "luxon": "^3.5.0",
-    "next": "^15.2.1",
+    "next": "15.2.8",
     "next-auth": "^5.0.0-beta.25",
     "next-intl": "^3.26.5",
     "next-seo": "^6.6.0",
