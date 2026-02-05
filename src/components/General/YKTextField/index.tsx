@@ -1,11 +1,6 @@
 'use client'
-import {
-  FormControl,
-  InputLabel,
-  TextField,
-  type TextFieldProps,
-} from '@mui/material'
-import React, { type FC } from 'react'
+import { FormControl, TextField, type TextFieldProps } from '@mui/material'
+import type { FC } from 'react'
 
 const YKTextField: FC<TextFieldProps> = (props) => {
   return (

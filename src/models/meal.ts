@@ -1,9 +1,9 @@
 import type {
   MealPlanRecipe,
+  Rating as PrismaRating,
   Recipe,
   RecipeImage,
-  Rating as PrismaRating,
-} from '@prisma/client'
+} from 'prisma/generated/prisma/client'
 
 export type Meal = (MealPlanRecipe & {
   recipe: Recipe & {

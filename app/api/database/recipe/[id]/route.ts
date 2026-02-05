@@ -1,11 +1,11 @@
-import type { Recipe, RecipeImage } from '@prisma/client'
 import type { NextRequest } from 'next/server'
+import type { Recipe, RecipeImage } from 'prisma/generated/prisma/client'
 import { validatePermissions } from '#misc/utils'
-import { getBody, getQuery } from '#network/index'
+import { getBody } from '#network/index'
 import prisma from '#prisma'
 
 export const GET = async (
-  req: NextRequest,
+  _req: NextRequest,
   ctx: { params: Promise<{ id: string }> },
 ) => {
   const params = await ctx.params
@@ -147,7 +147,7 @@ export const DELETE = validatePermissions(
   {
     permissions: true,
   },
-  async (req, user, ctx) => {
+  async (_req, user, ctx) => {
     const params = await ctx.params
 
     if (!params.id) {

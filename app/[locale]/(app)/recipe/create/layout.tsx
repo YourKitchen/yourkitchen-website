@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
-import React, { type FC, type PropsWithChildren } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations('header')

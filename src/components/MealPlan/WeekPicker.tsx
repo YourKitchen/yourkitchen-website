@@ -15,7 +15,7 @@ import type { TFunction } from '#models/TFunction'
 
 const CustomPickersDay = styled(PickersDay, {
   shouldForwardProp: (prop) => prop !== 'isSelected' && prop !== 'isHovered',
-})<PickersDayProps<DateTime> & { isHovered: boolean; isSelected: boolean }>(
+})<PickersDayProps & { isHovered: boolean; isSelected: boolean }>(
   ({ theme, isSelected, isHovered, day }) => ({
     borderRadius: 0,
     ...(isSelected && {
@@ -55,7 +55,7 @@ interface DayProps {
   hoveredDay: DateTime | null
 }
 
-const Day: FC<PickersDayProps<DateTime> & DayProps> = (props) => {
+const Day: FC<PickersDayProps & DayProps> = (props) => {
   const { day, selectedDay, hoveredDay, ...other } = props
 
   return (
@@ -72,7 +72,7 @@ const Day: FC<PickersDayProps<DateTime> & DayProps> = (props) => {
 }
 
 export const WeekPicker: FC<{
-  weekPickerProps?: DateCalendarProps<DateTime>
+  weekPickerProps?: DateCalendarProps
   buttonProps?: ButtonProps
   t: TFunction
   value: DateTime

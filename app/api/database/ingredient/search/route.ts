@@ -6,7 +6,7 @@ export const GET = async (req: NextRequest) => {
   // Search for the term in the DB
   const query = getQuery<{ searchTerm: string; count?: string }>(req)
   const searchTerm = query.searchTerm
-  const count = query.count ? Number.parseInt(query.count) : 5
+  const count = query.count ? Number.parseInt(query.count, 10) : 5
 
   const response = await prisma.ingredient.findMany({
     orderBy: {

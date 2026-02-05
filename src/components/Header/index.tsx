@@ -1,6 +1,6 @@
 import Logo from '#assets/Logo-192x192.png'
 import { auth } from '#misc/auth'
-import { Add, AddCircleRounded } from '@mui/icons-material'
+import { AddCircleRounded } from '@mui/icons-material'
 import {
   AppBar,
   Box,
@@ -90,7 +90,13 @@ const Header: FC = async () => {
     >
       <Box sx={{ margin: '0 15px' }}>
         <Toolbar disableGutters>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', md: 'flex' },
+              alignItems: 'center',
+            }}
+          >
             <Link
               sx={{
                 display: {
@@ -184,31 +190,27 @@ const Header: FC = async () => {
             </Tooltip>
             {session ? (
               <UserMenu user={session.user} settings={settings} />
-            ) : (
-              <>
-                {settings.length > 0 ? (
-                  <Button
-                    href={settings[0].href}
-                    sx={{
-                      display: 'block',
-                      borderRadius: '13px',
-                      padding: '8px 16px',
-                      backgroundColor: 'var(--mui-palette-primary-main)',
-                      color: 'var(--mui-palette-primary-contrastText)',
-                      ':hover': {
-                        backgroundColor: 'var(--mui-palette-primary-main)',
-                      },
-                      ':active': {
-                        backgroundColor: 'var(--mui-palette-primary-dark)',
-                      },
-                    }}
-                    variant="contained"
-                  >
-                    {settings[0].label}
-                  </Button>
-                ) : null}
-              </>
-            )}
+            ) : settings.length > 0 ? (
+              <Button
+                href={settings[0].href}
+                sx={{
+                  display: 'block',
+                  borderRadius: '13px',
+                  padding: '8px 16px',
+                  backgroundColor: 'var(--mui-palette-primary-main)',
+                  color: 'var(--mui-palette-primary-contrastText)',
+                  ':hover': {
+                    backgroundColor: 'var(--mui-palette-primary-main)',
+                  },
+                  ':active': {
+                    backgroundColor: 'var(--mui-palette-primary-dark)',
+                  },
+                }}
+                variant="contained"
+              >
+                {settings[0].label}
+              </Button>
+            ) : null}
           </Box>
           <MobileHeader session={session} pages={pages} settings={settings} />
         </Toolbar>

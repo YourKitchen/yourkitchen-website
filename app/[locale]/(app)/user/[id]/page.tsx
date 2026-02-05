@@ -14,26 +14,22 @@ import {
   Tabs,
   Typography,
 } from '@mui/material'
-import { type FeedItem, Follows, type Rating, type User } from '@prisma/client'
 import { DateTime } from 'luxon'
-import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
+import Image from 'next/image'
+import { useParams } from 'next/navigation'
 import type { Session } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import { getTranslations } from 'next-intl/server'
-import { NextSeo, ProfilePageJsonLd } from 'next-seo'
-import Image from 'next/image'
-import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
+import type { FeedItem, Rating, User } from 'prisma/generated/prisma/client'
+import { useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 import Logo from '#assets/Logo-512x512.png'
 import TabPanel from '#components/Account/TabPanel'
 import YKChip from '#components/Recipe/YKChip'
-import { auth } from '#misc/auth'
 import type { PublicRecipe } from '#models/publicRecipe'
 import type { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
-import { useParams } from 'next/navigation'
 
 type PublicUser = Pick<User, 'id' | 'image' | 'name' | 'created'>
 
@@ -60,7 +56,7 @@ const UserPage = async () => {
     required: true,
   })
 
-  const ownUser = session?.user
+  const _ownUser = session?.user
 
   const t = useTranslations('common')
 
@@ -83,8 +79,6 @@ const UserPage = async () => {
         `database/user/${user?.data.id}/follow`,
       )
 
-      console.log(response.data.data)
-
       setFollowing(response.data.data)
     } catch (err) {
       // Reset the following state
@@ -105,27 +99,6 @@ const UserPage = async () => {
         alignItems: 'center',
       }}
     >
-      <ProfilePageJsonLd
-        breadcrumb={'user'}
-        mainEntity={{
-          '@type': 'Person',
-          name: user.data.name ?? 'User',
-          identifier: user.data.id,
-          image: user.data.image ?? undefined,
-          interactionStatistic: [
-            {
-              '@type': 'InteractionCounter',
-              interactionType: 'https://schema.org/FollowAction',
-              userInteraactionCount: user?.data.followers.length,
-            },
-          ],
-        }}
-        dateCreated={user.data.created as any}
-      />
-      <NextSeo
-        title={user.data.name ?? 'User'}
-        description={t('user_default_description')}
-      />
       <Dialog
         open={followDialogOpen !== null}
         onClose={() => setFollowDialogOpen(null)}

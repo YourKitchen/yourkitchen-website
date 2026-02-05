@@ -1,6 +1,4 @@
 import { put } from '@vercel/blob'
-import type { NextApiRequest, NextApiResponse } from 'next'
-import type { Session } from 'next-auth'
 import { validatePermissions } from '#misc/utils'
 import { getQuery } from '#network/index'
 
@@ -8,7 +6,7 @@ export const POST = validatePermissions(
   {
     permissions: true,
   },
-  async (req, user) => {
+  async (req, _user) => {
     const query = getQuery<{ recipeId: string; id: string }>(req)
 
     const recipeId = query.recipeId as string

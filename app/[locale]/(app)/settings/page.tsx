@@ -1,11 +1,9 @@
 'use client'
 import { Box, CircularProgress, Tab, Tabs, Typography } from '@mui/material'
-import type { User } from '@prisma/client'
-import type { GetStaticProps } from 'next'
+import Image from 'next/image'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import { NextSeo } from 'next-seo'
-import Image from 'next/image'
+import type { User } from 'prisma/generated/prisma/client'
 import { type FC, useState } from 'react'
 import { toast } from 'sonner'
 import AccountUpdateBox from '#components/Account/AccountUpdateBox'
@@ -84,7 +82,6 @@ const UserPage: FC = () => {
 
   return (
     <Box sx={{ margin: { xs: 0, sm: 0, md: 8 }, my: { xs: 4, sm: 4, md: 0 } }}>
-      <NextSeo title="Settings" />
       <Box sx={{ alignItems: 'center', display: 'flex' }}>
         <Image
           width={80}

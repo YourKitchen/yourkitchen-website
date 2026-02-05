@@ -1,5 +1,5 @@
 'use client'
-import { Menu as MenuIcon, More } from '@mui/icons-material'
+import { Menu as MenuIcon } from '@mui/icons-material'
 import {
   Box,
   Button,
@@ -9,7 +9,6 @@ import {
   MenuItem,
   Typography,
 } from '@mui/material'
-import { pages } from 'next/dist/build/templates/app-page'
 import Image from 'next/image'
 import type React from 'react'
 import { type FC, useState } from 'react'
@@ -35,7 +34,7 @@ const MobileHeader: FC<MobileHeaderProps> = ({ session, settings, pages }) => {
     useState<null | HTMLElement>(null)
 
   const isMenuOpen = Boolean(anchorElNav)
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
+  const _isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget)
@@ -45,108 +44,104 @@ const MobileHeader: FC<MobileHeaderProps> = ({ session, settings, pages }) => {
     setAnchorElNav(null)
   }
 
-  const handleMobileMenuClose = (): void => {
+  const _handleMobileMenuClose = (): void => {
     setMobileMoreAnchorEl(null)
   }
 
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>): void => {
+  const _handleMobileMenuOpen = (
+    event: React.MouseEvent<HTMLElement>,
+  ): void => {
     setMobileMoreAnchorEl(event.currentTarget)
   }
 
-  const mobileMenuId = 'primary-menu-mobile'
+  const _mobileMenuId = 'primary-menu-mobile'
   return (
-    <>
-      <Box
+    <Box
+      sx={{
+        flexGrow: 1,
+        display: { xs: 'flex', md: 'none' },
+        justifyContent: 'space-between',
+      }}
+    >
+      <IconButton
+        size="large"
+        aria-label="navigation menu"
+        aria-controls="menu-appbar"
+        aria-haspopup="true"
+        onClick={handleOpenNavMenu}
+        color="inherit"
+      >
+        <MenuIcon />
+      </IconButton>
+      <Link
         sx={{
-          flexGrow: 1,
-          display: { xs: 'flex', md: 'none' },
-          justifyContent: 'space-between',
+          display: {
+            xs: 'none',
+            sm: 'flex',
+          },
+        }}
+        href="/"
+      >
+        <Image
+          width={40}
+          height={40}
+          style={{ borderRadius: '20px' }}
+          src={Logo}
+          alt="YourKitchen Logo"
+        />
+      </Link>
+      <Menu
+        id="menu-appbar"
+        anchorEl={anchorElNav}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        open={isMenuOpen}
+        onClose={handleCloseNavMenu}
+        sx={{
+          '& .MuiPaper-root': {
+            backgroundColor: 'var(--mui-palette-background-paper)',
+            color: 'var(--mui-palette-text-primary)',
+          },
         }}
       >
-        <IconButton
-          size="large"
-          aria-label="navigation menu"
-          aria-controls="menu-appbar"
-          aria-haspopup="true"
-          onClick={handleOpenNavMenu}
-          color="inherit"
-        >
-          <MenuIcon />
-        </IconButton>
-        <Link
-          sx={{
-            display: {
-              xs: 'none',
-              sm: 'flex',
-            },
-          }}
-          href="/"
-        >
-          <Image
-            width={40}
-            height={40}
-            style={{ borderRadius: '20px' }}
-            src={Logo}
-            alt="YourKitchen Logo"
-          />
-        </Link>
-        <Menu
-          id="menu-appbar"
-          anchorEl={anchorElNav}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          keepMounted
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'left',
-          }}
-          open={isMenuOpen}
-          onClose={handleCloseNavMenu}
-          sx={{
-            '& .MuiPaper-root': {
-              backgroundColor: 'var(--mui-palette-background-paper)',
-              color: 'var(--mui-palette-text-primary)',
-            },
-          }}
-        >
-          {pages.map((page) => (
-            <MenuItem LinkComponent={Link} key={page.label} href={page.href}>
-              <Typography textAlign="center">{page.label}</Typography>
-            </MenuItem>
-          ))}
-        </Menu>
+        {pages.map((page) => (
+          <MenuItem LinkComponent={Link} key={page.label} href={page.href}>
+            <Typography textAlign="center">{page.label}</Typography>
+          </MenuItem>
+        ))}
+      </Menu>
 
-        {session ? (
-          <UserMenu user={session.user} settings={settings} />
-        ) : (
-          <>
-            {settings.length > 0 ? (
-              <Button
-                href={settings[0].href}
-                sx={{
-                  display: 'block',
-                  borderRadius: '13px',
-                  padding: '8px 16px',
-                  backgroundColor: 'var(--mui-palette-primary-main)',
-                  color: 'var(--mui-palette-primary-contrastText)',
-                  ':hover': {
-                    backgroundColor: 'var(--mui-palette-primary-main)',
-                  },
-                  ':active': {
-                    backgroundColor: 'var(--mui-palette-primary-dark)',
-                  },
-                }}
-                variant="contained"
-              >
-                {settings[0].label}
-              </Button>
-            ) : null}
-          </>
-        )}
-      </Box>
-    </>
+      {session ? (
+        <UserMenu user={session.user} settings={settings} />
+      ) : settings.length > 0 ? (
+        <Button
+          href={settings[0].href}
+          sx={{
+            display: 'block',
+            borderRadius: '13px',
+            padding: '8px 16px',
+            backgroundColor: 'var(--mui-palette-primary-main)',
+            color: 'var(--mui-palette-primary-contrastText)',
+            ':hover': {
+              backgroundColor: 'var(--mui-palette-primary-main)',
+            },
+            ':active': {
+              backgroundColor: 'var(--mui-palette-primary-dark)',
+            },
+          }}
+          variant="contained"
+        >
+          {settings[0].label}
+        </Button>
+      ) : null}
+    </Box>
   )
 }
 

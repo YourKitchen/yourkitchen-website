@@ -1,5 +1,4 @@
 import type { Session } from 'next-auth'
-import type { AppRouteHandlerFn } from 'next-auth/lib/types'
 import type { NextRequest } from 'next/server'
 import { auth } from './auth'
 

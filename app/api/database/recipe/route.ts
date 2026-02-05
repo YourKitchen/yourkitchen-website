@@ -1,11 +1,9 @@
-import {
-  type MealType,
-  Prisma,
-  type Recipe,
-  type RecipeImage,
-} from '@prisma/client'
-import type { NextApiRequest, NextApiResponse } from 'next'
 import type { NextRequest } from 'next/server'
+import type {
+  MealType,
+  Recipe,
+  RecipeImage,
+} from 'prisma/generated/prisma/client'
 import { validatePermissions } from '#misc/utils'
 import { getBody, getQuery } from '#network/index'
 import prisma from '../../../../src/misc/prisma'
@@ -19,8 +17,8 @@ export const GET = async (req: NextRequest) => {
     cuisineName?: string
   }>(req)
 
-  const page = Number.parseInt(query.page ?? '0')
-  const pageSize = Number.parseInt(query.pageSize ?? '20')
+  const page = Number.parseInt(query.page ?? '0', 10)
+  const pageSize = Number.parseInt(query.pageSize ?? '20', 10)
 
   const [response, count] = await Promise.all([
     prisma.recipe.findMany({

@@ -1,10 +1,8 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import type { NextRequest } from 'next/server'
-import { getQuery } from '#network/index'
 import prisma from '#prisma'
 
 export const GET = async (
-  req: NextRequest,
+  _req: NextRequest,
   ctx: { params: Promise<{ id: string }> },
 ) => {
   const params = await ctx.params

@@ -1,3 +1,4 @@
+import { extract, token_set_ratio } from 'fuzzball'
 import type {
   AllergenType,
   Ingredient,
@@ -5,8 +6,7 @@ import type {
   RecipeIngredient,
   RecipeType,
   Unit,
-} from '@prisma/client'
-import { extract, token_set_ratio } from 'fuzzball'
+} from 'prisma/generated/prisma/client'
 import { v4 } from 'uuid'
 import { getIngredientId } from '.'
 
@@ -156,9 +156,7 @@ const validateIngredient = (
 
 function convertUnitAbbreviationToFullName(unitAbbreviation: string) {
   const tmpUnit = unitAbbreviation.toUpperCase().endsWith('S')
-    ? unitAbbreviation
-        .toUpperCase()
-        .substring(0, -1) // Remove last character (It is just the plural form of the word most likely)
+    ? unitAbbreviation.toUpperCase().substring(0, -1) // Remove last character (It is just the plural form of the word most likely)
     : unitAbbreviation.toUpperCase()
   switch (tmpUnit) {
     case 'TSP':
@@ -532,6 +530,7 @@ export const validateContent = (
   if (typeof content.persons === 'string') {
     recipe.persons = Number.parseInt(
       content.persons.toString().match(/\d+/g)?.toString() ?? '4',
+      10,
     )
   }
   if (typeof content.persons === 'number') {

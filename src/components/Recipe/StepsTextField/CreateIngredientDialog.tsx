@@ -11,11 +11,11 @@ import {
   Select,
   TextField,
 } from '@mui/material'
-import type { AllergenType, Ingredient } from '@prisma/client'
-import React, { type FC, useState } from 'react'
+import type { AllergenType, Ingredient } from 'prisma/generated/prisma/client'
+import { type FC, useState } from 'react'
 import { toast } from 'sonner'
-import type { TFunction } from '#models/TFunction'
 import { allAllergenes } from '#models/allergenes'
+import type { TFunction } from '#models/TFunction'
 import type { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
 

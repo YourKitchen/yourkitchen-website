@@ -1,4 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { validatePermissions } from '#misc/utils'
 import prisma from '#prisma'
 
@@ -6,7 +5,7 @@ export const GET = validatePermissions(
   {
     permissions: true,
   },
-  async (req, user) => {
+  async (_req, user) => {
     // Get the user's meal plan.
     const response = await prisma.mealPlan.findMany({
       where: {

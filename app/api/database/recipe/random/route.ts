@@ -1,8 +1,7 @@
-import type { RecipeImage } from '@prisma/client'
 import { put } from '@vercel/blob'
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { OpenAI } from 'openai'
 import type { ChatCompletionMessageParam } from 'openai/resources'
+import type { RecipeImage } from 'prisma/generated/prisma/client'
 import { ValidationError, validateContent } from 'src/utils/validator'
 import { v4 } from 'uuid'
 import { getRecipeImage } from '#misc/recipeImage'
@@ -52,7 +51,7 @@ export const GET = validatePermissions(
     bypass: (req) =>
       req.headers.get('authorization') !== `Bearer ${process.env.CRON_SECRET}`,
   },
-  async (req) => {
+  async (_req) => {
     try {
       const ingredientsCount = await prisma.ingredient.count()
 
@@ -186,7 +185,7 @@ export const GET = validatePermissions(
         ])
 
         // Add the recipe to the db.
-        const createResponse = await prisma.recipe.create({
+        const _createResponse = await prisma.recipe.create({
           data: {
             id: recipeId,
             name: recipe.name,

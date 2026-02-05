@@ -11,11 +11,12 @@ import {
   Typography,
   debounce,
 } from '@mui/material'
-import { type Cuisine, MealType } from '@prisma/client'
+import type { Cuisine } from 'prisma/generated/prisma/client'
 import { useTranslations } from 'next-intl'
 import { useParams } from 'next/navigation'
 import { type FC, useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
+import { MealType } from 'prisma/generated/prisma/enums'
 
 /**
  * Recipes overview featuring filters
@@ -34,14 +35,14 @@ const RecipesPage: FC = () => {
   const { data: cuisines } = useSWR<YKResponse<Cuisine[]>>('cuisine')
 
   // Recipes
-  const { data: popularRecipes, isValidating: popularLoading } =
+  const { data: popularRecipes } =
     useSWR<YKResponse<PublicRecipe[]>>('recipe/popular')
-  const { data: mealTypeRecipes, isValidating: mealTypeLoading } = useSWR<
-    YKResponse<PublicRecipe[]>
-  >(`recipe?mealType=${mealType}`)
-  const { data: cuisineRecipes, isValidating: cuisineLoading } = useSWR<
-    YKResponse<PublicRecipe[]>
-  >(cuisineName !== '' ? `recipe?cuisineName=${cuisineName}` : null)
+  const { data: mealTypeRecipes } = useSWR<YKResponse<PublicRecipe[]>>(
+    `recipe?mealType=${mealType}`,
+  )
+  const { data: cuisineRecipes } = useSWR<YKResponse<PublicRecipe[]>>(
+    cuisineName !== '' ? `recipe?cuisineName=${cuisineName}` : null,
+  )
 
   useEffect(() => {
     if (cuisines && cuisines.data.length > 0) {

@@ -1,7 +1,8 @@
 // TODO: Convert this to a fully server side component
-import prisma from '#prisma'
-import type { User } from '@prisma/client'
+
 import type { NextRequest } from 'next/server'
+import type { User } from 'prisma/generated/prisma/client'
+import prisma from '#prisma'
 
 const locales = ['da', 'en', 'de', 'es']
 const SITE_URL = process.env.SITE_URL ?? 'https://yourkitchen.io'
@@ -38,7 +39,7 @@ function generateSiteMap(users: Pick<User, 'id' | 'image' | 'updated'>[]) {
  `
 }
 
-export const GET = async (req: NextRequest) => {
+export const GET = async (_req: NextRequest) => {
   const users = await prisma.user.findMany({
     select: {
       id: true,

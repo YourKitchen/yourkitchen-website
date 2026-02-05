@@ -1,31 +1,26 @@
 'use client'
-import { CheckCircle, Delete } from '@mui/icons-material'
+import { CheckCircle } from '@mui/icons-material'
 import {
   Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
-  IconButton,
-  List,
-  ListItem,
+  debounce,
   TextField,
   Typography,
-  debounce,
 } from '@mui/material'
-import type { RecipeImage } from '@prisma/client'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import type { Photo } from 'pexels'
-import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
+import type { RecipeImage } from 'prisma/generated/prisma/client'
+import { type FC, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 import { v4 } from 'uuid'
 import type { TFunction } from '#models/TFunction'
 import type { YKResponse } from '#models/ykResponse'
-import { api } from '#network/index'
 
 interface ImageSelectProps {
   t: TFunction
@@ -227,7 +222,8 @@ const ImageSelect: FC<ImageSelectProps> = ({
                       color="success"
                     />
                   )}
-                  {/* biome-ignore lint/a11y/useAltText: <explanation> */}
+                  {/** biome-ignore lint/a11y/useAltText: Not known */}
+                  {/** biome-ignore lint/performance/noImgElement: Required */}
                   <img
                     src={
                       image.file

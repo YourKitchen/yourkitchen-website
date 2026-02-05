@@ -2,6 +2,7 @@
 import { ArrowForward, Delete, Search } from '@mui/icons-material'
 import {
   Box,
+  debounce,
   IconButton,
   InputBase,
   MenuItem,
@@ -9,11 +10,14 @@ import {
   Select,
   Tooltip,
   Typography,
-  debounce,
 } from '@mui/material'
 import Chip from '@mui/material/Chip'
 import TextField from '@mui/material/TextField'
-import type { Ingredient, RecipeIngredient, Unit } from '@prisma/client'
+import type {
+  Ingredient,
+  RecipeIngredient,
+  Unit,
+} from 'prisma/generated/prisma/client'
 import type React from 'react'
 import { type FC, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
@@ -212,7 +216,7 @@ const StepsTextField: FC<StepsTextFieldProps> = ({
             start: number
             end: number
           }
-        | undefined = undefined
+        | undefined
       for (const word of words) {
         // Add the word length
         curPosition += word.length

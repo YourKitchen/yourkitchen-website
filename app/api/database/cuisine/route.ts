@@ -13,7 +13,7 @@ export const GET = async (req: NextRequest) => {
   const take = params.take
 
   const cuisines = await prisma.cuisine.findMany({
-    take: take ? Number.parseInt(take) : undefined,
+    take: take ? Number.parseInt(take, 10) : undefined,
   })
 
   return Response.json({

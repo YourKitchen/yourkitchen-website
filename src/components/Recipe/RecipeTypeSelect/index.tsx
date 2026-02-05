@@ -1,8 +1,8 @@
 'use client'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { RecipeType } from '@prisma/client'
-import React, { type FC } from 'react'
+import type { FC } from 'react'
 import type { TFunction } from '#models/TFunction'
+import { RecipeType } from 'prisma/generated/prisma/enums'
 
 interface RecipeTypeSelectProps {
   t: TFunction

@@ -1,10 +1,10 @@
-import { auth } from '#misc/auth'
 import { Box, Typography } from '@mui/material'
 import type { Metadata } from 'next'
-import { getTranslations } from 'next-intl/server'
-import Providers from '../../../../../src/components/Auth/Providers'
-import type { FC } from 'react'
 import { redirect } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
+import type { FC } from 'react'
+import { auth } from '#misc/auth'
+import Providers from '../../../../../src/components/Auth/Providers'
 
 export const metadata: Metadata = {
   title: 'Sign In',

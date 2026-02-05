@@ -1,14 +1,12 @@
-import type { Rating } from '@prisma/client'
-import type { NextApiRequest, NextApiResponse } from 'next'
-import type { Session } from 'next-auth'
 import type { NextRequest } from 'next/server'
+import type { Rating } from 'prisma/generated/prisma/client'
 import { validatePermissions } from '#misc/utils'
-import { getBody, getQuery } from '#network/index'
+import { getBody } from '#network/index'
 import prisma from '#prisma'
 
 export const GET = validatePermissions(
   { permissions: true },
-  async (req, user, ctx) => {
+  async (_req, user, ctx) => {
     const params = await ctx.params
 
     if (!params.id) {

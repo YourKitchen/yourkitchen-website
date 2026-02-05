@@ -2,11 +2,7 @@
 import { MenuItem, Select, type SelectChangeEvent } from '@mui/material'
 import { type Locale, localeNames, locales, usePathname, useRouter } from 'i18n'
 
-export default function LocaleSwitcher({
-  locale,
-}: {
-  locale: Locale
-}) {
+export default function LocaleSwitcher({ locale }: { locale: Locale }) {
   const pathname = usePathname()
   const router = useRouter()
 

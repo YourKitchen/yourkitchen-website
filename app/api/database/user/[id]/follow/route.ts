@@ -1,13 +1,11 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { validatePermissions } from '#misc/utils'
-import { getQuery } from '#network/index'
 import prisma from '#prisma'
 
 export const PUT = validatePermissions(
   {
     permissions: true,
   },
-  async (req, user, ctx) => {
+  async (_req, user, ctx) => {
     const params = await ctx.params
 
     if (!params.id) {

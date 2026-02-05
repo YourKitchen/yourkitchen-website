@@ -1,6 +1,5 @@
 import { Button } from '@mui/material'
 import Image from 'next/image'
-import React from 'react'
 import { signIn } from '#misc/auth'
 
 const providerMap = [

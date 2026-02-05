@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon'
-import { type NextRequest, NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 import prisma from '#prisma'
 
-export const GET = async (req: NextRequest) => {
+export const GET = async (_req: NextRequest) => {
   // Get the 20 most popular recipes within the last week.
   const ratings = await prisma.rating.findMany({
     distinct: 'recipeId',

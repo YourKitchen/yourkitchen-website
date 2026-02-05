@@ -1,4 +1,4 @@
-import type { Ingredient } from '@prisma/client'
+import type { Ingredient } from 'prisma/generated/prisma/client'
 import { getIngredientId } from 'src/utils'
 import { validatePermissions } from '#misc/utils'
 import { getBody } from '#network/index'
@@ -16,7 +16,7 @@ export const POST = validatePermissions(
     // },
     permissions: true,
   },
-  async (req, user) => {
+  async (req, _user) => {
     const body = await getBody<Ingredient>(req)
 
     if (!body) {
