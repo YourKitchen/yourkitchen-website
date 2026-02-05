@@ -8,21 +8,15 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  debounce,
   Rating,
   TextField,
   Typography,
-  debounce,
 } from '@mui/material'
-import {
-  type MealPlan,
-  type MealType,
-  Rating as PrismaRating,
-  type Recipe,
-  RecipeImage,
-} from '@prisma/client'
 import type { DateTime } from 'luxon'
 import Image from 'next/image'
-import React, {
+import type { MealPlan, MealType, Recipe } from 'prisma/generated/prisma/client'
+import {
   type Dispatch,
   type FC,
   type SetStateAction,
@@ -32,9 +26,9 @@ import React, {
 } from 'react'
 import { toast } from 'sonner'
 import useSWR, { type KeyedMutator } from 'swr'
-import type { TFunction } from '#models/TFunction'
 import type { Meal } from '#models/meal'
 import type { PublicRecipe } from '#models/publicRecipe'
+import type { TFunction } from '#models/TFunction'
 import type { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
 import { avg } from '#utils/index'

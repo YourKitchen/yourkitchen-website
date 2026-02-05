@@ -1,16 +1,31 @@
-import type { Recipe, RecipeImage } from '@prisma/client'
 import type { NextRequest } from 'next/server'
+import type { Recipe, RecipeImage } from 'prisma/generated/prisma/client'
 import { validatePermissions } from '#misc/utils'
-import { getBody, getQuery } from '#network/index'
+import { getBody } from '#network/index'
 import prisma from '#prisma'
 
-export const GET = async (req: NextRequest) => {
-  const query = getQuery<{ id: string }>(req)
+export const GET = async (
+  _req: NextRequest,
+  ctx: { params: Promise<{ id: string }> },
+) => {
+  const params = await ctx.params
+
+  if (!params.id) {
+    return Response.json(
+      {
+        ok: false,
+        message: 'Id not provided',
+      },
+      {
+        status: 400,
+      },
+    )
+  }
 
   const [recipe, rating] = await Promise.all([
     prisma.recipe.findFirst({
       where: {
-        id: query.id as string,
+        id: params.id,
       },
       include: {
         image: true,
@@ -27,7 +42,7 @@ export const GET = async (req: NextRequest) => {
     }),
     prisma.rating.aggregate({
       where: {
-        recipeId: query.id as string,
+        recipeId: params.id as string,
       },
       _avg: {
         score: true,
@@ -55,8 +70,20 @@ export const PUT = validatePermissions(
   {
     permissions: true,
   },
-  async (req, user) => {
-    const query = getQuery<{ id: string }>(req)
+  async (req, user, ctx) => {
+    const params = await ctx.params
+
+    if (!params.id) {
+      return Response.json(
+        {
+          ok: false,
+          message: 'Id not provided',
+        },
+        {
+          status: 400,
+        },
+      )
+    }
     const body = getBody<Partial<Recipe & { image: RecipeImage[] }>>(req)
 
     if (!body) {
@@ -85,7 +112,7 @@ export const PUT = validatePermissions(
 
     const recipe = await prisma.recipe.update({
       where: {
-        id: query.id as string,
+        id: params.id as string,
         ownerId: user.id,
       },
       data: {
@@ -120,12 +147,24 @@ export const DELETE = validatePermissions(
   {
     permissions: true,
   },
-  async (req, user) => {
-    const query = getQuery<{ id: string }>(req)
+  async (_req, user, ctx) => {
+    const params = await ctx.params
+
+    if (!params.id) {
+      return Response.json(
+        {
+          ok: false,
+          message: 'Id not provided',
+        },
+        {
+          status: 400,
+        },
+      )
+    }
 
     const recipe = await prisma.recipe.delete({
       where: {
-        id: query.id as string,
+        id: params.id as string,
         ownerId: user.id,
       },
     })

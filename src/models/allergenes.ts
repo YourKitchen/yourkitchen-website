@@ -1,4 +1,4 @@
-import { AllergenType } from '@prisma/client'
+import { AllergenType } from 'prisma/generated/prisma/enums'
 
 export const allAllergenes: AllergenType[] = [
   AllergenType.CELERY,

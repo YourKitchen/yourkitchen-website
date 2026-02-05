@@ -1,18 +1,29 @@
-import type { Rating } from '@prisma/client'
-import type { NextApiRequest, NextApiResponse } from 'next'
-import type { Session } from 'next-auth'
 import type { NextRequest } from 'next/server'
+import type { Rating } from 'prisma/generated/prisma/client'
 import { validatePermissions } from '#misc/utils'
-import { getBody, getQuery } from '#network/index'
+import { getBody } from '#network/index'
 import prisma from '#prisma'
 
 export const GET = validatePermissions(
   { permissions: true },
-  async (req, user) => {
-    const query = getQuery<{ id: string }>(req)
+  async (_req, user, ctx) => {
+    const params = await ctx.params
+
+    if (!params.id) {
+      return Response.json(
+        {
+          ok: false,
+          message: 'Id not provided',
+        },
+        {
+          status: 400,
+        },
+      )
+    }
+
     const rating = await prisma.rating.findFirst({
       where: {
-        recipeId: query.id as string,
+        recipeId: params.id as string,
         ownerId: user.id,
       },
     })
@@ -23,8 +34,21 @@ export const GET = validatePermissions(
 
 export const PUT = validatePermissions(
   { permissions: true },
-  async (req: NextRequest, user) => {
-    const query = getQuery<{ id: string }>(req)
+  async (req: NextRequest, user, ctx) => {
+    const params = await ctx.params
+
+    if (!params.id) {
+      return Response.json(
+        {
+          ok: false,
+          message: 'Id not provided',
+        },
+        {
+          status: 400,
+        },
+      )
+    }
+
     const body = await getBody<Partial<Rating>>(req)
 
     if (!body) {
@@ -53,14 +77,14 @@ export const PUT = validatePermissions(
     const rating = await prisma.rating.upsert({
       where: {
         recipeId_ownerId: {
-          recipeId: query.id as string,
+          recipeId: params.id as string,
           ownerId: user.id,
         },
       },
       create: {
         score,
         message,
-        recipeId: query.id as string,
+        recipeId: params.id as string,
         ownerId: user.id,
       },
       update: {

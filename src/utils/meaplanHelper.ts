@@ -1,14 +1,14 @@
-import {
-  type MealPlan,
-  type MealPlanRecipe,
-  MealType,
-  type Rating,
-  type Recipe,
-  type RecipeImage,
-  RecipeType,
-  type User,
-} from '@prisma/client'
+'use server'
 import { DateTime } from 'luxon'
+import type {
+  MealPlan,
+  MealPlanRecipe,
+  Rating,
+  Recipe,
+  RecipeImage,
+  User,
+} from 'prisma/generated/prisma/client'
+import { MealType, RecipeType } from 'prisma/generated/prisma/enums'
 import { v4 } from 'uuid'
 import prisma from '#prisma'
 
@@ -90,10 +90,6 @@ export const getRandomRecipes = async (
   )
 
   return recipes.filter((recipe) => recipe !== null) as Recipe[]
-}
-
-export const sameDate = (dateTime1: DateTime, dateTime2: DateTime) => {
-  return dateTime1.toFormat('dd-MM-yyyy') === dateTime2.toFormat('dd-MM-yyyy')
 }
 
 export const updateMealplan = async (

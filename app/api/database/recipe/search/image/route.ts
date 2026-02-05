@@ -1,9 +1,6 @@
-import { Cuisine, MealType } from '@prisma/client'
-import type { NextApiRequest, NextApiResponse } from 'next'
 import type { NextRequest } from 'next/server'
 import { getRecipeImage } from '#misc/recipeImage'
 import { getQuery } from '#network/index'
-import prisma from '#prisma'
 
 export const GET = async (req: NextRequest) => {
   const { searchTerm } = getQuery<{ searchTerm: string }>(req)

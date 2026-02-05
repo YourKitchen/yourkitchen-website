@@ -7,13 +7,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField,
   debounce,
+  TextField,
 } from '@mui/material'
-import type { Ingredient } from '@prisma/client'
-import { useSession } from 'next-auth/react'
-import React, { type FC, useMemo, useState } from 'react'
-import { toast } from 'sonner'
+import type { Ingredient } from 'prisma/generated/prisma/client'
+import { type FC, useMemo, useState } from 'react'
 import useSWR from 'swr'
 import type { TFunction } from '#models/TFunction'
 import type { YKResponse } from '#models/ykResponse'
@@ -35,8 +33,6 @@ const FullSearchDialog: FC<FullSearchDialogProps> = ({
   onChange,
   openCreateDialog,
 }) => {
-  const { data: session } = useSession()
-
   const [value, setValue] = useState<string>(defaultValue)
   const [searchValue, setSearchValue] = useState<string>()
 
@@ -79,13 +75,13 @@ const FullSearchDialog: FC<FullSearchDialogProps> = ({
               color="primary"
               fullWidth
               onClick={() => {
-                if (
-                  session?.user.role !== 'ADMIN' &&
-                  (session?.user.score ?? 0) < 5
-                ) {
-                  toast.error(`${t('need_score_of')} 5`)
-                  return
-                }
+                // if (
+                //   session?.user.role !== 'ADMIN' &&
+                //   (session?.user.score ?? 0) < 5
+                // ) {
+                //   toast.error(`${t('need_score_of')} 5`)
+                //   return
+                // }
                 openCreateDialog(value)
               }}
             >

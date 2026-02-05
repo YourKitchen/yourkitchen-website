@@ -1,6 +1,4 @@
 'use client'
-import type { TFunction } from '#models/TFunction'
-import { api } from '#network/index'
 import { Comment } from '@mui/icons-material'
 import {
   Box,
@@ -13,12 +11,14 @@ import {
   Rating as MuiRating,
   TextField,
 } from '@mui/material'
-import type { Rating, Recipe } from '@prisma/client'
-import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
+import type { Rating, Recipe } from 'prisma/generated/prisma/client'
 import { type FC, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
+import type { TFunction } from '#models/TFunction'
+import { api } from '#network/index'
 
 interface RecipeRatingProps {
   t: TFunction

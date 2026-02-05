@@ -8,17 +8,15 @@ import {
   Menu,
   MenuItem,
   Popper,
-  Select,
   Slider,
-  debounce,
 } from '@mui/material'
-import { type Cuisine, MealType } from '@prisma/client'
+import type { Cuisine } from 'prisma/generated/prisma/client'
+import { MealType } from 'prisma/generated/prisma/enums'
 import { useTranslations } from 'next-intl'
 import React, {
   type FC,
   type MouseEvent,
   type PropsWithChildren,
-  useMemo,
   useState,
 } from 'react'
 import useSWR from 'swr'
@@ -205,11 +203,11 @@ const SearchResults: FC<SearchResultsProps> = ({ value, cuisines }) => {
           {skeletonData.map((data, index) => (
             <Grid
               key={`skeleton-${index}`}
-              xs={12}
-              sm={6}
-              md={4}
-              lg={3}
               sx={{
+                xs: 12,
+                sm: 6,
+                md: 4,
+                lg: 3,
                 display: 'flex',
                 justifyContent: 'center',
                 marginBottom: 4,
@@ -228,11 +226,11 @@ const SearchResults: FC<SearchResultsProps> = ({ value, cuisines }) => {
           {searchRecipes?.data.map((recipe) => (
             <Grid
               key={recipe.id}
-              xs={12}
-              sm={6}
-              md={4}
-              lg={3}
               sx={{
+                xs: 12,
+                sm: 6,
+                md: 4,
+                lg: 3,
                 display: 'flex',
                 justifyContent: 'center',
                 marginBottom: 4,

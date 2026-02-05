@@ -1,13 +1,10 @@
 'use client'
 import { Edit } from '@mui/icons-material'
 import { Box, Button, Link, Rating, Typography } from '@mui/material'
-import { Rating as PrismaRating, Recipe, RecipeImage } from '@prisma/client'
 import Image from 'next/image'
 import type { FC } from 'react'
-import useSWR from 'swr'
-import type { TFunction } from '#models/TFunction'
 import type { Meal } from '#models/meal'
-import { YKResponse } from '#models/ykResponse'
+import type { TFunction } from '#models/TFunction'
 import { avg } from '#utils/index'
 
 interface MealCellProps {

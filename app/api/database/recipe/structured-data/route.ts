@@ -1,25 +1,22 @@
-import {
-  type MealType,
-  type Recipe,
-  type RecipeImage,
-  RecipeIngredient,
-  type RecipeType,
-} from '@prisma/client'
-import axios from 'axios'
 import { parseHTML } from 'html-recipe-parser'
+import type {
+  MealType,
+  Recipe,
+  RecipeImage,
+  RecipeType,
+} from 'prisma/generated/prisma/client'
 import { v4 } from 'uuid'
 import { validatePermissions } from '#misc/utils'
 import { getQuery } from '#network/index'
-import prisma from '#prisma'
 import { getIngredientId } from '#utils/index'
-import { validUnits, validateContent } from '#utils/validator'
+import { validateContent, validUnits } from '#utils/validator'
 
 const parseHumanizedTime = (time: string) => {
   const parts = time.split(', ')
 
   return parts.reduce((prev, cur) => {
     const amount = cur.split(' ')[0]
-    const parsedAmount = Number.parseInt(amount)
+    const parsedAmount = Number.parseInt(amount, 10)
     if (cur.includes('day')) {
       return prev + 60 * 24 * parsedAmount
     }
@@ -114,6 +111,7 @@ export const GET = validatePermissions(
       persons: parsedRecipe.yeld
         ? Number.parseInt(
             parsedRecipe.yeld.toString().match(/\d+/g)?.toString() ?? '4',
+            10,
           ) || 4
         : 4,
       ingredients: parsedRecipe.ingredients?.map((ingredient) => {

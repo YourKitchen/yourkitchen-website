@@ -5,7 +5,6 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
-  Paper,
   Select,
   Table,
   TableBody,
@@ -15,20 +14,18 @@ import {
   TableRow,
   Typography,
 } from '@mui/material'
-import { type MealPlan, MealType, type User } from '@prisma/client'
 import { DateTime } from 'luxon'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import { NextSeo } from 'next-seo'
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
 import MealCell from '#components/MealPlan/MealCell'
 import MealPicker from '#components/MealPlan/MealPicker'
 import { WeekPicker } from '#components/MealPlan/WeekPicker'
 import type { Meal } from '#models/meal'
-import { sameDate } from '#utils/meaplanHelper'
-import type { Metadata } from 'next'
-import { getTranslations } from 'next-intl/server'
+import type { MealPlan, User } from 'prisma/generated/prisma/client'
+import { sameDate } from '#utils/index'
+import { MealType } from 'prisma/generated/prisma/enums'
 
 const daysOfWeek = [
   'monday',

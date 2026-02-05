@@ -2,7 +2,7 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 import InitColorSchemeScript from '@mui/system/InitColorSchemeScript'
 import type { Metadata } from 'next'
 import { Baloo_2 } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next';
+import { Analytics } from '@vercel/analytics/next'
 
 // If loading a variable font, you don't need to specify the font weight
 const baloo = Baloo_2({
@@ -18,18 +18,14 @@ export const metadata: Metadata = {
   },
 }
 
-const RootLayout = async ({
-  children,
-}: {
-  children: React.ReactNode
-}) => {
+const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <AppRouterCacheProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={baloo.className}>
           <InitColorSchemeScript attribute="class" />
           {children}
-          <Analytics/>
+          <Analytics />
         </body>
       </html>
     </AppRouterCacheProvider>

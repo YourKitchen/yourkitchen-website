@@ -1,13 +1,4 @@
 'use client'
-import YKTextField from '#components/General/YKTextField'
-import CuisineAutocomplete from '#components/Recipe/CuisineAutocomplete'
-import ImageSelect from '#components/Recipe/ImageSelect'
-import MealTypeSelect from '#components/Recipe/MealTypeSelect'
-import PreparationTimePicker from '#components/Recipe/PreparationTimePicker'
-import RecipeTypeSelect from '#components/Recipe/RecipeTypeSelect'
-import StepsTextField from '#components/Recipe/StepsTextField'
-import type { YKResponse } from '#models/ykResponse'
-import { api } from '#network/index'
 import {
   Box,
   Button,
@@ -20,17 +11,29 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import type { Recipe, RecipeImage, RecipeIngredient } from '@prisma/client'
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import { NextSeo } from 'next-seo'
-import { redirect } from 'next/navigation'
+import type {
+  Recipe,
+  RecipeImage,
+  RecipeIngredient,
+} from 'prisma/generated/prisma/client'
 import { type FC, useState } from 'react'
 import { toast } from 'sonner'
 import { getGetIngredientsFromStep } from 'src/utils'
-import { validateContent } from 'src/utils/validator'
+import { ValidationError, validateContent } from 'src/utils/validator'
 import { v4 } from 'uuid'
+import YKTextField from '#components/General/YKTextField'
+import CuisineAutocomplete from '#components/Recipe/CuisineAutocomplete'
+import ImageSelect from '#components/Recipe/ImageSelect'
+import MealTypeSelect from '#components/Recipe/MealTypeSelect'
+import PreparationTimePicker from '#components/Recipe/PreparationTimePicker'
+import RecipeTypeSelect from '#components/Recipe/RecipeTypeSelect'
+import StepsTextField from '#components/Recipe/StepsTextField'
+import type { YKResponse } from '#models/ykResponse'
+import { api } from '#network/index'
 
 const defaultRecipe: Recipe & {
   ingredients: RecipeIngredient[]
@@ -63,6 +66,8 @@ const CreateRecipePage: FC = () => {
   const { data: session, status } = useSession({
     required: true,
   })
+
+  const router = useRouter()
 
   // States
   const [importOpen, setImportOpen] = useState(false)
@@ -127,10 +132,23 @@ const CreateRecipePage: FC = () => {
       },
       {
         loading: `${t('creating')} ${t('recipe')}..`,
-        error: (err) => err.message ?? err,
+        error: (err) => {
+          if (err instanceof ValidationError) {
+            console.error(
+              `This object caused the error ${err.message}`,
+              err.object,
+            )
+          } else {
+            console.error(err)
+          }
+
+          return err.message ?? err
+        },
         success: (response) => {
           // Navigate to the newly created recipe.
-          redirect(`recipe/${response.data.data.id}`)
+          router.push(`recipe/${response.data.data.id}`)
+
+          return response.data.message
         },
       },
     )
@@ -298,7 +316,7 @@ const CreateRecipePage: FC = () => {
             onChange={(e) => {
               setRecipe((prev) => ({
                 ...prev,
-                persons: Number.parseInt(e.target.value),
+                persons: Number.parseInt(e.target.value, 10),
               }))
             }}
             type="number"

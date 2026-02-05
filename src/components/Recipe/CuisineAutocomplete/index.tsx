@@ -10,8 +10,8 @@ import {
   TextField,
 } from '@mui/material'
 import { debounce } from '@mui/material/utils'
-import type { Cuisine } from '@prisma/client'
 import { useSession } from 'next-auth/react'
+import type { Cuisine } from 'prisma/generated/prisma/client'
 import { type FC, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'

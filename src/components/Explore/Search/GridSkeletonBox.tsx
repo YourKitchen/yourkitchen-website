@@ -1,8 +1,6 @@
-import { Circle, HorizontalRule, ThumbDown, ThumbUp } from '@mui/icons-material'
+import { Circle } from '@mui/icons-material'
 import { Box, Chip, Skeleton, Typography } from '@mui/material'
-import { Recipe, RecipeImage } from '@prisma/client'
-import Image from 'next/image'
-import React, { type FC, useMemo } from 'react'
+import type { FC } from 'react'
 
 interface GridSkeletonRecipeBoxProps {
   name: string

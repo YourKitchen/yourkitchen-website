@@ -1,6 +1,5 @@
-import type { Cuisine, MealType } from '@prisma/client'
-import type { NextApiRequest, NextApiResponse } from 'next'
 import type { NextRequest } from 'next/server'
+import type { Cuisine, MealType } from 'prisma/generated/prisma/client'
 import { getQuery } from '#network/index'
 import prisma from '#prisma'
 

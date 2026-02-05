@@ -1,7 +1,7 @@
-import type { PublicRecipe } from '#models/publicRecipe'
 import { Circle, ThumbDown, ThumbUp } from '@mui/icons-material'
 import { Box, Chip, Link, Typography } from '@mui/material'
-import type { FC } from 'react'
+import type { FC, ReactElement } from 'react'
+import type { PublicRecipe } from '#models/publicRecipe'
 
 interface RecipeBoxProps {
   recipe: PublicRecipe
@@ -17,7 +17,7 @@ const RecipeBox: FC<RecipeBoxProps> = ({ recipe }) => {
   )
 
   let ratingColor: 'success' | 'primary' | 'error' = 'primary'
-  let ratingIcon: JSX.Element = <Circle />
+  let ratingIcon: ReactElement = <Circle />
 
   if (combinedRating > 0) {
     ratingColor = 'success'

@@ -1,13 +1,11 @@
-import type { FridgeIngredient } from '@prisma/client'
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { NextRequest } from 'next/server'
+import type { FridgeIngredient } from 'prisma/generated/prisma/client'
 import { validatePermissions } from '#misc/utils'
 import { getBody } from '#network/index'
 import prisma from '#prisma'
 
 export const GET = validatePermissions(
   { permissions: true },
-  async (req, user) => {
+  async (_req, user) => {
     // Get users own fridge
     const response = await prisma.fridge.upsert({
       where: {

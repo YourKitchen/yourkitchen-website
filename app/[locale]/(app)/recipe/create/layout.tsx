@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
-import React, { type FC, type PropsWithChildren } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations('header')
@@ -8,7 +8,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
   return {
     title: t('create_recipe'),
     description:
-      'This page allows the user to create a new recipe to add to their recipe collection. This recipe can also be public.'
+      'This page allows the user to create a new recipe to add to their recipe collection. This recipe can also be public.',
   }
 }
 

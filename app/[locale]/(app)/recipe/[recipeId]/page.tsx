@@ -1,8 +1,4 @@
 'use client'
-import RecipeRating from '#components/Recipe/RecipeRating'
-import YKChip from '#components/Recipe/YKChip'
-import type { PublicRecipe } from '#models/publicRecipe'
-import type { YKResponse } from '#models/ykResponse'
 import { ExpandLess, ExpandMore } from '@mui/icons-material'
 import {
   Box,
@@ -13,23 +9,26 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material'
+import { DateTime } from 'luxon'
+import Image from 'next/image'
+import { useParams } from 'next/navigation'
+import type { Session } from 'next-auth'
+import { useSession } from 'next-auth/react'
+import { useTranslations } from 'next-intl'
 import type {
   AllergenType,
   Ingredient,
   RecipeIngredient,
   Unit,
-} from '@prisma/client'
-import { DateTime } from 'luxon'
-import type { Session } from 'next-auth'
-import { useSession } from 'next-auth/react'
-import { useTranslations } from 'next-intl'
-import { NextSeo } from 'next-seo'
-import Image from 'next/image'
-import { useParams } from 'next/navigation'
+} from 'prisma/generated/prisma/client'
 import { type FC, useCallback, useMemo, useState } from 'react'
 import useSWR from 'swr'
+import RecipeRating from '#components/Recipe/RecipeRating'
+import YKChip from '#components/Recipe/YKChip'
+import type { PublicRecipe } from '#models/publicRecipe'
+import type { YKResponse } from '#models/ykResponse'
 
-const SITE_URL = process.env.SITE_URL ?? 'https://yourkitchen.io'
+const _SITE_URL = process.env.SITE_URL ?? 'https://yourkitchen.io'
 
 interface RecipePageProps {
   recipe: PublicRecipe & {
@@ -209,37 +208,6 @@ const RecipePage: FC = () => {
         alignItems: 'center',
       }}
     >
-      <NextSeo
-        title={recipe.data.name}
-        description={
-          recipe.data.description ?? t('recipe_page_default_description')
-        }
-      />
-      {/* <RecipeJsonLd
-        name={recipe.data.name}
-        authorName={recipe.data.owner.name ?? 'YourKitchen'} // It is required, and will often be set.
-        description={
-          recipe.data.description ?? t('recipe_page_default_description')
-        }
-        category={recipe.data.recipeType}
-        cuisine={recipe.data.cuisineName}
-        datePublished={recipe.data.created as any as string} // It is a string
-        yields={`${recipe.data.persons} Portions`}
-        images={recipe.data.image.map((image) => image.link)}
-        totalTime={`PT${recipe.data.preparationTime}M`}
-        ingredients={recipe.data.ingredients.map(
-          (ingredient) =>
-            `${ingredient.amount} ${ingredient.unit} ${ingredient.ingredient.name}`,
-        )}
-        aggregateRating={{
-          ratingValue: recipe.data.rating.toString(),
-          ratingCount: recipe.data.ratings.length.toString(),
-        }}
-        instructions={recipe.data.steps.map((step, index) => ({
-          text: step,
-          url: `${SITE_URL}/recipe/${recipe.data.id}#step${index}`,
-        }))}
-      /> */}
       <Box
         sx={{
           width: { xs: '100%', sm: '85%', md: '70%', lg: '60%' },
@@ -291,7 +259,7 @@ const RecipePage: FC = () => {
                 width={40}
                 height={40}
                 style={{
-                  borderRadius: 4,
+                  borderRadius: '50%',
                 }}
               />
             )}

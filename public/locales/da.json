@@ -74,7 +74,19 @@
     "import_url": "Importér URL",
     "import_recipe_description": "Importér en opskrift fra en URL",
     "amount": "Mængde",
-    "unit": "Enhed"
+    "unit": "Enhed",
+    "image_selected": "Billede valgt",
+    "gram": "Gram",
+    "kilogram": "Kilogram",
+    "liter": "Liter",
+    "milliliter": "Milliliter",
+    "tablespoon": "Spiseske",
+    "teaspoon": "Teske",
+    "cup": "Kop",
+    "piece": "Stykke",
+    "slice": "Skive",
+    "clove": "Fed",
+    "dish": "Ret"
   },
   "footer": {
     "cookie_policy": "Cookiepolitik",

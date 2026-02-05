@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
-import { NextSeo } from 'next-seo'
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations('common')
@@ -12,11 +11,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 }
 
 const CookiesPage = async () => {
-  return (
-    <>
-      <div id="green-analytics-cookie-policy" />
-    </>
-  )
+  return <div id="green-analytics-cookie-policy" />
 }
 
 export default CookiesPage

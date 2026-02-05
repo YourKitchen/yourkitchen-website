@@ -1,18 +1,13 @@
+import { routing } from 'i18n/routing'
+import { NextRequest } from 'next/server'
 import NextAuth from 'next-auth'
+import type { AppRouteHandlerFnContext } from 'next-auth/lib/types'
 import createMiddleware from 'next-intl/middleware'
-import { NextRequest, type NextResponse } from 'next/server'
 import authConfig from '#misc/auth.config'
 
 const { auth: authMiddleware } = NextAuth(authConfig)
 
-interface AppRouteHandlerFnContext {
-  params?: Record<string, string | string[]>
-}
-
-const i18nMiddleware = createMiddleware({
-  locales: ['en', 'da', 'es', 'de'],
-  defaultLocale: 'en',
-})
+const i18nMiddleware = createMiddleware(routing)
 
 const setRequestHeaders = (request: NextRequest) => {
   const url = new URL(request.url)
@@ -27,13 +22,13 @@ const setRequestHeaders = (request: NextRequest) => {
 
 export const middleware = (
   request: NextRequest,
-  event: AppRouteHandlerFnContext,
-): NextResponse => {
+  ctx: AppRouteHandlerFnContext,
+) => {
   const requestWithHeaders = setRequestHeaders(request)
 
   return authMiddleware(() => {
     return i18nMiddleware(requestWithHeaders)
-  })(requestWithHeaders, event) as NextResponse
+  })(request, ctx)
 }
 
 export const config = {

@@ -1,7 +1,6 @@
 import { Typography } from '@mui/material'
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
-import { NextSeo } from 'next-seo'
 import type { FC } from 'react'
 
 export const generateMetadata = async (): Promise<Metadata> => {
@@ -20,17 +19,14 @@ const AboutPage: FC = async () => {
   const t = await getTranslations('about')
 
   return (
-    <>
-      <NextSeo title={t('title')} description={t('description')} />
-      <main>
-        <Typography variant="h1">{t('title')}</Typography>
-        <Typography variant="body1">{t('description')}</Typography>
-        <section>
-          <Typography variant="h2">{t('section_title')}</Typography>
-          <Typography variant="body1">{t('section_content')}</Typography>
-        </section>
-      </main>
-    </>
+    <main>
+      <Typography variant="h1">{t('title')}</Typography>
+      <Typography variant="body1">{t('description')}</Typography>
+      <section>
+        <Typography variant="h2">{t('section_title')}</Typography>
+        <Typography variant="body1">{t('section_content')}</Typography>
+      </section>
+    </main>
   )
 }
 

@@ -9,11 +9,10 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { AllergenType } from '@prisma/client'
 import { type FC, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
-import type { TFunction } from '#models/TFunction'
 import { allAllergenes } from '#models/allergenes'
+import type { TFunction } from '#models/TFunction'
 import AccountBox from './AccountBox'
 
 interface AccountCell<T = any> {
@@ -166,7 +165,9 @@ const AccountUpdateBox: FC<AccountUpdateBoxProps> = <T = any>({
                   onChange={(event) => {
                     const value = event.target.value
                     const parsedValue =
-                      cell.type === 'number' ? Number.parseInt(value) : value
+                      cell.type === 'number'
+                        ? Number.parseInt(value, 10)
+                        : value
                     setState((prev: any) => ({
                       ...prev,
                       [cell.field]: parsedValue,

@@ -1,26 +1,13 @@
 'use client'
-import {
-  Box,
-  CircularProgress,
-  CssBaseline,
-  ThemeProvider,
-} from '@mui/material'
-import React, {
-  Component,
-  Suspense,
-  type FC,
-  type PropsWithChildren,
-} from 'react'
+import { CircularProgress, CssBaseline, ThemeProvider } from '@mui/material'
+import { type FC, type PropsWithChildren, Suspense } from 'react'
 import { Toaster, toast } from 'sonner'
 import { SWRConfig } from 'swr'
-import Footer from '#components/Footer'
-import Header from '#components/Header'
 import theme from '#misc/theme'
 import { api } from '#network/index'
 
-const layout: FC<PropsWithChildren & { params: { locale?: string } }> = ({
+const layout: FC<PropsWithChildren> = ({
   children,
-  params,
 }) => {
   return (
     <ThemeProvider theme={theme}>

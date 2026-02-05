@@ -1,9 +1,16 @@
-import type { MealPlanRecipe } from '@prisma/client'
 import { DateTime } from 'luxon'
+import type {
+  MealPlan,
+  MealPlanRecipe,
+  Rating,
+  Recipe,
+  RecipeImage,
+} from 'prisma/generated/prisma/client'
 import { validatePermissions } from '#misc/utils'
 import { getBody, getQuery } from '#network/index'
 import prisma from '#prisma'
-import { sameDate, updateMealplan } from '#utils/meaplanHelper'
+import { sameDate } from '#utils/index'
+import { updateMealplan } from '#utils/meaplanHelper'
 
 export const GET = validatePermissions(
   { permissions: true },
@@ -86,7 +93,7 @@ export const PUT = validatePermissions(
     // Check if the meal plan exists (It should, but just to guard the remaining code)
 
     // Get the user's meal plan.
-    let currentMealPlan = await prisma.mealPlan.findUnique({
+    let currentMealPlan = (await prisma.mealPlan.findUnique({
       where: {
         ownerId: user.id,
       },
@@ -102,11 +109,27 @@ export const PUT = validatePermissions(
           },
         },
       },
-    })
+    })) as MealPlan & {
+      recipes: (MealPlanRecipe & {
+        recipe: Recipe & { image: RecipeImage[]; ratings: Rating[] }
+      })[]
+    }
 
     if (!currentMealPlan) {
       // Apply any updates
       currentMealPlan = await updateMealplan(currentMealPlan, user)
+    }
+
+    if (!currentMealPlan) {
+      return Response.json(
+        {
+          ok: false,
+          message: 'Meal plan not found',
+        },
+        {
+          status: 404,
+        },
+      )
     }
 
     // We now have the meal plan. So now we can update it.

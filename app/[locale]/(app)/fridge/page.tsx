@@ -7,10 +7,8 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   FormControl,
-  InputBase,
   InputLabel,
   MenuItem,
   Select,
@@ -18,27 +16,27 @@ import {
   Typography,
   debounce,
 } from '@mui/material'
-import {
-  type Fridge,
-  type FridgeIngredient,
-  type Ingredient,
-  Unit,
-} from '@prisma/client'
+import type {
+  Fridge,
+  FridgeIngredient,
+  Ingredient,
+} from 'prisma/generated/prisma/client'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
-import React, { type FC, useMemo, useState } from 'react'
+import { type FC, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 import CreateIngredientDialog from '#components/Recipe/StepsTextField/CreateIngredientDialog'
 import type { YKResponse } from '#models/ykResponse'
 import { api } from '#network/index'
 import { validUnits } from '#utils/validator'
+import { Unit } from 'prisma/generated/prisma/enums'
 
 const FridgePage: FC = () => {
   // Translations
   const t = useTranslations('common')
 
-  const { data: session } = useSession({
+  useSession({
     required: true,
   })
 
@@ -100,13 +98,13 @@ const FridgePage: FC = () => {
           color="primary"
           fullWidth
           onClick={() => {
-            if (
-              session?.user.role !== 'ADMIN' &&
-              (session?.user.score ?? 0) < 5
-            ) {
-              toast.error(`${t('need_score_of')} 5`)
-              return
-            }
+            // if (
+            //   session?.user.role !== 'ADMIN' &&
+            //   (session?.user.score ?? 0) < 5
+            // ) {
+            //   toast.error(`${t('need_score_of')} 5`)
+            //   return
+            // }
             setCreateIngredientValue(value)
           }}
         >

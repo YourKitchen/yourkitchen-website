@@ -2,7 +2,7 @@
 import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers'
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
 import { DateTime } from 'luxon'
-import React, { type FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import type { TFunction } from '#models/TFunction'
 
 interface PreparationTimePickerProps {

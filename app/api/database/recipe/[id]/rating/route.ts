@@ -1,14 +1,27 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import type { NextRequest } from 'next/server'
-import { getQuery } from '#network/index'
 import prisma from '#prisma'
 
-export const GET = async (req: NextRequest) => {
-  const query = getQuery<{ id: string }>(req)
+export const GET = async (
+  _req: NextRequest,
+  ctx: { params: Promise<{ id: string }> },
+) => {
+  const params = await ctx.params
+
+  if (!params.id) {
+    return Response.json(
+      {
+        ok: false,
+        message: 'Id not provided',
+      },
+      {
+        status: 400,
+      },
+    )
+  }
 
   const ratings = await prisma.rating.findMany({
     where: {
-      recipeId: query.id as string,
+      recipeId: params.id as string,
     },
   })
 

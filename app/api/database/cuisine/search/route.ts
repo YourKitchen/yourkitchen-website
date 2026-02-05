@@ -1,4 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { validatePermissions } from '#misc/utils'
 import { getQuery } from '#network/index'
 import prisma from '#prisma'

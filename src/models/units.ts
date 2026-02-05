@@ -1,4 +1,4 @@
-import { Unit } from '@prisma/client'
+import { Unit } from 'prisma/generated/prisma/enums'
 
 export const allUnits: Unit[] = [
   Unit.TEASPOON,

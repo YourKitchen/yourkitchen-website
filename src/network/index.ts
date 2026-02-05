@@ -61,6 +61,7 @@ export const getQuery = <T = unknown>(req: NextRequest) => {
   const {
     nextUrl: { search },
   } = req
+
   const urlSearchParams = new URLSearchParams(search)
   const params = Object.fromEntries(urlSearchParams.entries())
 

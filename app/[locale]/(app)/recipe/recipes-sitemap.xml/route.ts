@@ -1,6 +1,6 @@
-import prisma from '#prisma'
-import type { Recipe, RecipeImage } from '@prisma/client'
 import type { NextRequest } from 'next/server'
+import type { Recipe, RecipeImage } from 'prisma/generated/prisma/client'
+import prisma from '#prisma'
 
 const locales = ['da', 'en', 'de', 'es']
 const SITE_URL = process.env.SITE_URL ?? 'https://yourkitchen.io'
@@ -40,7 +40,7 @@ function generateSiteMap(
  `
 }
 
-export const GET = async (req: NextRequest) => {
+export const GET = async (_req: NextRequest) => {
   const recipes = await prisma.recipe.findMany({
     select: {
       id: true,

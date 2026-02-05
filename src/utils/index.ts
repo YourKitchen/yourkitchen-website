@@ -1,4 +1,5 @@
-import type { RecipeIngredient, Unit } from '@prisma/client'
+import type { DateTime } from 'luxon'
+import type { RecipeIngredient, Unit } from 'prisma/generated/prisma/client'
 
 export const toTitleCase = () => {}
 
@@ -41,4 +42,8 @@ export const getGetIngredientsFromStep = (
 
 export const avg = (list: number[]) => {
   return list.reduce((prev, cur) => prev + cur, 0) / list.length
+}
+
+export const sameDate = (dateTime1: DateTime, dateTime2: DateTime) => {
+  return dateTime1.toFormat('dd-MM-yyyy') === dateTime2.toFormat('dd-MM-yyyy')
 }

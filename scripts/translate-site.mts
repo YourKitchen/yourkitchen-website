@@ -1,8 +1,9 @@
-import { Client } from '@gradio/client'
 import { existsSync } from 'node:fs'
-import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import { dirname, resolve, sep } from 'node:path'
+import { Client } from '@gradio/client'
+
 const require = createRequire(import.meta.url)
 global.EventSource = require('eventsource')
 
@@ -20,8 +21,6 @@ const writeToFile = async (destinationPath: string, content: string) => {
 
     // Write content to the destination file
     await writeFile(destinationPath, content)
-
-    console.log(`Content written to ${destinationPath}`)
   } catch (err) {
     console.error('Error:', err)
   }
@@ -40,12 +39,10 @@ const localizeTranslationFiles = async () => {
   for (const file of files) {
     const fullPath = resolve(dir, file)
     const fileContent = await readFile(fullPath, 'utf-8')
-
-    console.log(`Translating file ${file}..`)
     const defaultTranslations = JSON.parse(fileContent)
 
     const destinationSplit = fullPath.split(sep)
-    const localeIndex = destinationSplit.findLastIndex((val) => val === 'en')
+    const localeIndex = destinationSplit.lastIndexOf('en')
 
     for (const isoCode in languages) {
       let translations: { [key: string]: string } = {}
@@ -74,8 +71,6 @@ const localizeTranslationFiles = async () => {
             language, // string  in 'Target Language' Dropdown component
           ])
 
-          console.log('Translated key', key)
-
           const result = response as {
             data: string[]
           }
@@ -83,7 +78,7 @@ const localizeTranslationFiles = async () => {
           if (result.data.length > 0) {
             translations[key] = result.data[0]
           }
-        } catch (err) {}
+        } catch (_err) {}
       }
 
       // Save the translations file
