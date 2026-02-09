@@ -3000,7 +3000,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:25.2.1":
+"@types/node@npm:*":
   version: 25.2.1
   resolution: "@types/node@npm:25.2.1"
   dependencies:
@@ -3015,6 +3015,15 @@ __metadata:
   dependencies:
     undici-types: "npm:~5.26.4"
   checksum: 10c0/560aa850dfccb83326f9cba125459f6c3fb0c71ec78f22c61e4d248f1df78bd25fd6792cef573dfbdc49c882f8e38bb1a82ca87e0e28ff2513629c704c2b02af
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:25.2.2":
+  version: 25.2.2
+  resolution: "@types/node@npm:25.2.2"
+  dependencies:
+    undici-types: "npm:~7.16.0"
+  checksum: 10c0/45aa45b00df0aac4712c2d6e934a6ed21ac54e0284dd726df1c7620b8c7d36a4fb601b9f8fe1d2951298d1ee7618cf8275688e329c295eb36e8b8fa827a8e334
   languageName: node
   linkType: hard
 
@@ -8973,7 +8982,7 @@ __metadata:
     "@prisma/adapter-pg": "npm:^7.3.0"
     "@prisma/client": "npm:^7.3.0"
     "@types/luxon": "npm:^3.7.1"
-    "@types/node": "npm:25.2.1"
+    "@types/node": "npm:25.2.2"
     "@types/nodemailer": "npm:^7.0.9"
     "@types/react": "npm:19.2.13"
     "@types/uuid": "npm:^11.0.0"
