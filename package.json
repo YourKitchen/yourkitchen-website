@@ -38,7 +38,7 @@
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
     "@vercel/analytics": "^1.6.1",
-    "@vercel/blob": "^2.1.0",
+    "@vercel/blob": "^2.2.0",
     "accept-language": "^3.0.20",
     "axios": "^1.13.4",
     "framer-motion": "^12.33.0",
