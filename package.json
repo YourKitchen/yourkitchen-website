@@ -27,7 +27,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.14.1",
-    "@gradio/client": "^1.19.1",
+    "@gradio/client": "^2.0.4",
     "@mui/base": "5.0.0-dev.20240529-082515-213b5e33ab",
     "@mui/icons-material": "^7.3.7",
     "@mui/material": "^7.3.7",
