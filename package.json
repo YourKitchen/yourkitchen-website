@@ -40,7 +40,7 @@
     "@vercel/analytics": "^1.6.1",
     "@vercel/blob": "^2.2.0",
     "accept-language": "^3.0.20",
-    "axios": "^1.13.5",
+    "axios": "^1.15.0",
     "framer-motion": "^12.34.0",
     "fuzzball": "^2.2.3",
     "html-recipe-parser": "https://github.com/MakakWasTaken/html-recipe-parser.git#commit=bcc6efc8156f8e1f3f9ce2c2079d0c137d21fdcd",
