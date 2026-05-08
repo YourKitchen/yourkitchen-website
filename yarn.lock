@@ -5331,11 +5331,11 @@ __metadata:
   linkType: hard
 
 "icu-minify@npm:^4.8.2":
-  version: 4.8.2
-  resolution: "icu-minify@npm:4.8.2"
+  version: 4.11.0
+  resolution: "icu-minify@npm:4.11.0"
   dependencies:
     "@formatjs/icu-messageformat-parser": "npm:^3.4.0"
-  checksum: 10c0/081ca1f85be71acf0a7f687a64a6154b3282d7f5b30b6c9401ff86fd8fa9526778d7b4e4641d2ff51dfccfa1558add70d395c1ef2f86ad43dcdcf0f893eeb7f3
+  checksum: 10c0/036cd6be6f7167fab0f2b2fca9d4d77cef8186025ba03d7845de85461b90e4f202dd423f6ae3c60fb970ef53741338672409b6b7399d306d54da1a69e69c5202
   languageName: node
   linkType: hard
 
